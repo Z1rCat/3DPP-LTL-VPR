@@ -1,0 +1,172 @@
+2025-09-20 12:10:23,383 - numexpr.utils - INFO - NumExpr defaulting to 16 threads.
+2025-09-20 16:50:38,265 - numexpr.utils - INFO - NumExpr defaulting to 16 threads.
+2025-09-20 16:50:40,314 - utils.system_monitor - INFO - 系统监控开始 - 初始状态: {'memory_total_gb': 15.22, 'memory_available_gb': 2.77, 'memory_percent': 81.8, 'cpu_percent': 41.8, 'timestamp': '2025-09-20T16:50:40.314964'}
+2025-09-20 16:50:40,314 - main - INFO - 开始零担物流3D装箱优化系统V3.0完整流程
+2025-09-20 16:50:40,317 - utils.system_monitor - INFO - 检查点 [系统初始化完成] - 耗时: 0.10s, 内存: 175.12MB
+2025-09-20 16:50:40,317 - data_processing.data_loader - INFO - 正在加载数据文件: a:\MYpython\物流\表2-1 A网点某年某月某日需完成的取送货订单需求.xlsx
+2025-09-20 16:50:40,329 - data_processing.data_loader - INFO - 原始列名: ['订单类型', '经度', '纬度', '货物', '重量', '体积', '数量']
+2025-09-20 16:50:40,330 - data_processing.data_loader - INFO - 已重命名列为: ['pickup_delivery', 'longitude', 'latitude', 'cargo_type', 'volume_dm3', 'weight_kg', 'value']
+2025-09-20 16:50:40,330 - data_processing.data_loader - INFO - 数据加载成功，共44行记录
+2025-09-20 16:50:40,330 - data_processing.data_loader - INFO - 开始数据清洗和验证
+2025-09-20 16:50:40,332 - data_processing.data_loader - INFO - 数据清洗完成，保留44行有效记录
+2025-09-20 16:50:40,333 - data_processing.data_loader - INFO - 开始单位转换（已修复列映射）
+2025-09-20 16:50:40,334 - data_processing.data_loader - INFO - 单位转换完成，体积范围: 0.002000 - 0.078560 m³
+2025-09-20 16:50:40,334 - data_processing.data_loader - INFO - 开始处理订单数据（订单级别）
+2025-09-20 16:50:40,337 - data_processing.data_loader - INFO - 订单处理完成，共处理44个订单
+2025-09-20 16:50:40,337 - data_processing.data_loader - INFO - 订单总体积范围: 0.032000 - 219.418080 m³
+2025-09-20 16:50:40,338 - data_processing.data_loader - INFO - 货物类型分布: {'酒水': 14, '农产品': 13, '食品': 12, '日用品': 3, '建材': 2}
+2025-09-20 16:50:40,339 - optimization.cargo_classifier - INFO - 开始三分类订单：大货物、中货物、小货物
+2025-09-20 16:50:40,340 - optimization.cargo_classifier - INFO - 三分类完成:
+2025-09-20 16:50:40,341 - optimization.cargo_classifier - INFO -   大货物订单: 4 个，总体积 471.933 m³
+2025-09-20 16:50:40,341 - optimization.cargo_classifier - INFO -   中货物订单: 7 个，总体积 107.591 m³
+2025-09-20 16:50:40,341 - optimization.cargo_classifier - INFO -   小货物订单: 33 个，总体积 98.659 m³
+2025-09-20 16:50:40,374 - optimization.cargo_classifier - INFO - 货物分类结果已导出: a:\MYpython\物流\output\reports\cargo_classification_results.xlsx
+2025-09-20 16:50:40,374 - utils.system_monitor - INFO - 检查点 [数据预处理完成] - 耗时: 0.16s, 内存: 177.54MB
+2025-09-20 16:50:40,375 - data_processing.dimension_estimator - INFO - 开始批量估算4个货物的尺寸
+2025-09-20 16:50:40,375 - data_processing.dimension_estimator - INFO - 批量尺寸估算完成，成功4个，失败0个
+2025-09-20 16:50:40,377 - data_processing.dimension_estimator - INFO - 合理尺寸比例: 4/4 (100.0%)
+2025-09-20 16:50:40,377 - data_processing.dimension_estimator - INFO - 平均体积误差: 0.000159 (0.0159%)
+2025-09-20 16:50:40,377 - data_processing.dimension_estimator - INFO - 最大长宽比: 3.5:1
+2025-09-20 16:50:40,380 - optimization.large_cargo_dispatcher - INFO - 开始使用Gurobi 3DPP优化处理4个大宗订单
+2025-09-20 16:50:40,387 - optimization.large_cargo_dispatcher - INFO -   Gurobi 3DPP优化订单 ORDER_0036: 酒水 x2793
+2025-09-20 16:50:40,389 - optimization.gurobi_optimizer_fixed - INFO - 开始单货物3DPP【完整版分层构建】计算: 体积=0.078560m³, 尺寸=(0.7495, 0.2605, 0.4023)
+2025-09-20 16:50:40,391 - optimization.gurobi_optimizer_fixed - INFO -   ✅ 不重叠约束验证通过: 621 个货物位置合法
+2025-09-20 16:50:40,391 - optimization.gurobi_optimizer_fixed - INFO -   ✅ 完整版分层构建成功: 621 件，装载率 88.2%
+2025-09-20 16:50:40,391 - optimization.gurobi_optimizer_fixed - INFO -   最优姿态: (0.7495, 0.4023, 0.2605), 网格: 23×3×9
+2025-09-20 16:50:40,392 - optimization.large_cargo_dispatcher - INFO -     单车容量计算成功: 621 件，状态: heuristic_success
+2025-09-20 16:50:40,392 - optimization.large_cargo_dispatcher - INFO -     Gurobi 3DPP优化结果: 每车最多装载 621 件
+2025-09-20 16:50:40,392 - optimization.large_cargo_dispatcher - INFO -     分配方案: 4 辆满车 + 309 件剩余
+2025-09-20 16:50:40,392 - optimization.large_cargo_dispatcher - INFO -   Gurobi 3DPP优化订单 ORDER_0027: 酒水 x1994
+2025-09-20 16:50:40,393 - optimization.gurobi_optimizer_fixed - INFO - 开始单货物3DPP【完整版分层构建】计算: 体积=0.072980m³, 尺寸=(0.4677, 0.5255, 0.297)
+2025-09-20 16:50:40,395 - optimization.gurobi_optimizer_fixed - INFO -   ✅ 不重叠约束验证通过: 720 个货物位置合法
+2025-09-20 16:50:40,395 - optimization.gurobi_optimizer_fixed - INFO -   ✅ 完整版分层构建成功: 720 件，装载率 95.0%
+2025-09-20 16:50:40,395 - optimization.gurobi_optimizer_fixed - INFO -   最优姿态: (0.4677, 0.5255, 0.297), 网格: 18×5×8
+2025-09-20 16:50:40,395 - optimization.large_cargo_dispatcher - INFO -     单车容量计算成功: 720 件，状态: heuristic_success
+2025-09-20 16:50:40,396 - optimization.large_cargo_dispatcher - INFO -     Gurobi 3DPP优化结果: 每车最多装载 720 件
+2025-09-20 16:50:40,396 - optimization.large_cargo_dispatcher - INFO -     分配方案: 2 辆满车 + 554 件剩余
+2025-09-20 16:50:40,396 - optimization.large_cargo_dispatcher - INFO -   Gurobi 3DPP优化订单 ORDER_0032: 酒水 x1425
+2025-09-20 16:50:40,396 - optimization.gurobi_optimizer_fixed - INFO - 开始单货物3DPP【完整版分层构建】计算: 体积=0.039280m³, 尺寸=(0.3648, 0.3468, 0.3105)
+2025-09-20 16:50:40,399 - optimization.gurobi_optimizer_fixed - INFO -   ✅ 不重叠约束验证通过: 1134 个货物位置合法
+2025-09-20 16:50:40,400 - optimization.gurobi_optimizer_fixed - INFO -   ✅ 完整版分层构建成功: 1134 件，装载率 80.6%
+2025-09-20 16:50:40,400 - optimization.gurobi_optimizer_fixed - INFO -   最优姿态: (0.3648, 0.3468, 0.3105), 网格: 27×6×7
+2025-09-20 16:50:40,400 - optimization.large_cargo_dispatcher - INFO -     单车容量计算成功: 1134 件，状态: heuristic_success
+2025-09-20 16:50:40,400 - optimization.large_cargo_dispatcher - INFO -     Gurobi 3DPP优化结果: 每车最多装载 1134 件
+2025-09-20 16:50:40,402 - optimization.large_cargo_dispatcher - INFO -     分配方案: 1 辆满车 + 291 件剩余
+2025-09-20 16:50:40,402 - optimization.large_cargo_dispatcher - INFO -   Gurobi 3DPP优化订单 ORDER_0026: 食品 x1565
+2025-09-20 16:50:40,402 - optimization.gurobi_optimizer_fixed - INFO - 开始单货物3DPP【完整版分层构建】计算: 体积=0.032600m³, 尺寸=(0.172, 0.3119, 0.6078)
+2025-09-20 16:50:40,406 - optimization.gurobi_optimizer_fixed - INFO -   ✅ 不重叠约束验证通过: 1365 个货物位置合法
+2025-09-20 16:50:40,406 - optimization.gurobi_optimizer_fixed - INFO -   ✅ 完整版分层构建成功: 1365 件，装载率 80.5%
+2025-09-20 16:50:40,406 - optimization.gurobi_optimizer_fixed - INFO -   最优姿态: (0.172, 0.6078, 0.3119), 网格: 15×13×7
+2025-09-20 16:50:40,406 - optimization.large_cargo_dispatcher - INFO -     单车容量计算成功: 1365 件，状态: heuristic_success
+2025-09-20 16:50:40,407 - optimization.large_cargo_dispatcher - INFO -     Gurobi 3DPP优化结果: 每车最多装载 1365 件
+2025-09-20 16:50:40,407 - optimization.large_cargo_dispatcher - INFO -     分配方案: 1 辆满车 + 200 件剩余
+2025-09-20 16:50:40,408 - optimization.large_cargo_dispatcher - INFO - 大宗订单Gurobi 3DPP优化完成:
+2025-09-20 16:50:40,408 - optimization.large_cargo_dispatcher - INFO -   成功分配订单: 4/4
+2025-09-20 16:50:40,408 - optimization.large_cargo_dispatcher - INFO -   成功分配货物: 6423 个
+2025-09-20 16:50:40,408 - optimization.large_cargo_dispatcher - INFO -   使用货车: 8 辆
+2025-09-20 16:50:40,408 - optimization.large_cargo_dispatcher - INFO -   装载效率: 88.0%
+2025-09-20 16:50:40,408 - optimization.large_cargo_dispatcher - INFO -   剩余货物组: 4 组
+2025-09-20 16:50:40,415 - optimization.large_cargo_dispatcher - INFO - 大货物剩余转LTL: 4 组 → 1354 个独立货物
+2025-09-20 16:50:40,416 - utils.system_monitor - INFO - 检查点 [大货物3DPP优化完成] - 耗时: 0.20s, 内存: 179.05MB
+2025-09-20 16:50:40,416 - optimization.cargo_classifier - INFO - 开始合并33个小货物订单
+2025-09-20 16:50:40,417 - optimization.cargo_classifier - INFO -   合并农产品: 13个订单 → 1个虚拟货物，总体积 43.090 m³
+2025-09-20 16:50:40,417 - optimization.cargo_classifier - INFO -   合并建材: 2个订单 → 1个虚拟货物，总体积 0.902 m³
+2025-09-20 16:50:40,418 - optimization.cargo_classifier - INFO -   合并日用品: 3个订单 → 1个虚拟货物，总体积 5.484 m³
+2025-09-20 16:50:40,418 - optimization.cargo_classifier - INFO -   合并酒水: 8个订单 → 1个虚拟货物，总体积 24.430 m³
+2025-09-20 16:50:40,419 - optimization.cargo_classifier - INFO -   合并食品: 7个订单 → 1个虚拟货物，总体积 24.753 m³
+2025-09-20 16:50:40,420 - optimization.cargo_classifier - INFO - 小货物合并完成：33个订单 → 5个虚拟货物
+2025-09-20 16:50:40,425 - optimization.cargo_classifier - ERROR - 导出合并结果失败: At least one sheet must be visible
+2025-09-20 16:50:40,426 - data_processing.dimension_estimator - INFO - 开始批量估算7个货物的尺寸
+2025-09-20 16:50:40,427 - data_processing.dimension_estimator - INFO - 批量尺寸估算完成，成功7个，失败0个
+2025-09-20 16:50:40,428 - data_processing.dimension_estimator - INFO - 合理尺寸比例: 7/7 (100.0%)
+2025-09-20 16:50:40,428 - data_processing.dimension_estimator - INFO - 平均体积误差: 0.000183 (0.0183%)
+2025-09-20 16:50:40,428 - data_processing.dimension_estimator - INFO - 最大长宽比: 4.0:1
+2025-09-20 16:50:40,430 - optimization.ltl_optimizer - INFO - 准备LTL优化数据
+2025-09-20 16:50:40,430 - optimization.ltl_optimizer - INFO -   处理大货物剩余: 1354 个
+2025-09-20 16:50:40,507 - optimization.ltl_optimizer - INFO -   处理中货物订单: 7 个
+2025-09-20 16:50:40,572 - optimization.ltl_optimizer - INFO -   处理合并小货物: 5 个
+2025-09-20 16:50:40,583 - optimization.ltl_optimizer - INFO - LTL优化数据准备完成: 4962 个货物项目
+2025-09-20 16:50:40,584 - optimization.ltl_optimizer - INFO -   总体积: 288.906132 m³
+2025-09-20 16:50:40,585 - optimization.ltl_optimizer - INFO -   货物来源分布: {'medium_order': 3603, 'large_remaining': 1354, 'small_merged': 5}
+2025-09-20 16:50:40,586 - optimization.ltl_optimizer - INFO - 导出LTL优化前数据到Excel
+2025-09-20 16:50:41,570 - optimization.ltl_optimizer - INFO - LTL优化前数据已导出: a:\MYpython\物流\output\reports\ltl_optimization_input.xlsx
+2025-09-20 16:50:41,571 - optimization.ltl_optimizer - INFO - 开始多车队LTL 3DPP优化: 4962 个货物，12 辆可用车
+2025-09-20 16:50:41,571 - optimization.ltl_optimizer - INFO - 强制调用Gurobi多车队3DPP优化器
+2025-09-20 16:50:41,571 - optimization.gurobi_optimizer - INFO - 开始多车队LTL 3DPP优化: 4962 个货物，12 辆车
+2025-09-20 16:50:41,573 - gurobipy - INFO - Set parameter OutputFlag to value 1
+2025-09-20 16:50:41,573 - gurobipy - INFO - Set parameter TimeLimit to value 1800
+2025-09-20 16:50:41,575 - gurobipy - INFO - Set parameter MIPGap to value 0.05
+2025-09-20 16:50:41,575 - gurobipy - INFO - Set parameter Threads to value 1
+2025-09-20 16:50:41,575 - gurobipy - INFO - Set parameter NumericFocus to value 1
+2025-09-20 16:50:41,575 - gurobipy - INFO - Set parameter Presolve to value 1
+2025-09-20 16:50:41,575 - gurobipy - INFO - Set parameter Heuristics to value 0.1
+2025-09-20 16:50:41,575 - gurobipy - INFO - Set parameter MIPFocus to value 1
+2025-09-20 16:50:41,576 - optimization.gurobi_optimizer - INFO - 🔧 Gurobi参数已优化：更稳定的求解配置
+2025-09-20 16:50:45,168 - optimization.gurobi_optimizer - INFO -   ✅ 启用简化多车位置分布约束，确保有意义XYZ坐标
+2025-09-20 16:50:45,265 - optimization.gurobi_optimizer - INFO -   开始Gurobi求解...
+2025-09-20 16:50:45,279 - gurobipy - INFO - Gurobi Optimizer version 12.0.3 build v12.0.3rc0 (win64 - Windows 11.0 (26100.2))
+2025-09-20 16:50:45,279 - gurobipy - INFO - 
+2025-09-20 16:50:45,279 - gurobipy - INFO - CPU model: AMD Ryzen 9 7940H w/ Radeon 780M Graphics, instruction set [SSE2|AVX|AVX2|AVX512]
+2025-09-20 16:50:45,279 - gurobipy - INFO - Thread count: 8 physical cores, 16 logical processors, using up to 1 threads
+2025-09-20 16:50:45,280 - gurobipy - INFO - 
+2025-09-20 16:50:45,280 - gurobipy - INFO - Non-default parameters:
+2025-09-20 16:50:45,280 - gurobipy - INFO - TimeLimit  1800
+2025-09-20 16:50:45,280 - gurobipy - INFO - MIPGap  0.05
+2025-09-20 16:50:45,280 - gurobipy - INFO - Heuristics  0.1
+2025-09-20 16:50:45,280 - gurobipy - INFO - MIPFocus  1
+2025-09-20 16:50:45,280 - gurobipy - INFO - NumericFocus  1
+2025-09-20 16:50:45,281 - gurobipy - INFO - Presolve  1
+2025-09-20 16:50:45,281 - gurobipy - INFO - Threads  1
+2025-09-20 16:50:45,281 - gurobipy - INFO - 
+2025-09-20 16:50:45,281 - gurobipy - INFO - Optimize a model with 24821 rows, 74430 columns and 387021 nonzeros
+2025-09-20 16:50:45,284 - gurobipy - INFO - Model fingerprint: 0xeea4e2a7
+2025-09-20 16:50:45,284 - gurobipy - INFO - Variable types: 14886 continuous, 59544 integer (59544 binary)
+2025-09-20 16:50:45,285 - gurobipy - INFO - Coefficient statistics:
+2025-09-20 16:50:45,285 - gurobipy - INFO -   Matrix range     [1e-02, 1e+03]
+2025-09-20 16:50:45,285 - gurobipy - INFO -   Objective range  [1e-02, 4e+01]
+2025-09-20 16:50:45,286 - gurobipy - INFO -   Bounds range     [1e+00, 1e+00]
+2025-09-20 16:50:45,286 - gurobipy - INFO -   RHS range        [1e+00, 1e+03]
+2025-09-20 16:50:45,289 - gurobipy - INFO - Found heuristic solution: objective -0.0000000
+2025-09-20 16:50:45,581 - gurobipy - INFO - Presolve removed 19849 rows and 14910 columns
+2025-09-20 16:50:45,581 - gurobipy - INFO - Presolve time: 0.28s
+2025-09-20 16:50:45,584 - gurobipy - INFO - Presolved: 4972 rows, 59520 columns, 119040 nonzeros
+2025-09-20 16:50:45,599 - gurobipy - INFO - Variable types: 0 continuous, 59520 integer (59520 binary)
+2025-09-20 16:50:45,604 - gurobipy - INFO - Found heuristic solution: objective 221.0631200
+2025-09-20 16:50:45,711 - gurobipy - INFO - 
+2025-09-20 16:50:45,712 - gurobipy - INFO - Root relaxation: cutoff, 5134 iterations, 0.11 seconds (0.17 work units)
+2025-09-20 16:50:45,712 - gurobipy - INFO - 
+2025-09-20 16:50:45,712 - gurobipy - INFO -     Nodes    |    Current Node    |     Objective Bounds      |     Work
+2025-09-20 16:50:45,712 - gurobipy - INFO -  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+2025-09-20 16:50:45,712 - gurobipy - INFO - 
+2025-09-20 16:50:45,713 - gurobipy - INFO -      0     0     cutoff    0       221.06312  221.06312  0.00%     -    0s
+2025-09-20 16:50:45,717 - gurobipy - INFO - 
+2025-09-20 16:50:45,717 - gurobipy - INFO - Explored 1 nodes (5134 simplex iterations) in 0.44 seconds (0.72 work units)
+2025-09-20 16:50:45,717 - gurobipy - INFO - Thread count was 1 (of 16 available processors)
+2025-09-20 16:50:45,717 - gurobipy - INFO - 
+2025-09-20 16:50:45,717 - gurobipy - INFO - Solution count 2: 221.063 -0 
+2025-09-20 16:50:45,719 - gurobipy - INFO - 
+2025-09-20 16:50:45,719 - gurobipy - INFO - Optimal solution found (tolerance 5.00e-02)
+2025-09-20 16:50:45,720 - gurobipy - INFO - Best objective 2.210631200000e+02, best bound 2.210631200000e+02, gap 0.0000%
+2025-09-20 16:50:45,720 - optimization.gurobi_optimizer - INFO -   ✅ Gurobi求解完成，耗时: 4.15秒
+2025-09-20 16:50:46,061 - optimization.gurobi_optimizer - INFO -   多车队LTL优化完成: 装载 4960/4962 个货物，使用 4 辆车，装载率 99.9%
+2025-09-20 16:50:46,077 - optimization.gurobi_optimizer - INFO -   ✅ Gurobi模型资源已清理
+2025-09-20 16:50:46,082 - optimization.ltl_optimizer - INFO - Gurobi多车队求解成功: 4960 件装载，状态: optimal
+2025-09-20 16:50:46,092 - optimization.ltl_optimizer - INFO - LTL优化完成:
+2025-09-20 16:50:46,092 - optimization.ltl_optimizer - INFO -   装载货物: 4960/4962
+2025-09-20 16:50:46,092 - optimization.ltl_optimizer - INFO -   使用车辆: 4/12
+2025-09-20 16:50:46,092 - optimization.ltl_optimizer - INFO -   总装载率: 99.9%
+2025-09-20 16:50:46,093 - optimization.ltl_optimizer - INFO -   未装载货物: 2 个
+2025-09-20 16:50:46,093 - optimization.ltl_optimizer - INFO - 生成LTL优化报告
+2025-09-20 16:50:46,688 - optimization.ltl_optimizer - INFO - LTL优化报告已保存到: a:\MYpython\物流\output\reports\ltl_optimization_results.xlsx
+2025-09-20 16:50:46,689 - utils.system_monitor - INFO - 检查点 [LTL优化完成] - 耗时: 6.48s, 内存: 212.98MB
+2025-09-20 16:50:46,823 - optimization.ltl_optimizer - WARNING - 无法从货物分类器获取合并映射关系，返回空字典
+2025-09-20 16:50:46,823 - optimization.ltl_optimizer - INFO - 生成完整调度计划JSON文件
+2025-09-20 16:50:46,956 - optimization.ltl_optimizer - INFO - 完整调度计划已保存到: a:\MYpython\物流\output\intermediate\full_dispatch_plan.json
+2025-09-20 16:50:46,957 - optimization.ltl_optimizer - INFO - 生成ID映射关系JSON文件
+2025-09-20 16:50:47,056 - optimization.ltl_optimizer - INFO - ID映射关系已保存到: a:\MYpython\物流\output\intermediate\id_to_orders_mapping.json
+2025-09-20 16:50:47,056 - optimization.ltl_optimizer - INFO - 映射关系数量: 4964
+2025-09-20 16:50:47,133 - export_route_results - INFO - 路径优化汇总报告已保存到: output\reports\车辆路径优化汇总报告.xlsx
+2025-09-20 16:50:47,135 - utils.system_monitor - INFO - 检查点 [路径优化完成] - 耗时: 6.92s, 内存: 213.05MB
+2025-09-20 16:50:47,136 - main - INFO - 大件货物3DPP可视化报告已生成: a:\MYpython\物流\output\visualizations\large_cargo_3dpp_visualization_20250920_165047.txt
+2025-09-20 16:50:47,136 - main - INFO - 无车辆分配数据，跳过交互式3D可视化
+2025-09-20 16:50:47,137 - utils.system_monitor - INFO - 检查点 [高级可视化完成] - 耗时: 6.93s, 内存: 213.05MB

@@ -114,6 +114,26 @@ VISUALIZATION_CONFIG = {
                      '<b>体积:</b> %{customdata[5]:.3f}m³<extra></extra>'
 }
 
+# 可视化性能控制配置
+VISUALIZATION_PERFORMANCE = {
+    'enable_heavy_visualizations': False,      # 是否启用重型可视化（密度分析等）
+    'sample_ratio': 0.3,                      # 采样比例（30%）
+    'max_items_per_visualization': 500,        # 每个可视化最大项目数
+    'visualization_timeout': 30,               # 可视化超时时间（秒）
+    'density_analysis_enabled': False,        # 密度分析开关
+    'max_trucks_for_density': 20,             # 密度分析最大车辆数
+    'skip_heavy_charts_above_items': 5000,    # 超过此货物数量跳过重型图表
+}
+
+# 用户体验控制配置
+USER_EXPERIENCE = {
+    'verbose_logging': False,                  # 控制详细日志输出
+    'show_progress_bars': True,                # 显示进度条
+    'auto_open_results': False,                # 自动打开结果文件
+    'max_console_output_lines': 50,            # 最大控制台输出行数
+    'simplified_output': True,                 # 简化输出模式
+}
+
 # ===== 报告配置 =====
 REPORT_CONFIG = {
     'excel_file_name': 'Final_Loading_Plan.xlsx',
@@ -202,8 +222,99 @@ def validate_config():
 
     print("配置参数验证通过")
 
+# ===== 路径生成配置 (增强版) =====
+ROUTE_GENERATION = {
+    'depot_coordinates': [30.800835, 104.139111],  # A网点坐标 [纬度, 经度]
+    'avg_speed_kmh': 40,                           # 平均车速
+    'service_time_pickup': 20,                     # 取货服务时间(分钟)
+    'service_time_delivery': 30,                   # 送货服务时间(分钟)
+    'fuel_cost_per_ton_km': 0.16,                 # 燃油成本系数
+    'empty_truck_weight_kg': 8500,                # 空车重量
+    'max_stops_per_truck': 20,                    # 单车最大停靠点数
+    'route_optimization_method': 'nearest_neighbor', # 路径优化方法
+    'max_working_hours': 10,                      # 最大工作时间(小时)
+    'start_time': '08:00',                        # 开始工作时间
+    'truck_capacity_kg': 15000,                   # 货车载重能力(kg)
+    'vehicle_volume_m3': 55.296,                  # 货车容积(m3)
+    'enable_return_to_depot': True                # 是否返回配送中心
+}
+
+# ===== API接口配置 =====
+API_CONFIG = {
+    'host': '0.0.0.0',
+    'port': 5000,
+    'debug': True,
+    'max_concurrent_tasks': 3,
+    'task_timeout_seconds': 3600,
+    'result_cache_hours': 24,
+    'enable_cors': True,
+    'secret_key': 'logistics_optimization_system_secret_key_2024',
+    'upload_timeout': 300,
+    'max_request_size_mb': 100
+}
+
+# ===== 前端接口配置 =====
+FRONTEND_CONFIG = {
+    'static_folder': 'frontend/static',
+    'template_folder': 'frontend/templates',
+    'upload_folder': 'uploads',
+    'cache_folder': 'cache',
+    'allowed_extensions': {'xlsx', 'xls', 'csv'},
+    'max_upload_size_mb': 50,
+    'session_timeout_hours': 24,
+    'auto_cleanup_days': 7,
+    'enable_file_validation': True
+}
+
+# ===== 任务管理配置 =====
+TASK_CONFIG = {
+    'max_concurrent_optimization_tasks': 2,
+    'task_progress_update_interval': 5,  # 秒
+    'task_result_retention_hours': 48,
+    'enable_task_queue': True,
+    'queue_max_size': 10,
+    'auto_retry_failed_tasks': True,
+    'max_retry_attempts': 3
+}
+
+def create_all_directories():
+    """创建所有必要的目录，包括API和前端相关目录"""
+    directories = [
+        OUTPUT_DIR, INTERMEDIATE_DIR, REPORTS_DIR,
+        VISUALIZATIONS_DIR, LOGS_DIR,
+        PROJECT_ROOT / FRONTEND_CONFIG['upload_folder'],
+        PROJECT_ROOT / FRONTEND_CONFIG['cache_folder']
+    ]
+
+    for directory in directories:
+        directory.mkdir(parents=True, exist_ok=True)
+
+    print("已创建所有输出目录结构")
+
+def validate_extended_config():
+    """验证扩展配置参数的有效性"""
+    # 验证原有配置
+    validate_config()
+
+    # 验证路径生成配置
+    assert len(ROUTE_GENERATION['depot_coordinates']) == 2, "配送中心坐标格式错误"
+    assert ROUTE_GENERATION['avg_speed_kmh'] > 0, "平均车速必须大于0"
+    assert ROUTE_GENERATION['service_time_pickup'] > 0, "取货服务时间必须大于0"
+    assert ROUTE_GENERATION['service_time_delivery'] > 0, "送货服务时间必须大于0"
+
+    # 验证API配置
+    assert 1000 <= API_CONFIG['port'] <= 65535, "API端口号范围错误"
+    assert API_CONFIG['max_concurrent_tasks'] > 0, "最大并发任务数必须大于0"
+    assert API_CONFIG['task_timeout_seconds'] > 0, "任务超时时间必须大于0"
+
+    # 验证前端配置
+    assert API_CONFIG['max_request_size_mb'] > 0, "最大请求大小必须大于0"
+    assert len(FRONTEND_CONFIG['allowed_extensions']) > 0, "必须允许至少一种文件格式"
+
+    print("扩展配置参数验证通过")
+
 if __name__ == "__main__":
     # 创建目录并验证配置
-    create_directories()
-    validate_config()
-    print("系统配置初始化完成")
+    create_all_directories()
+    validate_extended_config()
+    print("系统完整配置初始化完成")
