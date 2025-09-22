@@ -143,7 +143,34 @@ FILE_CONFIG = {
     'small_cargo_merged_file': 'small_cargo_merged.xlsx',
     'ltl_optimization_input_file': 'ltl_optimization_input.xlsx',
     'single_item_3dpp_results_file': 'single_item_3dpp_results.xlsx',
+    'full_dispatch_plan_file': 'full_dispatch_plan.json',
+    'id_to_orders_mapping_file': 'id_to_orders_mapping.json',
     'encoding': 'utf-8'
+}
+
+# ===== 路径优化配置 =====
+ROUTING_CONFIG = {
+    'fuel_cost_per_ton_km': 0.16,     # 燃油成本系数（元/吨·公里）
+    'empty_vehicle_weight': 8.5,      # 空车重量（吨）
+    'depot_coordinates': [104.139111, 30.800835],  # A网点坐标（经度，纬度）
+    'max_route_time_hours': 12,       # 最大路径时间（小时）
+    'average_speed_kmh': 40,          # 平均行驶速度（公里/小时）
+    'max_payload_capacity': 15.0,     # 最大载货量（吨）
+    'service_time_delivery': 15,      # 配送服务时间（分钟）
+    'service_time_pickup': 10,        # 取货服务时间（分钟）
+    'start_time': '08:00',           # 作业开始时间
+    'max_working_hours': 10          # 最大工作时间（小时）
+}
+
+# ===== OR-Tools求解器配置 =====
+ORTOOLS_CONFIG = {
+    'first_solution_strategy': 'PATH_CHEAPEST_ARC',
+    'local_search_metaheuristic': 'GUIDED_LOCAL_SEARCH',
+    'time_limit_seconds': 300,        # 5分钟求解时限
+    'log_search': True,               # 显示求解日志
+    'solution_limit': 100,            # 解的数量限制
+    'use_depth_first_search': False,  # 是否使用深度优先搜索
+    'use_cp': False                   # 是否使用约束编程
 }
 
 def create_directories():

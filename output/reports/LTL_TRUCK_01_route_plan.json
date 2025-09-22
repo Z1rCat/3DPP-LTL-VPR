@@ -1,0 +1,97 @@
+{
+  "summary": {
+    "vehicle_id": "LTL_TRUCK_01",
+    "total_distance_km": 141.69,
+    "total_duration_hours": 3.54,
+    "fuel_cost_yuan": 214.49,
+    "total_stops": 3,
+    "pickup_stops": 2,
+    "delivery_stops": 1,
+    "optimization_algorithm": "Heuristic_NearestNeighbor",
+    "solution_status": "HEURISTIC_FEASIBLE",
+    "completion_time": "11:55",
+    "start_time": "08:00",
+    "working_hours": 3.54,
+    "initial_load_kg": 1922,
+    "final_load_kg": 7834,
+    "load_efficiency": 12.81
+  },
+  "route_details": {
+    "depot_info": {
+      "name": "A网点（成都至重庆专线）",
+      "coordinates": {
+        "lat": 30.800835,
+        "lng": 104.139111
+      }
+    },
+    "vehicle_info": {
+      "type": "9.6米箱式货车",
+      "capacity_kg": 15000.0,
+      "empty_weight_kg": 8500.0
+    }
+  },
+  "itinerary": [
+    {
+      "step": 1,
+      "action": "取货",
+      "order_id": "ORDER_0031",
+      "coordinates": [
+        30.851558,
+        104.28116
+      ],
+      "weight_change_kg": 4347,
+      "distance_from_previous_km": 14.69,
+      "cumulative_load_kg": 6269,
+      "node_index": 3,
+      "estimated_arrival": "08:22",
+      "service_time_minutes": 10,
+      "departure_time": "08:32",
+      "address": "坐标(30.8516, 104.2812)"
+    },
+    {
+      "step": 2,
+      "action": "取货",
+      "order_id": "ORDER_0040",
+      "coordinates": [
+        30.399125,
+        104.558069
+      ],
+      "weight_change_kg": 3487,
+      "distance_from_previous_km": 56.86,
+      "cumulative_load_kg": 9756,
+      "node_index": 2,
+      "estimated_arrival": "09:57",
+      "service_time_minutes": 10,
+      "departure_time": "10:07",
+      "address": "坐标(30.3991, 104.5581)"
+    },
+    {
+      "step": 3,
+      "action": "送货",
+      "order_id": "ORDER_0011",
+      "coordinates": [
+        30.76405,
+        104.0668
+      ],
+      "weight_change_kg": -1922,
+      "distance_from_previous_km": 62.11,
+      "cumulative_load_kg": 7834,
+      "node_index": 4,
+      "estimated_arrival": "11:40",
+      "service_time_minutes": 15,
+      "departure_time": "11:55",
+      "address": "坐标(30.7641, 104.0668)"
+    }
+  ],
+  "performance_metrics": {
+    "total_service_time_minutes": 35,
+    "service_efficiency": 81.31
+  },
+  "solver_info": {
+    "method": "Heuristic_NearestNeighbor_2Opt",
+    "solve_time_seconds": 0.0,
+    "status": "HEURISTIC_SOLUTION"
+  },
+  "generated_time": "2025-09-19T23:21:46.363061",
+  "generated_by": "LTL_3DPP_Optimization_System_V2"
+}

@@ -466,6 +466,185 @@ class LTLOptimizer:
             self.logger.error(f"生成优化报告失败: {str(e)}")
             raise
 
+    def generate_full_dispatch_plan(self, large_results: Dict, ltl_results: Dict,
+                                   run_id: str = None) -> str:
+        """
+        生成完整调度计划JSON文件
+
+        Args:
+            large_results: 大货物调度结果
+            ltl_results: LTL优化结果
+            run_id: 运行ID
+
+        Returns:
+            str: 输出文件路径
+        """
+        import json
+        from datetime import datetime
+
+        if run_id is None:
+            run_id = f"run_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+
+        self.logger.info("生成完整调度计划JSON文件")
+
+        try:
+            dispatch_plan = {}
+
+            # 处理大货物调度结果
+            if large_results.get('dispatch_results'):
+                for i, result in enumerate(large_results['dispatch_results']):
+                    truck_id = f"LARGE_TRUCK_{i:02d}"
+                    dispatch_plan[truck_id] = {
+                        'type': 'FULL_TRUCK',
+                        'source_order': result.get('order_id', f'LARGE_ORDER_{i}'),
+                        'item_type': result.get('item_type', 'unknown'),
+                        'quantity_per_truck': result.get('items_count', 0),
+                        'total_weight_kg': result.get('truck_volume_used', 0) * 1000,  # 估算重量
+                        'loading_efficiency': result.get('loading_efficiency', 0)
+                    }
+
+            # 处理LTL优化结果
+            if ltl_results.get('loading_plan') is not None and len(ltl_results['loading_plan']) > 0:
+                # 按truck_id分组
+                ltl_plan = ltl_results['loading_plan']
+                trucks_dict = {}
+
+                for _, row in ltl_plan.iterrows():
+                    truck_id = f"LTL_TRUCK_{row['truck_id']:02d}"
+                    if truck_id not in trucks_dict:
+                        trucks_dict[truck_id] = []
+
+                    trucks_dict[truck_id].append({
+                        'item_id': row['item_id'],
+                        'weight_kg': row.get('weight_kg', 0),
+                        'volume_m3': row['volume_m3']
+                    })
+
+                # 添加到调度计划
+                for truck_id, items in trucks_dict.items():
+                    total_weight = sum(item['weight_kg'] for item in items)
+                    dispatch_plan[truck_id] = {
+                        'type': 'LTL_TRUCK',
+                        'loaded_items': items,
+                        'total_weight_kg': total_weight,
+                        'item_count': len(items)
+                    }
+
+            # 构建完整数据结构
+            full_dispatch_data = {
+                'run_id': run_id,
+                'generated_time': datetime.now().isoformat(),
+                'dispatch_plan': dispatch_plan,
+                'summary': {
+                    'total_trucks': len(dispatch_plan),
+                    'large_trucks': len([t for t in dispatch_plan.values() if t['type'] == 'FULL_TRUCK']),
+                    'ltl_trucks': len([t for t in dispatch_plan.values() if t['type'] == 'LTL_TRUCK']),
+                    'large_cargo_efficiency': large_results.get('dispatch_efficiency', 0),
+                    'ltl_loading_rate': ltl_results.get('total_loading_rate', 0)
+                }
+            }
+
+            # 保存文件
+            output_file = INTERMEDIATE_DIR / FILE_CONFIG['full_dispatch_plan_file']
+            with open(output_file, 'w', encoding='utf-8') as f:
+                json.dump(full_dispatch_data, f, ensure_ascii=False, indent=2)
+
+            self.logger.info(f"完整调度计划已保存到: {output_file}")
+            return str(output_file)
+
+        except Exception as e:
+            self.logger.error(f"生成完整调度计划失败: {str(e)}")
+            raise
+
+    def generate_id_mapping(self, merge_mapping: Dict, large_results: Dict,
+                           ltl_results: Dict) -> str:
+        """
+        生成ID映射关系JSON文件
+
+        Args:
+            merge_mapping: 小货物合并映射关系
+            large_results: 大货物调度结果
+            ltl_results: LTL优化结果
+
+        Returns:
+            str: 输出文件路径
+        """
+        import json
+        from datetime import datetime
+
+        self.logger.info("生成ID映射关系JSON文件")
+
+        try:
+            id_to_orders_mapping = {}
+
+            # 处理小货物合并映射
+            if merge_mapping:
+                for merged_id, order_list in merge_mapping.items():
+                    id_to_orders_mapping[merged_id] = order_list
+
+            # 处理大货物映射
+            if large_results.get('dispatch_results'):
+                for result in large_results['dispatch_results']:
+                    order_id = result.get('order_id')
+                    if order_id:
+                        # 大货物直接映射
+                        id_to_orders_mapping[order_id] = [order_id]
+
+            # 处理LTL优化结果中的映射
+            if ltl_results.get('loading_plan') is not None and len(ltl_results['loading_plan']) > 0:
+                ltl_plan = ltl_results['loading_plan']
+                for _, row in ltl_plan.iterrows():
+                    item_id = row['item_id']
+                    original_order_id = row.get('original_order_id', item_id)
+
+                    if item_id not in id_to_orders_mapping:
+                        # 如果是单个订单，直接映射
+                        id_to_orders_mapping[item_id] = [original_order_id]
+
+            # 保存映射文件
+            output_file = INTERMEDIATE_DIR / FILE_CONFIG['id_to_orders_mapping_file']
+            mapping_data = {
+                'generated_time': datetime.now().isoformat(),
+                'mapping_count': len(id_to_orders_mapping),
+                'id_to_orders_mapping': id_to_orders_mapping
+            }
+
+            with open(output_file, 'w', encoding='utf-8') as f:
+                json.dump(mapping_data, f, ensure_ascii=False, indent=2)
+
+            self.logger.info(f"ID映射关系已保存到: {output_file}")
+            self.logger.info(f"映射关系数量: {len(id_to_orders_mapping)}")
+
+            return str(output_file)
+
+        except Exception as e:
+            self.logger.error(f"生成ID映射关系失败: {str(e)}")
+            raise
+
+    def get_merge_mapping_from_classifier(self, cargo_classifier) -> Dict:
+        """
+        从货物分类器获取合并映射关系
+
+        Args:
+            cargo_classifier: 货物分类器实例
+
+        Returns:
+            Dict: 合并映射关系
+        """
+        try:
+            # 尝试从分类器获取合并映射
+            if hasattr(cargo_classifier, 'merge_mapping'):
+                return cargo_classifier.merge_mapping
+            elif hasattr(cargo_classifier, 'get_merge_mapping'):
+                return cargo_classifier.get_merge_mapping()
+            else:
+                self.logger.warning("无法从货物分类器获取合并映射关系，返回空字典")
+                return {}
+
+        except Exception as e:
+            self.logger.error(f"获取合并映射关系失败: {str(e)}")
+            return {}
+
 
 def main():
     """测试LTL优化器模块"""

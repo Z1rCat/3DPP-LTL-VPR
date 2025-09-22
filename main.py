@@ -3,6 +3,7 @@
 Main Entry Point V2.0 for LTL 3D Bin Packing Optimization System
 
 基于Gurobi的零担物流3D装箱与可视化优化框架，支持三分类货物和双重优化模式
+集成VRPPD路径优化功能，实现"先装箱后规划"的一体化物流优化
 """
 
 import sys
@@ -16,7 +17,8 @@ from tqdm import tqdm
 
 # 导入所有模块
 from config import (create_directories, validate_config, LTL_OPTIMIZATION,
-                   TRUCK_SPECS, VISUALIZATIONS_DIR)
+                   TRUCK_SPECS, VISUALIZATIONS_DIR, INTERMEDIATE_DIR,
+                   REPORTS_DIR, FILE_CONFIG)
 from preprocessing_pipeline import PreprocessingPipeline
 from optimization.cargo_classifier import CargoClassifier
 from optimization.large_cargo_dispatcher import LargeCargoDispatcherV2
@@ -29,6 +31,7 @@ except ImportError:
     VISUALIZATION_AVAILABLE = False
     print("[警告] 可视化模块不可用，将跳过3D可视化生成")
 from utils.file_manager import FileManager
+from utils.system_monitor import SystemMonitor, SafeExecutor
 
 
 class LogisticsOptimizationSystemV2:
@@ -50,12 +53,28 @@ class LogisticsOptimizationSystemV2:
         self.large_cargo_dispatcher = LargeCargoDispatcherV2()
         self.ltl_optimizer = LTLOptimizer()
         self.gurobi_optimizer = GurobiOptimizerV2()
+
+        # 初始化路径优化器
+        try:
+            from optimization.routing_solver import VRPPDSolver
+            self.routing_solver = VRPPDSolver()
+            self.routing_available = True
+        except (ImportError, Exception) as e:
+            self.routing_solver = None
+            self.routing_available = False
+            if self.verbose:
+                print(f"[警告] 路径优化器不可用，将跳过路径规划功能: {e}")
+
         # 条件性初始化可视化器
         if VISUALIZATION_AVAILABLE:
             self.visualizer = Plotly3DVisualizer()
         else:
             self.visualizer = None
         self.file_manager = FileManager()
+
+        # 系统监控
+        self.monitor = SystemMonitor()
+        self.safe_executor = SafeExecutor(self.monitor)
 
         # 运行状态
         self.start_time = None
@@ -83,49 +102,98 @@ class LogisticsOptimizationSystemV2:
             Dict[str, Any]: 完整的优化结果
         """
         self.start_time = time.time()
+        self.monitor.start_monitoring()
         self.logger.info("开始零担物流3D装箱优化系统V2.0完整流程")
 
         try:
             # Step 1: 系统初始化
+            self.monitor.checkpoint("系统初始化开始")
             self._initialize_system()
+            self.monitor.checkpoint("系统初始化完成")
 
             # Step 2: 数据预处理（订单级别）
+            self.monitor.checkpoint("数据预处理开始")
             orders_data, preprocessing_stats = self._run_data_preprocessing()
+            self.monitor.checkpoint("数据预处理完成", {"订单数量": len(orders_data) if orders_data is not None else 0})
 
             # Step 3: 三分类货物
+            self.monitor.checkpoint("货物分类开始")
             large_orders, medium_orders, small_orders = self._classify_cargo_three_way(orders_data)
+            self.monitor.checkpoint("货物分类完成", {
+                "大货物": len(large_orders),
+                "中货物": len(medium_orders),
+                "小货物": len(small_orders)
+            })
 
             # Step 4: 处理大货物（单货物3DPP优化）
+            self.monitor.checkpoint("大货物3DPP优化开始")
             large_dispatch_results, large_remaining = self._process_large_orders_3dpp(large_orders)
+            self.monitor.checkpoint("大货物3DPP优化完成", {
+                "使用车辆": large_dispatch_results.get('trucks_used', 0),
+                "剩余货物": len(large_remaining)
+            })
 
             # Step 5: 合并小货物
+            self.monitor.checkpoint("小货物合并开始")
             merged_small_cargo = self._merge_small_cargo(small_orders)
+            self.monitor.checkpoint("小货物合并完成", {"合并后数量": len(merged_small_cargo)})
 
             # Step 6: 准备LTL优化数据
+            self.monitor.checkpoint("LTL数据准备开始")
             ltl_optimization_data = self._prepare_ltl_optimization_data(
                 large_remaining, medium_orders, merged_small_cargo
             )
+            self.monitor.checkpoint("LTL数据准备完成", {"LTL货物数量": len(ltl_optimization_data)})
 
             # Step 7: 执行多车队LTL 3DPP优化
+            self.monitor.checkpoint("LTL优化开始")
             available_trucks = self._calculate_available_trucks(large_dispatch_results)
             ltl_optimization_results = self._run_ltl_optimization(ltl_optimization_data, available_trucks)
+            self.monitor.checkpoint("LTL优化完成", {
+                "可用车辆": available_trucks,
+                "装载货物": ltl_optimization_results.get('loaded_items', 0)
+            })
 
             # Step 8: 合并所有优化结果
             complete_solution = self._merge_optimization_results(
                 large_dispatch_results, ltl_optimization_results
             )
 
-            # Step 9: 3D可视化
-            visualization_files = self._generate_3d_visualizations(complete_solution)
+            # Step 9: 生成路径优化数据文件
+            self.monitor.checkpoint("路径数据生成开始")
+            dispatch_data_files = self._generate_dispatch_data_files(
+                complete_solution, large_dispatch_results, ltl_optimization_results
+            )
+            self.monitor.checkpoint("路径数据生成完成")
 
-            # Step 10: 生成最终报告
+            # Step 10: 执行路径优化
+            self.monitor.checkpoint("路径优化开始")
+            route_solutions = self._run_route_optimization(complete_solution, orders_data)
+            self.monitor.checkpoint("路径优化完成", {
+                "成功车辆": len(route_solutions),
+                "总车辆": len(complete_solution.get('loading_plans', []))
+            })
+
+            # Step 11: 生成路径报告
+            self.monitor.checkpoint("路径报告生成开始")
+            route_reports = self._generate_truck_route_reports(route_solutions)
+            self.monitor.checkpoint("路径报告生成完成", {"报告数量": len(route_reports)})
+
+            # Step 12: 3D可视化
+            self.monitor.checkpoint("可视化生成开始")
+            visualization_files = self._generate_3d_visualizations(complete_solution)
+            self.monitor.checkpoint("可视化生成完成", {"文件数量": len(visualization_files)})
+
+            # Step 13: 生成最终报告
+            self.monitor.checkpoint("最终报告生成开始")
             final_reports = self._generate_final_reports(complete_solution)
+            self.monitor.checkpoint("最终报告生成完成")
 
             # 编译最终结果
             self.end_time = time.time()
             self.results = self._compile_final_results(
                 preprocessing_stats, large_dispatch_results, ltl_optimization_results,
-                visualization_files, final_reports
+                visualization_files, final_reports, route_solutions, route_reports
             )
 
             self._print_final_summary()
@@ -219,7 +287,7 @@ class LogisticsOptimizationSystemV2:
         if self.verbose:
             print("[合并] 开始合并小货物...")
 
-        merged_small_cargo = self.cargo_classifier.merge_small_orders(small_orders)
+        merged_small_cargo, merged_mapping = self.cargo_classifier.merge_small_orders(small_orders)
 
         if self.verbose:
             print(f"[完成] 小货物合并完成:")
@@ -397,6 +465,198 @@ class LogisticsOptimizationSystemV2:
 
         return complete_solution
 
+    def _generate_dispatch_data_files(self, complete_solution: Dict,
+                                    large_results: Dict, ltl_results: Dict) -> Dict[str, str]:
+        """
+        生成路径优化所需的数据文件
+
+        Args:
+            complete_solution: 完整解决方案
+            large_results: 大货物调度结果
+            ltl_results: LTL优化结果
+
+        Returns:
+            Dict[str, str]: 生成的文件路径
+        """
+        if self.verbose:
+            print("[数据] 生成路径优化数据文件...")
+
+        try:
+            # 获取合并映射关系
+            merge_mapping = self.ltl_optimizer.get_merge_mapping_from_classifier(self.cargo_classifier)
+
+            # 生成完整调度计划
+            dispatch_plan_file = self.ltl_optimizer.generate_full_dispatch_plan(
+                large_results, ltl_results
+            )
+
+            # 生成ID映射关系
+            mapping_file = self.ltl_optimizer.generate_id_mapping(
+                merge_mapping, large_results, ltl_results
+            )
+
+            data_files = {
+                'dispatch_plan': dispatch_plan_file,
+                'id_mapping': mapping_file
+            }
+
+            if self.verbose:
+                print(f"[完成] 路径优化数据文件生成完成")
+                print(f"   调度计划: {Path(dispatch_plan_file).name}")
+                print(f"   ID映射: {Path(mapping_file).name}")
+
+            return data_files
+
+        except Exception as e:
+            self.logger.error(f"生成路径优化数据文件失败: {str(e)}")
+            if self.verbose:
+                print(f"[错误] 数据文件生成失败: {str(e)}")
+            return {}
+
+    def _run_route_optimization(self, complete_solution: Dict,
+                              orders_data: pd.DataFrame) -> Dict:
+        """
+        执行路径优化
+
+        Args:
+            complete_solution: 完整解决方案
+            orders_data: 原始订单数据
+
+        Returns:
+            Dict: 所有车辆的路径方案
+        """
+        if not self.routing_available:
+            if self.verbose:
+                print("[跳过] 路径优化器不可用，跳过路径规划")
+            return {}
+
+        if self.verbose:
+            print("[路径] 开始单车路径优化...")
+
+        try:
+            import json
+            from pathlib import Path
+
+            # 读取调度计划和映射文件
+            dispatch_plan_file = INTERMEDIATE_DIR / FILE_CONFIG['full_dispatch_plan_file']
+            mapping_file = INTERMEDIATE_DIR / FILE_CONFIG['id_to_orders_mapping_file']
+
+            if not dispatch_plan_file.exists() or not mapping_file.exists():
+                raise FileNotFoundError("路径优化数据文件不存在")
+
+            # 加载数据
+            with open(dispatch_plan_file, 'r', encoding='utf-8') as f:
+                dispatch_data = json.load(f)
+
+            with open(mapping_file, 'r', encoding='utf-8') as f:
+                mapping_data = json.load(f)
+
+            dispatch_plan = dispatch_data['dispatch_plan']
+            id_mapping = mapping_data['id_to_orders_mapping']
+
+            route_solutions = {}
+            successful_routes = 0
+            total_trucks = len(dispatch_plan)
+
+            # 为每辆车执行路径优化
+            for truck_id, truck_data in dispatch_plan.items():
+                try:
+                    if self.verbose:
+                        print(f"   优化车辆: {truck_id}")
+
+                    # 准备该车的路径数据
+                    routing_data = self.routing_solver.prepare_routing_data_for_truck(
+                        truck_id, dispatch_data, id_mapping, orders_data
+                    )
+
+                    # 求解路径
+                    route_solution = self.routing_solver.solve_route(routing_data)
+
+                    if route_solution and route_solution.get('summary', {}).get('total_stops', 0) > 0:
+                        route_solutions[truck_id] = route_solution
+                        successful_routes += 1
+
+                        if self.verbose:
+                            summary = route_solution['summary']
+                            print(f"     ✓ 总距离: {summary['total_distance_km']:.1f}km, "
+                                  f"停靠点: {summary['total_stops']}, "
+                                  f"燃油成本: {summary['fuel_cost_yuan']:.2f}元")
+                    else:
+                        if self.verbose:
+                            print(f"     ✗ 无有效路径解")
+
+                except Exception as e:
+                    self.logger.error(f"车辆 {truck_id} 路径优化失败: {str(e)}")
+                    if self.verbose:
+                        print(f"     ✗ 优化失败: {str(e)}")
+
+            if self.verbose:
+                print(f"[完成] 路径优化完成: {successful_routes}/{total_trucks} 辆车成功")
+
+            return route_solutions
+
+        except Exception as e:
+            self.logger.error(f"路径优化执行失败: {str(e)}")
+            if self.verbose:
+                print(f"[错误] 路径优化失败: {str(e)}")
+            return {}
+
+    def _generate_truck_route_reports(self, route_solutions: Dict) -> List[str]:
+        """
+        生成单车路径报告文件
+
+        Args:
+            route_solutions: 所有车辆的路径方案
+
+        Returns:
+            List[str]: 生成的报告文件路径列表
+        """
+        if not route_solutions:
+            if self.verbose:
+                print("[跳过] 无路径方案，跳过报告生成")
+            return []
+
+        if self.verbose:
+            print("[报告] 生成路径规划报告...")
+
+        try:
+            import json
+            from datetime import datetime
+
+            report_files = []
+
+            for truck_id, route_solution in route_solutions.items():
+                # 生成单车路径报告文件
+                report_filename = f"{truck_id}_route_plan.json"
+                report_file = REPORTS_DIR / report_filename
+
+                # 添加生成时间戳
+                route_solution['generated_time'] = datetime.now().isoformat()
+                route_solution['generated_by'] = 'LTL_3DPP_Optimization_System_V2'
+
+                # 保存报告
+                with open(report_file, 'w', encoding='utf-8') as f:
+                    json.dump(route_solution, f, ensure_ascii=False, indent=2)
+
+                report_files.append(str(report_file))
+
+                if self.verbose:
+                    summary = route_solution['summary']
+                    print(f"   {truck_id}: {summary['total_distance_km']:.1f}km, "
+                          f"{summary['total_stops']}停靠点, "
+                          f"成本{summary['fuel_cost_yuan']:.2f}元")
+
+            if self.verbose:
+                print(f"[完成] 生成 {len(report_files)} 个路径报告")
+
+            return report_files
+
+        except Exception as e:
+            self.logger.error(f"生成路径报告失败: {str(e)}")
+            if self.verbose:
+                print(f"[错误] 报告生成失败: {str(e)}")
+            return []
+
     def _generate_3d_visualizations(self, complete_solution: Dict) -> List[str]:
         """生成3D可视化"""
         if self.verbose:
@@ -448,7 +708,7 @@ class LogisticsOptimizationSystemV2:
         return reports
 
     def _compile_final_results(self, preprocessing_stats, large_results, ltl_results,
-                             visualization_files, final_reports) -> Dict[str, Any]:
+                             visualization_files, final_reports, route_solutions=None, route_reports=None) -> Dict[str, Any]:
         """编译最终结果"""
         total_runtime = self.end_time - self.start_time
 
@@ -463,8 +723,10 @@ class LogisticsOptimizationSystemV2:
             'preprocessing_stats': preprocessing_stats,
             'large_cargo_results': large_results,
             'ltl_optimization_results': ltl_results,
+            'route_optimization_results': route_solutions if route_solutions else {},
             'visualization_files': visualization_files,
             'final_reports': final_reports,
+            'route_reports': route_reports if route_reports else [],
             'performance_metrics': {
                 'total_orders_processed': preprocessing_stats.get('order_count', 0),
                 'total_items_loaded': (

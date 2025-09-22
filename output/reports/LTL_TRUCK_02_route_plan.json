@@ -1,0 +1,114 @@
+{
+  "summary": {
+    "vehicle_id": "LTL_TRUCK_02",
+    "total_distance_km": 115.44,
+    "total_duration_hours": 2.89,
+    "fuel_cost_yuan": 174.75,
+    "total_stops": 4,
+    "pickup_stops": 3,
+    "delivery_stops": 1,
+    "optimization_algorithm": "Heuristic_NearestNeighbor",
+    "solution_status": "HEURISTIC_FEASIBLE",
+    "completion_time": "11:16",
+    "start_time": "08:00",
+    "working_hours": 2.89,
+    "initial_load_kg": 1922,
+    "final_load_kg": 10796,
+    "load_efficiency": 12.81
+  },
+  "route_details": {
+    "depot_info": {
+      "name": "A网点（成都至重庆专线）",
+      "coordinates": {
+        "lat": 30.800835,
+        "lng": 104.139111
+      }
+    },
+    "vehicle_info": {
+      "type": "9.6米箱式货车",
+      "capacity_kg": 15000.0,
+      "empty_weight_kg": 8500.0
+    }
+  },
+  "itinerary": [
+    {
+      "step": 1,
+      "action": "送货",
+      "order_id": "ORDER_0011",
+      "coordinates": [
+        30.76405,
+        104.0668
+      ],
+      "weight_change_kg": -1922,
+      "distance_from_previous_km": 8.03,
+      "cumulative_load_kg": 0,
+      "node_index": 5,
+      "estimated_arrival": "08:12",
+      "service_time_minutes": 15,
+      "departure_time": "08:27",
+      "address": "坐标(30.7641, 104.0668)"
+    },
+    {
+      "step": 2,
+      "action": "取货",
+      "order_id": "ORDER_0022",
+      "coordinates": [
+        30.689311,
+        104.086109
+      ],
+      "weight_change_kg": 1697,
+      "distance_from_previous_km": 8.51,
+      "cumulative_load_kg": 1697,
+      "node_index": 6,
+      "estimated_arrival": "08:39",
+      "service_time_minutes": 10,
+      "departure_time": "08:49",
+      "address": "坐标(30.6893, 104.0861)"
+    },
+    {
+      "step": 3,
+      "action": "取货",
+      "order_id": "ORDER_0033",
+      "coordinates": [
+        30.737656,
+        104.609837
+      ],
+      "weight_change_kg": 4752,
+      "distance_from_previous_km": 50.35,
+      "cumulative_load_kg": 6449,
+      "node_index": 3,
+      "estimated_arrival": "10:05",
+      "service_time_minutes": 10,
+      "departure_time": "10:15",
+      "address": "坐标(30.7377, 104.6098)"
+    },
+    {
+      "step": 4,
+      "action": "取货",
+      "order_id": "ORDER_0031",
+      "coordinates": [
+        30.851558,
+        104.28116
+      ],
+      "weight_change_kg": 4347,
+      "distance_from_previous_km": 33.85,
+      "cumulative_load_kg": 10796,
+      "node_index": 4,
+      "estimated_arrival": "11:06",
+      "service_time_minutes": 10,
+      "departure_time": "11:16",
+      "address": "坐标(30.8516, 104.2812)"
+    }
+  ],
+  "performance_metrics": {
+    "total_service_time_minutes": 45,
+    "service_efficiency": 131.31
+  },
+  "solver_info": {
+    "method": "Heuristic_NearestNeighbor_2Opt",
+    "solve_time_seconds": 0.0,
+    "status": "HEURISTIC_SOLUTION"
+  },
+  "generated_time": "2025-09-19T23:21:46.366062",
+  "generated_by": "LTL_3DPP_Optimization_System_V2"
+}
