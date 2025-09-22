@@ -1451,22 +1451,10 @@ class Plotly3DVisualizer:
         timestamp = time.strftime("%Y%m%d_%H%M%S")
         filename_with_timestamp = f"{filename}_{timestamp}"
 
-        # 保存PNG图片
-        png_file = output_dir / f"{filename_with_timestamp}.png"
-        try:
-            fig.write_image(
-                str(png_file),
-                format='png',
-                width=1200,
-                height=800,
-                scale=2
-            )
-            self.logger.info(f"PNG图片已保存: {png_file}")
-        except Exception as e:
-            self.logger.error(f"保存PNG失败: {e}")
-            # 如果PNG保存失败，尝试保存HTML作为backup
-            png_file = output_dir / f"{filename_with_timestamp}.html"
-            fig.write_html(
+        # 直接保存HTML文件，跳过PNG（防止卡死）
+        self.logger.info("跳过PNG保存防止卡死，直接保存HTML文件")
+        png_file = output_dir / f"{filename_with_timestamp}.html"
+        fig.write_html(
                 str(png_file),
                 include_plotlyjs=True,
                 config={
@@ -1482,9 +1470,9 @@ class Plotly3DVisualizer:
                     'modeBarButtonsToRemove': [
                         'select2d', 'lasso2d'
                     ]
-                }
-            )
-            self.logger.info(f"HTML文件已保存: {png_file}")
+            }
+        )
+        self.logger.info(f"HTML文件已保存: {png_file}")
 
         return str(png_file)
 
