@@ -1570,15 +1570,15 @@ class LogisticsOptimizationSystemV2:
                 if self.verbose:
                     print(f"   [OK] 传统3D可视化: {len(traditional_viz)} 个文件")
 
-            # 2. 高级3DPP可视化（单品类+多品类+密度+效率）
-            advanced_3dpp_viz = self._generate_advanced_3dpp_visualizations(complete_solution)
+            # 2. 高级3DPP可视化（单品类+多品类+密度+效率）- 传递采样数据
+            advanced_3dpp_viz = self._generate_advanced_3dpp_visualizations(complete_solution, truck_assignments)
             if advanced_3dpp_viz:
                 all_visualization_files.extend(advanced_3dpp_viz)
                 if self.verbose:
                     print(f"   [OK] 高级3DPP可视化: {len(advanced_3dpp_viz)} 个文件")
 
-            # 3. 路径优化可视化系统
-            route_viz = self._generate_route_optimization_visualizations(complete_solution)
+            # 3. 路径优化可视化系统 - 传递采样数据
+            route_viz = self._generate_route_optimization_visualizations(complete_solution, truck_assignments)
             if route_viz:
                 all_visualization_files.extend(route_viz)
                 if self.verbose:
@@ -1602,41 +1602,35 @@ class LogisticsOptimizationSystemV2:
 
         return all_visualization_files
 
-    def _generate_advanced_3dpp_visualizations(self, complete_solution: Dict) -> List[str]:
+    def _generate_advanced_3dpp_visualizations(self, complete_solution: Dict, truck_assignments: Dict = None) -> List[str]:
         """生成高级3DPP可视化"""
-        # 数据采样 - 防止卡死
-        from config import VISUALIZATION_PERFORMANCE
+        # 使用传入的采样数据，避免重新加载原始数据
+        if truck_assignments is None:
+            truck_assignments = self._extract_truck_assignments(complete_solution)
 
-        truck_assignments = self._extract_truck_assignments(complete_solution)
-        if truck_assignments:
+        if not truck_assignments:
+            return []
+
+        if self.verbose:
             total_items = sum(len(items) for items in truck_assignments.values())
-            max_items = VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500)
-            sample_ratio = VISUALIZATION_PERFORMANCE.get('sample_ratio', 0.3)
-
-            if total_items > max_items:
-                if self.verbose:
-                    print(f"[采样] 高级3DPP可视化 - 数据量过大({total_items}个货物)，采样显示")
-                truck_assignments = self._sample_truck_assignments(truck_assignments, max_items, sample_ratio)
-                # 更新complete_solution中的数据
-                complete_solution = complete_solution.copy()
-                complete_solution['sampled_truck_assignments'] = truck_assignments
+            print(f"[3DPP] 使用采样数据: {len(truck_assignments)}辆车, {total_items}个货物")
 
         advanced_viz_files = []
 
         try:
             if self.visualizer:
-                # 单品类3DPP可视化
-                single_category_viz = self._generate_enhanced_single_category_visualization(complete_solution)
+                # 单品类3DPP可视化 - 传递采样数据
+                single_category_viz = self._generate_enhanced_single_category_visualization(complete_solution, truck_assignments)
                 if single_category_viz:
                     advanced_viz_files.extend(single_category_viz)
 
-                # 多品类3DPP可视化
-                multi_category_viz = self._generate_multi_category_visualization(complete_solution)
+                # 多品类3DPP可视化 - 传递采样数据
+                multi_category_viz = self._generate_multi_category_visualization(complete_solution, truck_assignments)
                 if multi_category_viz:
                     advanced_viz_files.extend(multi_category_viz)
 
-                # 装载密度热力图
-                density_heatmap = self._generate_loading_density_heatmap(complete_solution)
+                # 装载密度热力图 - 传递采样数据
+                density_heatmap = self._generate_loading_density_heatmap(complete_solution, truck_assignments)
                 if density_heatmap:
                     advanced_viz_files.append(density_heatmap)
 
@@ -1657,26 +1651,19 @@ class LogisticsOptimizationSystemV2:
             print("[禁用] 传统3D可视化已禁用，避免重复生成")
         return []
 
-    def _generate_enhanced_single_category_visualization(self, complete_solution: Dict) -> List[str]:
+    def _generate_enhanced_single_category_visualization(self, complete_solution: Dict, truck_assignments: Dict = None) -> List[str]:
         """生成增强版单品类3DPP可视化"""
         try:
-            truck_assignments = self._extract_truck_assignments(complete_solution)
+            # 使用传入的采样数据，避免重新加载
+            if truck_assignments is None:
+                truck_assignments = self._extract_truck_assignments(complete_solution)
+
             if not truck_assignments:
                 return []
 
-            # 数据采样 - 防止卡死
-            from config import VISUALIZATION_PERFORMANCE
-            total_items = sum(len(items) for items in truck_assignments.values())
-            max_items = VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500)
-            sample_ratio = VISUALIZATION_PERFORMANCE.get('sample_ratio', 0.3)
-
-            if total_items > max_items:
-                if self.verbose:
-                    print(f"[采样] 单品类可视化数据量过大({total_items})，采样显示")
-                truck_assignments = self._sample_truck_assignments(truck_assignments, max_items, sample_ratio)
-                # 更新complete_solution中的数据
-                complete_solution = complete_solution.copy()
-                complete_solution['sampled_truck_assignments'] = truck_assignments
+            if self.verbose:
+                total_items = sum(len(items) for items in truck_assignments.values())
+                print(f"[单品类] 使用采样数据: {len(truck_assignments)}辆车, {total_items}个货物")
 
             solution_data = {'truck_assignments': truck_assignments}
             figures = self.visualizer.create_enhanced_single_category_3dpp_visualization(solution_data)
@@ -1693,26 +1680,19 @@ class LogisticsOptimizationSystemV2:
             self.logger.error(f"单品类3DPP可视化生成失败: {str(e)}")
             return []
 
-    def _generate_multi_category_visualization(self, complete_solution: Dict) -> List[str]:
+    def _generate_multi_category_visualization(self, complete_solution: Dict, truck_assignments: Dict = None) -> List[str]:
         """生成多品类3DPP可视化"""
         try:
-            truck_assignments = self._extract_truck_assignments(complete_solution)
+            # 使用传入的采样数据，避免重新加载
+            if truck_assignments is None:
+                truck_assignments = self._extract_truck_assignments(complete_solution)
+
             if not truck_assignments:
                 return []
 
-            # 数据采样 - 防止卡死
-            from config import VISUALIZATION_PERFORMANCE
-            total_items = sum(len(items) for items in truck_assignments.values())
-            max_items = VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500)
-            sample_ratio = VISUALIZATION_PERFORMANCE.get('sample_ratio', 0.3)
-
-            if total_items > max_items:
-                if self.verbose:
-                    print(f"[采样] 多品类可视化数据量过大({total_items})，采样显示")
-                truck_assignments = self._sample_truck_assignments(truck_assignments, max_items, sample_ratio)
-                # 更新complete_solution中的数据
-                complete_solution = complete_solution.copy()
-                complete_solution['sampled_truck_assignments'] = truck_assignments
+            if self.verbose:
+                total_items = sum(len(items) for items in truck_assignments.values())
+                print(f"[多品类] 使用采样数据: {len(truck_assignments)}辆车, {total_items}个货物")
 
             solution_data = {'truck_assignments': truck_assignments}
             figures = self.visualizer.create_multi_category_3dpp_visualization(solution_data)
@@ -1729,33 +1709,24 @@ class LogisticsOptimizationSystemV2:
             self.logger.error(f"多品类3DPP可视化生成失败: {str(e)}")
             return []
 
-    def _generate_loading_density_heatmap(self, complete_solution: Dict) -> Optional[str]:
+    def _generate_loading_density_heatmap(self, complete_solution: Dict, truck_assignments: Dict = None) -> Optional[str]:
         """生成装载密度热力图 - 简化版本只计算装载率"""
         try:
             from config import VISUALIZATION_PERFORMANCE
 
-            truck_assignments = self._extract_truck_assignments(complete_solution)
+            # 使用传入的采样数据，避免重新加载
+            if truck_assignments is None:
+                truck_assignments = self._extract_truck_assignments(complete_solution)
+
             if not truck_assignments:
                 if self.verbose:
                     print("[热力图] 无车辆分配数据")
                 return None
 
-            # 检查车辆数量是否合适（支持1-50辆车）
-            vehicle_count = len(truck_assignments)
-            max_vehicles = VISUALIZATION_PERFORMANCE.get('max_vehicles_for_heatmap', 50)
-
-            if vehicle_count > max_vehicles:
-                if self.verbose:
-                    print(f"[热力图] 车辆数量过多({vehicle_count})，限制在{max_vehicles}辆以内")
-                # 随机选择前N辆车进行热力图分析
-                import random
-                selected_trucks = dict(random.sample(list(truck_assignments.items()), max_vehicles))
-                truck_assignments = selected_trucks
-
             if self.verbose:
                 final_count = len(truck_assignments)
                 total_items = sum(len(items) for items in truck_assignments.values())
-                print(f"[热力图] 生成装载密度热力图: {final_count}辆车, {total_items}个货物")
+                print(f"[热力图] 使用采样数据: {final_count}辆车, {total_items}个货物")
 
             solution_data = {'truck_assignments': truck_assignments}
             fig = self.visualizer.create_loading_density_heatmap(solution_data)
@@ -1887,7 +1858,7 @@ class LogisticsOptimizationSystemV2:
             self.logger.warning(f"从JSON文件加载装载数据失败: {str(e)}")
             return {}
 
-    def _generate_route_optimization_visualizations(self, complete_solution: Dict) -> List[str]:
+    def _generate_route_optimization_visualizations(self, complete_solution: Dict, truck_assignments: Dict = None) -> List[str]:
         """生成路径优化结果可视化"""
         # 数据采样 - 防止卡死
         from config import VISUALIZATION_PERFORMANCE

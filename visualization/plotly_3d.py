@@ -1045,12 +1045,14 @@ class Plotly3DVisualizer:
 
         # 性能检查：如果货物数量太大，直接返回简化图表
         total_items_count = sum(len(items) for items in truck_assignments.values())
-        MAX_ITEMS_FOR_FAST_DENSITY = 500
+        MAX_ITEMS_FOR_FAST_DENSITY = 2000  # 提高限制，信任main.py的采样逻辑
 
         if total_items_count > MAX_ITEMS_FOR_FAST_DENSITY:
             self.logger.warning(f"货物数量过多({total_items_count})，返回简化密度图表")
             # 返回简化的密度可视化
             return self._create_simplified_density_chart(truck_assignments)
+
+        self.logger.info(f"生成真实密度热力图: {total_items_count}个货物")
 
         x_grid = np.linspace(0, L, grid_resolution)
         y_grid = np.linspace(0, W, grid_resolution)
