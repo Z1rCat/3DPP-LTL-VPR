@@ -1,21 +1,21 @@
 {
   "summary": {
     "vehicle_id": "LTL_TRUCK_01",
-    "total_distance_km": 149.1,
-    "total_duration_hours": 4.89,
-    "fuel_cost_yuan": 203.23,
-    "total_stops": 3,
-    "pickup_stops": 2,
+    "total_distance_km": 160.21,
+    "total_duration_hours": 5.51,
+    "fuel_cost_yuan": 218.44,
+    "total_stops": 4,
+    "pickup_stops": 3,
     "delivery_stops": 1,
     "initial_load_kg": 0,
     "final_load_kg": 0,
-    "max_load_kg": 38.09,
-    "load_efficiency": 0.25,
+    "max_load_kg": 42.64000000000001,
+    "load_efficiency": 0.28,
     "optimization_algorithm": "Nearest_Neighbor_TSP",
     "solution_status": "MULTI_STOP_OPTIMIZED",
-    "completion_time": "12:53",
+    "completion_time": "13:30",
     "start_time": "08:00",
-    "working_hours": 4.89
+    "working_hours": 5.51
   },
   "route_details": {
     "depot_info": {
@@ -40,20 +40,20 @@
     {
       "step": 1,
       "action": "送货",
-      "order_id": "ORDER_0012",
+      "order_id": "ORDER_0011",
       "coordinates": [
-        30.84101,
-        104.1591
+        30.76405,
+        104.0668
       ],
-      "weight_change_kg": -12.0,
-      "distance_from_previous_km": 4.86,
-      "estimated_arrival": "08:07",
+      "weight_change_kg": -6.2,
+      "distance_from_previous_km": 8.03,
+      "estimated_arrival": "08:12",
       "service_time_minutes": 30,
-      "departure_time": "08:37",
-      "address": "坐标(30.8410, 104.1591)",
+      "departure_time": "08:42",
+      "address": "坐标(30.7641, 104.0668)",
       "cargo_info": {
         "type": "未知",
-        "weight_kg": 12.0
+        "weight_kg": 6.2
       }
     },
     {
@@ -65,10 +65,10 @@
         104.036469
       ],
       "weight_change_kg": 18.67,
-      "distance_from_previous_km": 12.07,
-      "estimated_arrival": "08:55",
+      "distance_from_previous_km": 11.88,
+      "estimated_arrival": "08:59",
       "service_time_minutes": 20,
-      "departure_time": "09:15",
+      "departure_time": "09:19",
       "address": "坐标(30.8676, 104.0365)",
       "cargo_info": {
         "type": "未知",
@@ -78,16 +78,35 @@
     {
       "step": 3,
       "action": "取货",
+      "order_id": "ORDER_0031",
+      "coordinates": [
+        30.851558,
+        104.28116
+      ],
+      "weight_change_kg": 10.35,
+      "distance_from_previous_km": 23.42,
+      "estimated_arrival": "09:54",
+      "service_time_minutes": 20,
+      "departure_time": "10:14",
+      "address": "坐标(30.8516, 104.2812)",
+      "cargo_info": {
+        "type": "未知",
+        "weight_kg": 10.35
+      }
+    },
+    {
+      "step": 4,
+      "action": "取货",
       "order_id": "ORDER_0040",
       "coordinates": [
         30.399125,
         104.558069
       ],
       "weight_change_kg": 7.42,
-      "distance_from_previous_km": 72.14,
-      "estimated_arrival": "11:03",
+      "distance_from_previous_km": 56.86,
+      "estimated_arrival": "11:40",
       "service_time_minutes": 20,
-      "departure_time": "11:23",
+      "departure_time": "12:00",
       "address": "坐标(30.3991, 104.5581)",
       "cargo_info": {
         "type": "未知",
@@ -96,16 +115,16 @@
     }
   ],
   "performance_metrics": {
-    "total_service_time_minutes": 75.0,
-    "total_travel_time_hours": 3.73,
+    "total_service_time_minutes": 100.0,
+    "total_travel_time_hours": 4.01,
     "fuel_efficiency_yuan_per_km": 1.36,
-    "average_distance_per_stop": 49.7
+    "average_distance_per_stop": 40.05
   },
   "solver_info": {
     "method": "Nearest_Neighbor_TSP",
     "solve_time_seconds": 0.1,
     "status": "MULTI_STOP_OPTIMIZED"
   },
-  "generated_time": "2025-09-22T17:29:01.526339",
+  "generated_time": "2025-09-22T17:39:38.132830",
   "generated_by": "LTL_3DPP_Optimization_System_V2"
 }

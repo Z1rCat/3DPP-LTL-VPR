@@ -1,21 +1,21 @@
 {
   "summary": {
     "vehicle_id": "LTL_TRUCK_02",
-    "total_distance_km": 167.34,
-    "total_duration_hours": 6.35,
-    "fuel_cost_yuan": 229.03,
+    "total_distance_km": 129.83,
+    "total_duration_hours": 5.41,
+    "fuel_cost_yuan": 177.67,
     "total_stops": 6,
     "pickup_stops": 5,
     "delivery_stops": 1,
     "initial_load_kg": 0,
     "final_load_kg": 0,
-    "max_load_kg": 108.17,
-    "load_efficiency": 0.72,
+    "max_load_kg": 106.72,
+    "load_efficiency": 0.71,
     "optimization_algorithm": "Nearest_Neighbor_TSP",
     "solution_status": "MULTI_STOP_OPTIMIZED",
-    "completion_time": "14:21",
+    "completion_time": "13:24",
     "start_time": "08:00",
-    "working_hours": 6.35
+    "working_hours": 5.41
   },
   "route_details": {
     "depot_info": {
@@ -135,34 +135,34 @@
     {
       "step": 6,
       "action": "取货",
-      "order_id": "ORDER_0040",
+      "order_id": "ORDER_0033",
       "coordinates": [
-        30.399125,
-        104.558069
+        30.737656,
+        104.609837
       ],
-      "weight_change_kg": 7.42,
-      "distance_from_previous_km": 56.86,
-      "estimated_arrival": "12:30",
+      "weight_change_kg": 5.97,
+      "distance_from_previous_km": 33.85,
+      "estimated_arrival": "11:56",
       "service_time_minutes": 20,
-      "departure_time": "12:50",
-      "address": "坐标(30.3991, 104.5581)",
+      "departure_time": "12:16",
+      "address": "坐标(30.7377, 104.6098)",
       "cargo_info": {
         "type": "未知",
-        "weight_kg": 7.42
+        "weight_kg": 5.97
       }
     }
   ],
   "performance_metrics": {
     "total_service_time_minutes": 150.0,
-    "total_travel_time_hours": 4.18,
+    "total_travel_time_hours": 3.25,
     "fuel_efficiency_yuan_per_km": 1.37,
-    "average_distance_per_stop": 27.89
+    "average_distance_per_stop": 21.64
   },
   "solver_info": {
     "method": "Nearest_Neighbor_TSP",
     "solve_time_seconds": 0.1,
     "status": "MULTI_STOP_OPTIMIZED"
   },
-  "generated_time": "2025-09-22T17:29:01.526741",
+  "generated_time": "2025-09-22T17:39:38.132830",
   "generated_by": "LTL_3DPP_Optimization_System_V2"
 }
