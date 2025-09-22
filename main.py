@@ -1539,18 +1539,23 @@ class LogisticsOptimizationSystemV2:
         生成V3.0综合可视化系统
         包含所有高级可视化功能：3DPP装载、路径优化、效率分析
         """
-        # 全局性能检查 - 防止卡死
+        # 数据采样 - 防止卡死
         from config import VISUALIZATION_PERFORMANCE
 
-        # 检查数据量是否过大
+        # 获取原始数据并进行采样
         truck_assignments = self._extract_truck_assignments(complete_solution)
         if truck_assignments:
             total_items = sum(len(items) for items in truck_assignments.values())
-            if total_items > VISUALIZATION_PERFORMANCE.get('skip_heavy_charts_above_items', 5000):
+            max_items = VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500)
+            sample_ratio = VISUALIZATION_PERFORMANCE.get('sample_ratio', 0.3)
+
+            if total_items > max_items:
                 if self.verbose:
-                    print(f"[跳过] 数据量过大({total_items}个货物)，跳过综合可视化防止卡死")
-                    print("       可在config.py中调整 skip_heavy_charts_above_items 参数")
-                return []
+                    print(f"[采样] 数据量过大({total_items}个货物)，采样显示防止卡死")
+                truck_assignments = self._sample_truck_assignments(truck_assignments, max_items, sample_ratio)
+                # 更新complete_solution中的数据
+                complete_solution = complete_solution.copy()
+                complete_solution['sampled_truck_assignments'] = truck_assignments
 
         if self.verbose:
             print("[可视化] 生成V3.0综合可视化系统...")
@@ -1600,16 +1605,22 @@ class LogisticsOptimizationSystemV2:
 
     def _generate_advanced_3dpp_visualizations(self, complete_solution: Dict) -> List[str]:
         """生成高级3DPP可视化"""
-        # 性能检查 - 防止卡死
+        # 数据采样 - 防止卡死
         from config import VISUALIZATION_PERFORMANCE
 
         truck_assignments = self._extract_truck_assignments(complete_solution)
         if truck_assignments:
             total_items = sum(len(items) for items in truck_assignments.values())
-            if total_items > VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500):
+            max_items = VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500)
+            sample_ratio = VISUALIZATION_PERFORMANCE.get('sample_ratio', 0.3)
+
+            if total_items > max_items:
                 if self.verbose:
-                    print(f"[跳过] 高级3DPP可视化 - 数据量过大({total_items}个货物)")
-                return []
+                    print(f"[采样] 高级3DPP可视化 - 数据量过大({total_items}个货物)，采样显示")
+                truck_assignments = self._sample_truck_assignments(truck_assignments, max_items, sample_ratio)
+                # 更新complete_solution中的数据
+                complete_solution = complete_solution.copy()
+                complete_solution['sampled_truck_assignments'] = truck_assignments
 
         advanced_viz_files = []
 
@@ -1642,15 +1653,21 @@ class LogisticsOptimizationSystemV2:
 
     def _generate_3d_visualizations(self, complete_solution: Dict) -> List[str]:
         """生成增强版3D可视化"""
-        # 性能检查 - 防止卡死
+        # 数据采样 - 防止卡死
         from config import VISUALIZATION_PERFORMANCE
         truck_assignments = self._extract_truck_assignments(complete_solution)
         if truck_assignments:
             total_items = sum(len(items) for items in truck_assignments.values())
-            if total_items > VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500):
+            max_items = VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500)
+            sample_ratio = VISUALIZATION_PERFORMANCE.get('sample_ratio', 0.3)
+
+            if total_items > max_items:
                 if self.verbose:
-                    print(f"[跳过] 3D可视化数据量过大({total_items})，跳过生成")
-                return []
+                    print(f"[采样] 3D可视化数据量过大({total_items})，采样显示")
+                truck_assignments = self._sample_truck_assignments(truck_assignments, max_items, sample_ratio)
+                # 更新complete_solution中的数据
+                complete_solution = complete_solution.copy()
+                complete_solution['sampled_truck_assignments'] = truck_assignments
 
         if self.verbose:
             print("[可视化] 生成增强版3D可视化...")
@@ -1724,12 +1741,19 @@ class LogisticsOptimizationSystemV2:
             if not truck_assignments:
                 return []
 
-            # 性能检查 - 防止卡死
+            # 数据采样 - 防止卡死
             from config import VISUALIZATION_PERFORMANCE
             total_items = sum(len(items) for items in truck_assignments.values())
-            if total_items > VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500):
-                self.logger.warning(f"单品类可视化数据量过大({total_items})，跳过生成")
-                return []
+            max_items = VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500)
+            sample_ratio = VISUALIZATION_PERFORMANCE.get('sample_ratio', 0.3)
+
+            if total_items > max_items:
+                if self.verbose:
+                    print(f"[采样] 单品类可视化数据量过大({total_items})，采样显示")
+                truck_assignments = self._sample_truck_assignments(truck_assignments, max_items, sample_ratio)
+                # 更新complete_solution中的数据
+                complete_solution = complete_solution.copy()
+                complete_solution['sampled_truck_assignments'] = truck_assignments
 
             solution_data = {'truck_assignments': truck_assignments}
             figures = self.visualizer.create_enhanced_single_category_3dpp_visualization(solution_data)
@@ -1753,12 +1777,19 @@ class LogisticsOptimizationSystemV2:
             if not truck_assignments:
                 return []
 
-            # 性能检查 - 防止卡死
+            # 数据采样 - 防止卡死
             from config import VISUALIZATION_PERFORMANCE
             total_items = sum(len(items) for items in truck_assignments.values())
-            if total_items > VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500):
-                self.logger.warning(f"多品类可视化数据量过大({total_items})，跳过生成")
-                return []
+            max_items = VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500)
+            sample_ratio = VISUALIZATION_PERFORMANCE.get('sample_ratio', 0.3)
+
+            if total_items > max_items:
+                if self.verbose:
+                    print(f"[采样] 多品类可视化数据量过大({total_items})，采样显示")
+                truck_assignments = self._sample_truck_assignments(truck_assignments, max_items, sample_ratio)
+                # 更新complete_solution中的数据
+                complete_solution = complete_solution.copy()
+                complete_solution['sampled_truck_assignments'] = truck_assignments
 
             solution_data = {'truck_assignments': truck_assignments}
             figures = self.visualizer.create_multi_category_3dpp_visualization(solution_data)
@@ -1813,12 +1844,16 @@ class LogisticsOptimizationSystemV2:
             if not truck_assignments:
                 return None
 
-            # 性能检查 - 防止卡死
+            # 数据采样 - 防止卡死
             from config import VISUALIZATION_PERFORMANCE
             total_items = sum(len(items) for items in truck_assignments.values())
-            if total_items > VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500):
-                self.logger.warning(f"3D效率分析数据量过大({total_items})，跳过生成")
-                return None
+            max_items = VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500)
+            sample_ratio = VISUALIZATION_PERFORMANCE.get('sample_ratio', 0.3)
+
+            if total_items > max_items:
+                if self.verbose:
+                    print(f"[采样] 3D效率分析数据量过大({total_items})，采样显示")
+                truck_assignments = self._sample_truck_assignments(truck_assignments, max_items, sample_ratio)
 
             solution_data = {'truck_assignments': truck_assignments}
             fig = self.visualizer.create_3d_loading_efficiency_analysis(solution_data)
@@ -1831,6 +1866,59 @@ class LogisticsOptimizationSystemV2:
         except Exception as e:
             self.logger.error(f"3D装载效率分析生成失败: {str(e)}")
             return None
+
+    def _sample_truck_assignments(self, truck_assignments: Dict, max_items: int = 500, sample_ratio: float = 0.3) -> Dict:
+        """
+        对车辆分配数据进行采样，防止可视化卡死
+
+        Args:
+            truck_assignments: 原始车辆分配数据
+            max_items: 最大货物数量
+            sample_ratio: 采样比例
+
+        Returns:
+            采样后的车辆分配数据
+        """
+        if not truck_assignments:
+            return {}
+
+        # 计算总货物数量
+        total_items = sum(len(items) for items in truck_assignments.values())
+
+        # 计算目标数量：取较小值
+        target_items = min(max_items, int(total_items * sample_ratio))
+
+        if total_items <= target_items:
+            # 不需要采样
+            return truck_assignments
+
+        # 计算采样比例
+        actual_sample_ratio = target_items / total_items
+
+        # 对每个车辆的货物进行采样
+        sampled_assignments = {}
+        import random
+
+        for truck_id, items in truck_assignments.items():
+            if not items:
+                continue
+
+            # 计算该车辆应该采样的数量
+            vehicle_target = max(1, int(len(items) * actual_sample_ratio))
+
+            # 随机采样
+            if len(items) > vehicle_target:
+                sampled_items = random.sample(items, vehicle_target)
+            else:
+                sampled_items = items
+
+            sampled_assignments[truck_id] = sampled_items
+
+        if hasattr(self, 'verbose') and self.verbose:
+            sampled_total = sum(len(items) for items in sampled_assignments.values())
+            print(f"   [采样] 从{total_items}个货物采样到{sampled_total}个 (比例: {sampled_total/total_items:.1%})")
+
+        return sampled_assignments
 
     def _extract_truck_assignments(self, complete_solution: Dict) -> Dict:
         """从完整解决方案中提取车辆分配数据（优先使用JSON文件）"""
@@ -1892,16 +1980,22 @@ class LogisticsOptimizationSystemV2:
 
     def _generate_route_optimization_visualizations(self, complete_solution: Dict) -> List[str]:
         """生成路径优化结果可视化"""
-        # 性能检查 - 防止卡死
+        # 数据采样 - 防止卡死
         from config import VISUALIZATION_PERFORMANCE
 
         truck_assignments = self._extract_truck_assignments(complete_solution)
         if truck_assignments:
             total_items = sum(len(items) for items in truck_assignments.values())
-            if total_items > VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500):
+            max_items = VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500)
+            sample_ratio = VISUALIZATION_PERFORMANCE.get('sample_ratio', 0.3)
+
+            if total_items > max_items:
                 if self.verbose:
-                    print(f"[跳过] 路径优化可视化 - 数据量过大({total_items}个货物)")
-                return []
+                    print(f"[采样] 路径优化可视化 - 数据量过大({total_items}个货物)，采样显示")
+                truck_assignments = self._sample_truck_assignments(truck_assignments, max_items, sample_ratio)
+                # 更新complete_solution中的数据
+                complete_solution = complete_solution.copy()
+                complete_solution['sampled_truck_assignments'] = truck_assignments
 
         if self.verbose:
             print("[可视化] 生成路径优化结果可视化...")
@@ -1986,14 +2080,21 @@ class LogisticsOptimizationSystemV2:
 
     def _generate_route_efficiency_heatmap(self, route_solutions: Dict, route_visualizer) -> Optional[str]:
         """生成路径效率热力图"""
-        # 性能检查 - 防止卡死
+        # 路径数据采样 - 防止卡死
         from config import VISUALIZATION_PERFORMANCE
 
         if route_solutions:
             total_routes = len(route_solutions)
-            if total_routes > VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500):
-                self.logger.info(f"跳过路径效率热力图 - 路径数量过大({total_routes})")
-                return None
+            max_routes = VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500)
+
+            if total_routes > max_routes:
+                if hasattr(self, 'verbose') and self.verbose:
+                    print(f"[采样] 路径效率热力图 - 路径数量过大({total_routes})，采样显示")
+                # 对路径进行采样
+                import random
+                route_keys = list(route_solutions.keys())
+                sampled_keys = random.sample(route_keys, min(max_routes, len(route_keys)))
+                route_solutions = {k: route_solutions[k] for k in sampled_keys}
 
         try:
             fig = route_visualizer.create_route_efficiency_heatmap(route_solutions)
@@ -2011,14 +2112,21 @@ class LogisticsOptimizationSystemV2:
 
     def _generate_vehicle_performance_dashboard(self, route_solutions: Dict, route_visualizer) -> Optional[str]:
         """生成车辆性能仪表盘"""
-        # 性能检查 - 防止卡死
+        # 路径数据采样 - 防止卡死
         from config import VISUALIZATION_PERFORMANCE
 
         if route_solutions:
             total_routes = len(route_solutions)
-            if total_routes > VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500):
-                self.logger.info(f"跳过车辆性能仪表盘 - 路径数量过大({total_routes})")
-                return None
+            max_routes = VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500)
+
+            if total_routes > max_routes:
+                if hasattr(self, 'verbose') and self.verbose:
+                    print(f"[采样] 车辆性能仪表盘 - 路径数量过大({total_routes})，采样显示")
+                # 对路径进行采样
+                import random
+                route_keys = list(route_solutions.keys())
+                sampled_keys = random.sample(route_keys, min(max_routes, len(route_keys)))
+                route_solutions = {k: route_solutions[k] for k in sampled_keys}
 
         try:
             fig = route_visualizer.create_vehicle_performance_dashboard(route_solutions)
@@ -2151,16 +2259,33 @@ class LogisticsOptimizationSystemV2:
 
     def _generate_large_cargo_3dpp_visualization(self, large_cargo_results: Dict) -> Optional[str]:
         """生成大件货物3DPP可视化报告"""
-        # 性能检查 - 防止卡死
+        # 数据采样 - 防止卡死
         from config import VISUALIZATION_PERFORMANCE
 
         dispatch_results = large_cargo_results.get('dispatch_results', {})
         if dispatch_results:
             total_items = sum(len(items.get('loaded_items', [])) for truck_id, items in dispatch_results.items())
-            if total_items > VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500):
+            max_items = VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500)
+
+            if total_items > max_items:
                 if hasattr(self, 'verbose') and self.verbose:
-                    print(f"[跳过] 大件货物3DPP可视化 - 数据量过大({total_items}个货物)")
-                return None
+                    print(f"[采样] 大件货物3DPP可视化 - 数据量过大({total_items}个货物)，采样显示")
+                # 对大件货物分配结果进行采样
+                sample_ratio = min(1.0, max_items / total_items)
+                import random
+
+                sampled_dispatch = {}
+                for truck_id, truck_data in dispatch_results.items():
+                    loaded_items = truck_data.get('loaded_items', [])
+                    if loaded_items:
+                        target_count = max(1, int(len(loaded_items) * sample_ratio))
+                        sampled_items = random.sample(loaded_items, min(target_count, len(loaded_items)))
+                        sampled_truck_data = truck_data.copy()
+                        sampled_truck_data['loaded_items'] = sampled_items
+                        sampled_dispatch[truck_id] = sampled_truck_data
+
+                large_cargo_results = large_cargo_results.copy()
+                large_cargo_results['dispatch_results'] = sampled_dispatch
 
         try:
             if not large_cargo_results.get('dispatch_results'):
@@ -2239,15 +2364,18 @@ class LogisticsOptimizationSystemV2:
             self.logger.info("可视化器不可用，跳过交互式3D可视化")
             return None
 
-        # 性能检查 - 防止卡死
+        # 数据采样 - 防止卡死
         from config import VISUALIZATION_PERFORMANCE
 
         truck_assignments = self._extract_truck_assignments(complete_solution)
         if truck_assignments:
             total_items = sum(len(items) for items in truck_assignments.values())
-            if total_items > VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500):
-                self.logger.info(f"跳过交互式3D可视化 - 数据量过大({total_items}个货物)")
-                return None
+            max_items = VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500)
+            sample_ratio = VISUALIZATION_PERFORMANCE.get('sample_ratio', 0.3)
+
+            if total_items > max_items:
+                self.logger.info(f"[采样] 交互式3D可视化 - 数据量过大({total_items}个货物)，采样显示")
+                truck_assignments = self._sample_truck_assignments(truck_assignments, max_items, sample_ratio)
 
         try:
             # 获取车辆分配数据 (再次检查，确保数据存在)
