@@ -120,9 +120,21 @@ VISUALIZATION_PERFORMANCE = {
     'sample_ratio': 0.3,                      # 采样比例（30%）
     'max_items_per_visualization': 500,        # 每个可视化最大项目数
     'visualization_timeout': 30,               # 可视化超时时间（秒）
-    'density_analysis_enabled': False,        # 密度分析开关
+    'density_analysis_enabled': True,         # 密度分析开关 - 已启用
     'max_trucks_for_density': 20,             # 密度分析最大车辆数
+    'max_vehicles_for_heatmap': 50,           # 热力图支持的最大车辆数
     'skip_heavy_charts_above_items': 5000,    # 超过此货物数量跳过重型图表
+}
+
+# 热力图专用配置
+HEATMAP_CONFIG = {
+    'enable_density_heatmap': True,            # 强制启用装载密度热力图
+    'max_vehicles_for_heatmap': 50,            # 支持最大车辆数（可调整至50辆）
+    'min_vehicles_for_heatmap': 1,             # 最小车辆数
+    'heatmap_sample_vehicles': True,           # 当车辆过多时是否采样
+    'heatmap_color_scheme': 'Viridis',         # 热力图颜色方案
+    'show_vehicle_labels': True,               # 显示车辆标签
+    'calculate_loading_efficiency': True,      # 计算装载效率（简单加法除法）
 }
 
 # 用户体验控制配置
