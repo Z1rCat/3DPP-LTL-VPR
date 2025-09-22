@@ -22,7 +22,7 @@ from config import (create_directories, validate_config, LTL_OPTIMIZATION,
 import json
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
-from preprocessing_pipeline import PreprocessingPipeline
+from data_processing.preprocessing_pipeline import PreprocessingPipeline
 from optimization.cargo_classifier import CargoClassifier
 from optimization.large_cargo_dispatcher import LargeCargoDispatcherV2
 from optimization.ltl_optimizer import LTLOptimizer

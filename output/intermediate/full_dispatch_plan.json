@@ -1,6 +1,6 @@
 {
-  "run_id": "run_20250922_171829",
-  "generated_time": "2025-09-22T17:18:30.110734",
+  "run_id": "run_20250922_172857",
+  "generated_time": "2025-09-22T17:28:57.838942",
   "dispatch_plan": {
     "LARGE_TRUCK_00": {
       "type": "FULL_TRUCK",
@@ -69,6 +69,11 @@
     "LTL_TRUCK_00": {
       "type": "LTL_TRUCK",
       "loaded_items": [
+        {
+          "item_id": "LTL_04960",
+          "weight_kg": 12553.962000000001,
+          "volume_m3": 24.429900000000004
+        },
         {
           "item_id": "LTL_04959",
           "weight_kg": 3779.94,
@@ -1634,6 +1639,18 @@
           "weight_kg": 18.67,
           "volume_m3": 0.07298
         },
+        {
+          "item_id": "LTL_01512",
+          "weight_kg": 7.42,
+          "volume_m3": 0.049
+        }
+      ],
+      "total_weight_kg": 24084.642,
+      "item_count": 315
+    },
+    "LTL_TRUCK_01": {
+      "type": "LTL_TRUCK",
+      "loaded_items": [
         {
           "item_id": "LTL_00677",
           "weight_kg": 18.67,
@@ -3310,18 +3327,6 @@
           "volume_m3": 0.07298
         },
         {
-          "item_id": "LTL_00956",
-          "weight_kg": 10.77,
-          "volume_m3": 0.03928
-        }
-      ],
-      "total_weight_kg": 17788.479999999843,
-      "item_count": 649
-    },
-    "LTL_TRUCK_01": {
-      "type": "LTL_TRUCK",
-      "loaded_items": [
-        {
           "item_id": "LTL_00421",
           "weight_kg": 18.67,
           "volume_m3": 0.07298
@@ -4405,11 +4410,6 @@
           "item_id": "LTL_00497",
           "weight_kg": 18.67,
           "volume_m3": 0.07298
-        },
-        {
-          "item_id": "LTL_01512",
-          "weight_kg": 7.42,
-          "volume_m3": 0.049
         },
         {
           "item_id": "LTL_01511",
@@ -5941,6 +5941,18 @@
           "weight_kg": 7.42,
           "volume_m3": 0.049
         },
+        {
+          "item_id": "LTL_04350",
+          "weight_kg": 12.0,
+          "volume_m3": 0.015
+        }
+      ],
+      "total_weight_kg": 12588.36,
+      "item_count": 859
+    },
+    "LTL_TRUCK_02": {
+      "type": "LTL_TRUCK",
+      "loaded_items": [
         {
           "item_id": "LTL_01810",
           "weight_kg": 7.42,
@@ -8710,14 +8722,7 @@
           "item_id": "LTL_03134",
           "weight_kg": 6.2,
           "volume_m3": 0.042
-        }
-      ],
-      "total_weight_kg": 10788.840000000257,
-      "item_count": 1078
-    },
-    "LTL_TRUCK_02": {
-      "type": "LTL_TRUCK",
-      "loaded_items": [
+        },
         {
           "item_id": "LTL_03135",
           "weight_kg": 6.2,
@@ -10412,6 +10417,11 @@
           "item_id": "LTL_02664",
           "weight_kg": 10.35,
           "volume_m3": 0.042
+        },
+        {
+          "item_id": "LTL_00956",
+          "weight_kg": 10.77,
+          "volume_m3": 0.03928
         },
         {
           "item_id": "LTL_00949",
@@ -12584,6 +12594,18 @@
           "volume_m3": 0.036000000000000004
         },
         {
+          "item_id": "LTL_01291",
+          "weight_kg": 68.16,
+          "volume_m3": 0.032600000000000004
+        }
+      ],
+      "total_weight_kg": 11439.57,
+      "item_count": 1329
+    },
+    "LTL_TRUCK_03": {
+      "type": "LTL_TRUCK",
+      "loaded_items": [
+        {
           "item_id": "LTL_03623",
           "weight_kg": 5.27,
           "volume_m3": 0.036000000000000004
@@ -13472,11 +13494,6 @@
           "item_id": "LTL_03459",
           "weight_kg": 5.27,
           "volume_m3": 0.036000000000000004
-        },
-        {
-          "item_id": "LTL_01291",
-          "weight_kg": 68.16,
-          "volume_m3": 0.032600000000000004
         },
         {
           "item_id": "LTL_01282",
@@ -16697,14 +16714,7 @@
           "item_id": "LTL_02500",
           "weight_kg": 5.97,
           "volume_m3": 0.02594
-        }
-      ],
-      "total_weight_kg": 24127.840000000695,
-      "item_count": 1596
-    },
-    "LTL_TRUCK_03": {
-      "type": "LTL_TRUCK",
-      "loaded_items": [
+        },
         {
           "item_id": "LTL_02499",
           "weight_kg": 5.97,
@@ -21071,11 +21081,6 @@
           "volume_m3": 0.01957
         },
         {
-          "item_id": "LTL_04350",
-          "weight_kg": 12.0,
-          "volume_m3": 0.015
-        },
-        {
           "item_id": "LTL_04351",
           "weight_kg": 12.0,
           "volume_m3": 0.015
@@ -24886,8 +24891,8 @@
           "volume_m3": 0.015
         }
       ],
-      "total_weight_kg": 13877.130000000056,
-      "item_count": 1636
+      "total_weight_kg": 31023.68,
+      "item_count": 2457
     }
   },
   "summary": {
@@ -24895,6 +24900,6 @@
     "large_trucks": 8,
     "ltl_trucks": 4,
     "large_cargo_efficiency": 0.8799839952256945,
-    "ltl_loading_rate": 0.8890029116029204
+    "ltl_loading_rate": 0.9994534866897253
   }
 }
