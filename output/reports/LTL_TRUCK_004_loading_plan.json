@@ -1,0 +1,506 @@
+{
+  "summary": {
+    "vehicle_id": "LTL_TRUCK_004",
+    "total_items": 15,
+    "total_weight_kg": 180.0,
+    "total_volume_m3": 0.2250000000000001,
+    "loading_efficiency": 0.40690104166666685,
+    "volume_utilization": 0.40690104166666685,
+    "optimization_algorithm": "Multi_Truck_3DPP_Gurobi",
+    "solution_status": "OPTIMAL",
+    "loading_time_minutes": 60,
+    "cargo_types": [
+      "酒水"
+    ]
+  },
+  "vehicle_details": {
+    "type": "LTL_TRUCK",
+    "truck_specs": {
+      "length_m": 9.6,
+      "width_m": 2.4,
+      "height_m": 2.4,
+      "volume_m3": 55.296,
+      "capacity_kg": 15000
+    },
+    "optimization_info": {
+      "solver": "Gurobi_3DPP_Optimizer",
+      "strategy": "多品类混合装载优化",
+      "loading_type": "LTL_MIXED_LOADING"
+    }
+  },
+  "loading_plan": [
+    {
+      "item_index": 1,
+      "original_order_id": "ORDER_0012",
+      "original_item_id": "ITEM_ORDER_0012_001",
+      "virtual_item_id": "LTL_04110",
+      "cargo_info": {
+        "type": "酒水",
+        "subtype": "酒水_混合",
+        "weight_kg": 12.0,
+        "volume_m3": 0.015
+      },
+      "dimensions": {
+        "length_m": 0.5,
+        "width_m": 0.4,
+        "height_m": 0.3
+      },
+      "position_3d": {
+        "x": 9.398599999999988,
+        "y": 2.1721999999999753,
+        "z": 2.072999999999979,
+        "rotation": 0
+      },
+      "loading_sequence": 1,
+      "loading_zone": "zone_A",
+      "stacking_info": {
+        "can_stack": true,
+        "stacked_on": null,
+        "supports": []
+      }
+    },
+    {
+      "item_index": 2,
+      "original_order_id": "ORDER_0012",
+      "original_item_id": "ITEM_ORDER_0012_002",
+      "virtual_item_id": "LTL_04109",
+      "cargo_info": {
+        "type": "酒水",
+        "subtype": "酒水_混合",
+        "weight_kg": 12.0,
+        "volume_m3": 0.015
+      },
+      "dimensions": {
+        "length_m": 0.5,
+        "width_m": 0.4,
+        "height_m": 0.3
+      },
+      "position_3d": {
+        "x": 9.398599999999988,
+        "y": 2.1721999999999753,
+        "z": 2.072999999999979,
+        "rotation": 0
+      },
+      "loading_sequence": 2,
+      "loading_zone": "zone_A",
+      "stacking_info": {
+        "can_stack": true,
+        "stacked_on": null,
+        "supports": []
+      }
+    },
+    {
+      "item_index": 3,
+      "original_order_id": "ORDER_0012",
+      "original_item_id": "ITEM_ORDER_0012_003",
+      "virtual_item_id": "LTL_04108",
+      "cargo_info": {
+        "type": "酒水",
+        "subtype": "酒水_混合",
+        "weight_kg": 12.0,
+        "volume_m3": 0.015
+      },
+      "dimensions": {
+        "length_m": 0.5,
+        "width_m": 0.4,
+        "height_m": 0.3
+      },
+      "position_3d": {
+        "x": 9.398599999999988,
+        "y": 2.1721999999999753,
+        "z": 2.072999999999979,
+        "rotation": 0
+      },
+      "loading_sequence": 3,
+      "loading_zone": "zone_A",
+      "stacking_info": {
+        "can_stack": true,
+        "stacked_on": null,
+        "supports": []
+      }
+    },
+    {
+      "item_index": 4,
+      "original_order_id": "ORDER_0012",
+      "original_item_id": "ITEM_ORDER_0012_004",
+      "virtual_item_id": "LTL_04107",
+      "cargo_info": {
+        "type": "酒水",
+        "subtype": "酒水_混合",
+        "weight_kg": 12.0,
+        "volume_m3": 0.015
+      },
+      "dimensions": {
+        "length_m": 0.5,
+        "width_m": 0.4,
+        "height_m": 0.3
+      },
+      "position_3d": {
+        "x": 9.398599999999988,
+        "y": 2.1721999999999753,
+        "z": 2.072999999999979,
+        "rotation": 0
+      },
+      "loading_sequence": 4,
+      "loading_zone": "zone_A",
+      "stacking_info": {
+        "can_stack": true,
+        "stacked_on": null,
+        "supports": []
+      }
+    },
+    {
+      "item_index": 5,
+      "original_order_id": "ORDER_0012",
+      "original_item_id": "ITEM_ORDER_0012_005",
+      "virtual_item_id": "LTL_04106",
+      "cargo_info": {
+        "type": "酒水",
+        "subtype": "酒水_混合",
+        "weight_kg": 12.0,
+        "volume_m3": 0.015
+      },
+      "dimensions": {
+        "length_m": 0.5,
+        "width_m": 0.4,
+        "height_m": 0.3
+      },
+      "position_3d": {
+        "x": 9.398599999999988,
+        "y": 2.1721999999999753,
+        "z": 2.072999999999979,
+        "rotation": 0
+      },
+      "loading_sequence": 5,
+      "loading_zone": "zone_A",
+      "stacking_info": {
+        "can_stack": true,
+        "stacked_on": null,
+        "supports": []
+      }
+    },
+    {
+      "item_index": 6,
+      "original_order_id": "ORDER_0012",
+      "original_item_id": "ITEM_ORDER_0012_006",
+      "virtual_item_id": "LTL_04104",
+      "cargo_info": {
+        "type": "酒水",
+        "subtype": "酒水_混合",
+        "weight_kg": 12.0,
+        "volume_m3": 0.015
+      },
+      "dimensions": {
+        "length_m": 0.5,
+        "width_m": 0.4,
+        "height_m": 0.3
+      },
+      "position_3d": {
+        "x": 9.398599999999988,
+        "y": 2.1721999999999753,
+        "z": 2.072999999999979,
+        "rotation": 0
+      },
+      "loading_sequence": 6,
+      "loading_zone": "zone_A",
+      "stacking_info": {
+        "can_stack": true,
+        "stacked_on": null,
+        "supports": []
+      }
+    },
+    {
+      "item_index": 7,
+      "original_order_id": "ORDER_0012",
+      "original_item_id": "ITEM_ORDER_0012_007",
+      "virtual_item_id": "LTL_04096",
+      "cargo_info": {
+        "type": "酒水",
+        "subtype": "酒水_混合",
+        "weight_kg": 12.0,
+        "volume_m3": 0.015
+      },
+      "dimensions": {
+        "length_m": 0.5,
+        "width_m": 0.4,
+        "height_m": 0.3
+      },
+      "position_3d": {
+        "x": 9.398599999999988,
+        "y": 2.1721999999999753,
+        "z": 2.072999999999979,
+        "rotation": 0
+      },
+      "loading_sequence": 7,
+      "loading_zone": "zone_A",
+      "stacking_info": {
+        "can_stack": true,
+        "stacked_on": null,
+        "supports": []
+      }
+    },
+    {
+      "item_index": 8,
+      "original_order_id": "ORDER_0012",
+      "original_item_id": "ITEM_ORDER_0012_008",
+      "virtual_item_id": "LTL_04103",
+      "cargo_info": {
+        "type": "酒水",
+        "subtype": "酒水_混合",
+        "weight_kg": 12.0,
+        "volume_m3": 0.015
+      },
+      "dimensions": {
+        "length_m": 0.5,
+        "width_m": 0.4,
+        "height_m": 0.3
+      },
+      "position_3d": {
+        "x": 9.398599999999988,
+        "y": 2.1721999999999753,
+        "z": 2.072999999999979,
+        "rotation": 0
+      },
+      "loading_sequence": 8,
+      "loading_zone": "zone_A",
+      "stacking_info": {
+        "can_stack": true,
+        "stacked_on": null,
+        "supports": []
+      }
+    },
+    {
+      "item_index": 9,
+      "original_order_id": "ORDER_0012",
+      "original_item_id": "ITEM_ORDER_0012_009",
+      "virtual_item_id": "LTL_04102",
+      "cargo_info": {
+        "type": "酒水",
+        "subtype": "酒水_混合",
+        "weight_kg": 12.0,
+        "volume_m3": 0.015
+      },
+      "dimensions": {
+        "length_m": 0.5,
+        "width_m": 0.4,
+        "height_m": 0.3
+      },
+      "position_3d": {
+        "x": 9.398599999999988,
+        "y": 2.1721999999999753,
+        "z": 2.072999999999979,
+        "rotation": 0
+      },
+      "loading_sequence": 9,
+      "loading_zone": "zone_A",
+      "stacking_info": {
+        "can_stack": true,
+        "stacked_on": null,
+        "supports": []
+      }
+    },
+    {
+      "item_index": 10,
+      "original_order_id": "ORDER_0012",
+      "original_item_id": "ITEM_ORDER_0012_010",
+      "virtual_item_id": "LTL_04101",
+      "cargo_info": {
+        "type": "酒水",
+        "subtype": "酒水_混合",
+        "weight_kg": 12.0,
+        "volume_m3": 0.015
+      },
+      "dimensions": {
+        "length_m": 0.5,
+        "width_m": 0.4,
+        "height_m": 0.3
+      },
+      "position_3d": {
+        "x": 9.398599999999988,
+        "y": 2.1721999999999753,
+        "z": 2.072999999999979,
+        "rotation": 0
+      },
+      "loading_sequence": 10,
+      "loading_zone": "zone_A",
+      "stacking_info": {
+        "can_stack": true,
+        "stacked_on": null,
+        "supports": []
+      }
+    },
+    {
+      "item_index": 11,
+      "original_order_id": "ORDER_0012",
+      "original_item_id": "ITEM_ORDER_0012_011",
+      "virtual_item_id": "LTL_04100",
+      "cargo_info": {
+        "type": "酒水",
+        "subtype": "酒水_混合",
+        "weight_kg": 12.0,
+        "volume_m3": 0.015
+      },
+      "dimensions": {
+        "length_m": 0.5,
+        "width_m": 0.4,
+        "height_m": 0.3
+      },
+      "position_3d": {
+        "x": 9.398599999999988,
+        "y": 2.1721999999999753,
+        "z": 2.072999999999979,
+        "rotation": 0
+      },
+      "loading_sequence": 11,
+      "loading_zone": "zone_A",
+      "stacking_info": {
+        "can_stack": true,
+        "stacked_on": null,
+        "supports": []
+      }
+    },
+    {
+      "item_index": 12,
+      "original_order_id": "ORDER_0012",
+      "original_item_id": "ITEM_ORDER_0012_012",
+      "virtual_item_id": "LTL_04099",
+      "cargo_info": {
+        "type": "酒水",
+        "subtype": "酒水_混合",
+        "weight_kg": 12.0,
+        "volume_m3": 0.015
+      },
+      "dimensions": {
+        "length_m": 0.5,
+        "width_m": 0.4,
+        "height_m": 0.3
+      },
+      "position_3d": {
+        "x": 9.398599999999988,
+        "y": 2.1721999999999753,
+        "z": 2.072999999999979,
+        "rotation": 0
+      },
+      "loading_sequence": 12,
+      "loading_zone": "zone_A",
+      "stacking_info": {
+        "can_stack": true,
+        "stacked_on": null,
+        "supports": []
+      }
+    },
+    {
+      "item_index": 13,
+      "original_order_id": "ORDER_0012",
+      "original_item_id": "ITEM_ORDER_0012_013",
+      "virtual_item_id": "LTL_04098",
+      "cargo_info": {
+        "type": "酒水",
+        "subtype": "酒水_混合",
+        "weight_kg": 12.0,
+        "volume_m3": 0.015
+      },
+      "dimensions": {
+        "length_m": 0.5,
+        "width_m": 0.4,
+        "height_m": 0.3
+      },
+      "position_3d": {
+        "x": 9.398599999999988,
+        "y": 2.1721999999999753,
+        "z": 2.072999999999979,
+        "rotation": 0
+      },
+      "loading_sequence": 13,
+      "loading_zone": "zone_A",
+      "stacking_info": {
+        "can_stack": true,
+        "stacked_on": null,
+        "supports": []
+      }
+    },
+    {
+      "item_index": 14,
+      "original_order_id": "ORDER_0012",
+      "original_item_id": "ITEM_ORDER_0012_014",
+      "virtual_item_id": "LTL_04097",
+      "cargo_info": {
+        "type": "酒水",
+        "subtype": "酒水_混合",
+        "weight_kg": 12.0,
+        "volume_m3": 0.015
+      },
+      "dimensions": {
+        "length_m": 0.5,
+        "width_m": 0.4,
+        "height_m": 0.3
+      },
+      "position_3d": {
+        "x": 9.398599999999988,
+        "y": 2.1721999999999753,
+        "z": 2.072999999999979,
+        "rotation": 0
+      },
+      "loading_sequence": 14,
+      "loading_zone": "zone_A",
+      "stacking_info": {
+        "can_stack": true,
+        "stacked_on": null,
+        "supports": []
+      }
+    },
+    {
+      "item_index": 15,
+      "original_order_id": "ORDER_0012",
+      "original_item_id": "ITEM_ORDER_0012_015",
+      "virtual_item_id": "LTL_03922",
+      "cargo_info": {
+        "type": "酒水",
+        "subtype": "酒水_混合",
+        "weight_kg": 12.0,
+        "volume_m3": 0.015
+      },
+      "dimensions": {
+        "length_m": 0.5,
+        "width_m": 0.4,
+        "height_m": 0.3
+      },
+      "position_3d": {
+        "x": 9.398599999999988,
+        "y": 2.1721999999999753,
+        "z": 2.072999999999979,
+        "rotation": 0
+      },
+      "loading_sequence": 15,
+      "loading_zone": "zone_A",
+      "stacking_info": {
+        "can_stack": true,
+        "stacked_on": null,
+        "supports": []
+      }
+    }
+  ],
+  "statistics": {
+    "by_cargo_type": {
+      "酒水": {
+        "count": 15,
+        "weight_kg": 180.0,
+        "volume_m3": 0.2250000000000001,
+        "percentage": 100.0
+      }
+    },
+    "utilization": {
+      "length_utilization": 85.0,
+      "width_utilization": 90.0,
+      "height_utilization": 0.40690104166666685,
+      "overall_utilization": 0.40690104166666685
+    }
+  },
+  "metadata": {
+    "generated_time": "2025-09-26T14:12:09.891878",
+    "generated_by": "LTL_3DPP_Optimization_System_V3.0",
+    "format_version": "1.0",
+    "source_type": "ltl_mixed_loading",
+    "id_mapping_source": "id_to_orders_mapping.json"
+  }
+}

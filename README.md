@@ -1,20 +1,22 @@
 # 🚛 智能物流3D装箱优化系统 V4.0
 
-[![版本](https://img.shields.io/badge/版本-V4.0-blue.svg)](https://github.com/Z1rCat/3DPP-LTL-VPR)
+[![版本](https://img.shields.io/badge/版本-V4.0-blue.svg)](https://github.com/logistics-optimization)
 [![Python](https://img.shields.io/badge/python-3.8+-green.svg)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.85+-00a393.svg)](https://fastapi.tiangolo.com/)
 [![许可证](https://img.shields.io/badge/许可证-MIT-red.svg)](LICENSE)
 
 ## 🎯 系统概述
 
-智能物流3D装箱优化系统V4.0是一个高性能的零担物流优化解决方案，集成了3D装箱算法、路径规划和智能可视化功能。本版本经过全面重构，解决了性能问题，提供了更好的用户体验。
+智能物流3D装箱优化系统V4.0是一个现代化的物流优化解决方案，集成了3D装箱算法、车辆路径规划、智能可视化和Web API接口。本系统采用模块化架构，支持高性能优化计算和实时可视化展示。
 
-### ✨ V4.0 主要改进
+### ✨ V4.0 核心特性
 
-- 🚀 **性能优化**: 解决了可视化卡死问题，实现30%采样显示
-- 📁 **模块化重构**: 清晰的文件结构，便于维护和扩展
-- 🎛️ **可配置性**: 丰富的配置选项，支持性能调优
-- 🌐 **API就绪**: 完整的API接口文档，支持前端集成
-- 💡 **用户友好**: 简化的输出界面，更好的错误处理
+- 🚀 **高性能优化**: 集成Gurobi求解器，支持大规模3D装箱和路径优化
+- 🎨 **智能可视化**: 5种类型的交互式HTML可视化，包括2D热力图和3D效率分析
+- 🌐 **RESTful API**: 基于FastAPI的现代Web API，完整的Swagger文档
+- 🖥️ **Web界面**: 响应式前端界面，支持任务管理和实时监控
+- 📊 **数据分析**: 装载效率分析、路径优化报告和性能统计
+- 🔧 **模块化设计**: 清晰的代码结构，易于维护和扩展
 
 ## 📁 项目结构
 
@@ -22,12 +24,32 @@
 logistics_system/
 ├── 📄 main.py                    # 主程序入口
 ├── 📄 config.py                  # 系统配置文件
-├── 📄 api_interface.py           # API接口文档
 ├── 📄 requirements.txt           # 依赖包清单
+├── 📄 README.md                  # 项目文档
+├── 📄 .gitignore                 # Git忽略文件
+│
+├── 📁 api/                       # Web API模块
+│   ├── 📄 app.py                 # FastAPI应用入口
+│   ├── 📁 routes/                # API路由
+│   │   ├── visualization.py      # 可视化API
+│   │   ├── data.py               # 数据API
+│   │   └── optimization.py       # 优化API
+│   ├── 📁 models/                # 数据模型
+│   │   └── schemas.py            # Pydantic模型
+│   └── 📁 utils/                 # API工具
+│       └── response.py           # 响应格式化
+│
+├── 📁 frontend/                  # Web前端
+│   ├── 📁 templates/             # HTML模板
+│   │   └── index.html            # 主页面
+│   └── 📁 static/                # 静态资源
+│       ├── 📁 css/               # 样式文件
+│       ├── 📁 js/                # JavaScript文件
+│       └── 📁 images/            # 图片资源
 │
 ├── 📁 data_processing/           # 数据处理模块
-│   ├── data_loader.py           # 数据加载器
-│   ├── dimension_estimator.py   # 尺寸估算器
+│   ├── data_loader.py            # 数据加载器
+│   ├── dimension_estimator.py    # 尺寸估算器
 │   └── preprocessing_pipeline.py # 预处理管道
 │
 ├── 📁 optimization/              # 优化算法模块
@@ -58,14 +80,15 @@ logistics_system/
 
 - Python 3.8+
 - Gurobi 9.5+ (需要许可证)
+- FastAPI 0.85+
 - 8GB+ 内存推荐
 
 ### 安装步骤
 
 1. **克隆项目**
    ```bash
-   git clone https://github.com/Z1rCat/3DPP-LTL-VPR.git
-   cd 3DPP-LTL-VPR
+   git clone https://github.com/logistics-optimization/system.git
+   cd logistics-system
    ```
 
 2. **安装依赖**
@@ -75,14 +98,33 @@ logistics_system/
 
 3. **配置Gurobi许可证**
    ```bash
-   # 设置Gurobi许可证文件路径
+   # Windows
+   set GUROBI_LICENSE_PATH=C:\path\to\your\gurobi.lic
+
+   # Linux/Mac
    export GUROBI_LICENSE_PATH=/path/to/your/gurobi.lic
    ```
 
-4. **运行系统**
-   ```bash
-   python main.py
-   ```
+### 🎯 使用方式
+
+#### 方式一：命令行运行（传统方式）
+```bash
+python main.py
+```
+
+#### 方式二：Web API服务（推荐）
+```bash
+# 启动API服务器
+python -m uvicorn api.app:app --host 0.0.0.0 --port 8000 --reload
+
+# 或者直接运行
+python api/app.py
+```
+
+访问 Web 界面：
+- 🌐 **主页**: http://localhost:8000
+- 📋 **API文档**: http://localhost:8000/docs
+- 📖 **ReDoc**: http://localhost:8000/redoc
 
 ## ⚙️ 配置说明
 
@@ -150,21 +192,38 @@ VISUALIZATION_PERFORMANCE['max_items_per_visualization'] = 1000
 
 ## 🔌 API集成
 
-### Flask Web API
+### FastAPI Web API
 
 启动API服务：
 ```bash
-python api_interface.py
+python -m uvicorn api.app:app --host 0.0.0.0 --port 8000
 ```
 
-### 主要端点
+### 核心端点
 
-- `GET /api/v1/status` - 系统状态
-- `POST /api/v1/optimize` - 创建优化任务
-- `GET /api/v1/tasks/{task_id}` - 查询任务状态
-- `GET /api/v1/results/{task_id}` - 下载结果
+#### 🎨 可视化 API
+- `GET /api/visualizations/list` - 获取可视化文件列表
+- `GET /api/visualizations/file/{filename}` - 获取特定可视化文件
+- `GET /api/visualizations/types` - 获取可视化类型列表
+- `GET /api/visualizations/stats` - 获取可视化统计信息
 
-详细API文档请参考 `api_interface.py`
+#### 📊 数据 API
+- `GET /api/data/trucks` - 获取卡车数据列表
+- `GET /api/data/routes` - 获取路径数据列表
+- `GET /api/data/trucks/{vehicle_id}` - 获取特定卡车详细信息
+- `GET /api/data/summary` - 获取数据摘要统计
+
+#### ⚡ 优化 API
+- `POST /api/optimization/run` - 启动优化任务
+- `GET /api/optimization/status/{task_id}` - 查询任务状态
+- `GET /api/optimization/result/{task_id}` - 获取优化结果
+- `GET /api/optimization/history` - 获取任务历史
+
+### API 特性
+- 🔄 **异步处理**: 基于FastAPI的高性能异步API
+- 📋 **自动文档**: Swagger UI和ReDoc自动生成
+- 🛡️ **数据验证**: Pydantic模型确保数据完整性
+- 🌐 **CORS支持**: 支持跨域请求
 
 ## 📈 性能特性
 

@@ -355,6 +355,19 @@ class LogisticsOptimizationSystemV2:
 
         return max(0, available_trucks)
 
+    def _standardize_vehicle_id(self, vehicle_id: str) -> str:
+        """标准化vehicle_id为3位数格式"""
+        if 'LARGE_TRUCK_' in vehicle_id:
+            # 提取数字部分：LARGE_TRUCK_00 -> 00 -> 000
+            number = vehicle_id.split('_')[-1]
+            return f"LARGE_TRUCK_{int(number):03d}"
+        elif 'LTL_TRUCK_' in vehicle_id:
+            # 提取数字部分：LTL_TRUCK_00 -> 00 -> 000
+            number = vehicle_id.split('_')[-1]
+            return f"LTL_TRUCK_{int(number):03d}"
+        else:
+            return vehicle_id
+
     def _run_ltl_optimization(self, ltl_data: pd.DataFrame, available_trucks: int) -> Dict:
         """执行多车队LTL 3DPP优化"""
         if self.verbose:
@@ -658,7 +671,7 @@ class LogisticsOptimizationSystemV2:
                 }
 
                 # 保存JSON文件
-                filename = f"{truck_id}_loading_plan.json"
+                filename = f"LARGE_{truck_id}_loading_plan.json"
                 file_path = REPORTS_DIR / filename
 
                 with open(file_path, 'w', encoding='utf-8') as f:
@@ -1487,7 +1500,8 @@ class LogisticsOptimizationSystemV2:
 
             for truck_id, route_solution in route_solutions.items():
                 # 生成单车路径报告文件
-                report_filename = f"{truck_id}_route_plan.json"
+                standardized_truck_id = self._standardize_vehicle_id(truck_id)
+                report_filename = f"{standardized_truck_id}_route_plan.json"
                 report_file = REPORTS_DIR / report_filename
 
                 # 添加生成时间戳
@@ -1536,69 +1550,153 @@ class LogisticsOptimizationSystemV2:
 
     def _generate_comprehensive_visualizations(self, complete_solution: Dict) -> List[str]:
         """
-        生成V3.0综合可视化系统
-        包含所有高级可视化功能：3DPP装载、路径优化、效率分析
+        生成V4.0基于JSON文件的综合可视化系统
+        包含四种核心可视化：单品类3DPP、多品类3DPP、装载密度热力图、路径优化地图
         """
-        # 数据采样 - 防止卡死
-        from config import VISUALIZATION_PERFORMANCE
-
-        # 获取原始数据并进行采样
-        truck_assignments = self._extract_truck_assignments(complete_solution)
-        if truck_assignments:
-            total_items = sum(len(items) for items in truck_assignments.values())
-            max_items = VISUALIZATION_PERFORMANCE.get('max_items_per_visualization', 500)
-            sample_ratio = VISUALIZATION_PERFORMANCE.get('sample_ratio', 0.3)
-
-            if total_items > max_items:
-                if self.verbose:
-                    print(f"[采样] 数据量过大({total_items}个货物)，采样显示防止卡死")
-                truck_assignments = self._sample_truck_assignments(truck_assignments, max_items, sample_ratio)
-                # 更新complete_solution中的数据
-                complete_solution = complete_solution.copy()
-                complete_solution['sampled_truck_assignments'] = truck_assignments
-
         if self.verbose:
-            print("[可视化] 生成V3.0综合可视化系统...")
+            print("[可视化] 开始基于JSON文件生成四种核心可视化...")
 
         all_visualization_files = []
 
         try:
-            # 1. 传统3D可视化（保持兼容性）
-            traditional_viz = self._generate_3d_visualizations(complete_solution)
-            if traditional_viz:
-                all_visualization_files.extend(traditional_viz)
-                if self.verbose:
-                    print(f"   [OK] 传统3D可视化: {len(traditional_viz)} 个文件")
+            # 初始化路径地图可视化器
+            try:
+                from visualization.route_map_visualizer import RouteMapVisualizer
+                route_visualizer = RouteMapVisualizer()
+            except ImportError as e:
+                self.logger.warning(f"路径地图可视化器导入失败: {str(e)}")
+                route_visualizer = None
 
-            # 2. 高级3DPP可视化（单品类+多品类+密度+效率）- 传递采样数据
-            advanced_3dpp_viz = self._generate_advanced_3dpp_visualizations(complete_solution, truck_assignments)
-            if advanced_3dpp_viz:
-                all_visualization_files.extend(advanced_3dpp_viz)
-                if self.verbose:
-                    print(f"   [OK] 高级3DPP可视化: {len(advanced_3dpp_viz)} 个文件")
+            # 检查JSON文件是否存在
+            if self.visualizer and self.visualizer.json_processor:
+                json_files = self.visualizer.json_processor.scan_json_files()
 
-            # 3. 路径优化可视化系统 - 传递采样数据
-            route_viz = self._generate_route_optimization_visualizations(complete_solution, truck_assignments)
-            if route_viz:
-                all_visualization_files.extend(route_viz)
                 if self.verbose:
-                    print(f"   [OK] 路径优化可视化: {len(route_viz)} 个文件")
+                    print(f"   发现装载文件: {len(json_files['loading_plans'])}个")
+                    print(f"   发现路径文件: {len(json_files['route_plans'])}个")
+
+                if not json_files['loading_plans'] and not json_files['route_plans']:
+                    if self.verbose:
+                        print("[警告] 未找到JSON文件，跳过可视化生成")
+                    return []
+
+                # 1. 单品类3DPP可视化（每个货车一个HTML）
+                try:
+                    single_html_files = self.visualizer.generate_all_single_category_visualizations()
+                    all_visualization_files.extend(single_html_files)
+                    if self.verbose:
+                        print(f"   ✅ 单品类3DPP可视化: {len(single_html_files)}个HTML文件")
+                except Exception as e:
+                    self.logger.error(f"单品类3DPP可视化失败: {str(e)}")
+                    if self.verbose:
+                        print(f"   ❌ 单品类3DPP可视化失败: {str(e)}")
+
+                # 2. 多品类3DPP可视化（混合装载货车）
+                try:
+                    multi_figs = self.visualizer.create_multi_category_3dpp_visualization()
+                    for i, fig in enumerate(multi_figs):
+                        html_path = self.visualizer._save_html_visualization(fig, f"multi_category_3dpp_{i}")
+                        all_visualization_files.append(html_path)
+                    if self.verbose:
+                        print(f"   ✅ 多品类3DPP可视化: {len(multi_figs)}个HTML文件")
+                except Exception as e:
+                    self.logger.error(f"多品类3DPP可视化失败: {str(e)}")
+                    if self.verbose:
+                        print(f"   ❌ 多品类3DPP可视化失败: {str(e)}")
+
+                # 3. 装载密度热力图
+                try:
+                    density_fig = self.visualizer.create_loading_density_heatmap()
+                    if density_fig:
+                        html_path = self.visualizer._save_html_visualization(density_fig, "loading_density_heatmap")
+                        all_visualization_files.append(html_path)
+                        if self.verbose:
+                            print("   ✅ 装载密度热力图已生成")
+                    else:
+                        if self.verbose:
+                            print("   ❌ 装载密度热力图生成失败：无数据")
+                except Exception as e:
+                    self.logger.error(f"装载密度热力图失败: {str(e)}")
+                    if self.verbose:
+                        print(f"   ❌ 装载密度热力图失败: {str(e)}")
+
+                # 4. 装载率仪表盘
+                try:
+                    efficiency_fig = self.visualizer.create_loading_efficiency_dashboard()
+                    if efficiency_fig:
+                        html_path = self.visualizer._save_html_visualization(efficiency_fig, "loading_efficiency_dashboard")
+                        all_visualization_files.append(html_path)
+                        if self.verbose:
+                            print("   ✅ 装载率仪表盘已生成")
+                    else:
+                        if self.verbose:
+                            print("   ❌ 装载率仪表盘生成失败：无数据")
+                except Exception as e:
+                    self.logger.error(f"装载率仪表盘失败: {str(e)}")
+                    if self.verbose:
+                        print(f"   ❌ 装载率仪表盘失败: {str(e)}")
+
+                # 5. 3D装载效率分析图
+                try:
+                    analysis_fig = self.visualizer.create_3d_efficiency_analysis()
+                    if analysis_fig:
+                        html_path = self.visualizer._save_html_visualization(analysis_fig, "3d_efficiency_analysis")
+                        all_visualization_files.append(html_path)
+                        if self.verbose:
+                            print("   ✅ 3D装载效率分析图已生成")
+                    else:
+                        if self.verbose:
+                            print("   ❌ 3D装载效率分析图生成失败：无数据")
+                except Exception as e:
+                    self.logger.error(f"3D装载效率分析图失败: {str(e)}")
+                    if self.verbose:
+                        print(f"   ❌ 3D装载效率分析图失败: {str(e)}")
+
+                # 6. 路径优化地图可视化（每个路径一个HTML地图）
+                if route_visualizer:
+                    try:
+                        route_html_files = route_visualizer.generate_all_route_maps()
+                        all_visualization_files.extend(route_html_files)
+                        if self.verbose:
+                            print(f"   ✅ 路径优化地图: {len(route_html_files)}个HTML地图")
+                    except Exception as e:
+                        self.logger.error(f"路径优化地图失败: {str(e)}")
+                        if self.verbose:
+                            print(f"   ❌ 路径优化地图失败: {str(e)}")
+
+                    # 6. 生成综合路径概览地图
+                    try:
+                        overview_map = route_visualizer.create_combined_route_overview_map()
+                        if overview_map:
+                            all_visualization_files.append(overview_map)
+                            if self.verbose:
+                                print("   ✅ 综合路径概览地图已生成")
+                    except Exception as e:
+                        self.logger.error(f"综合路径概览地图失败: {str(e)}")
+                        if self.verbose:
+                            print(f"   ❌ 综合路径概览地图失败: {str(e)}")
+                else:
+                    if self.verbose:
+                        print("   ❌ 路径地图可视化器不可用，跳过路径地图生成")
+
+            else:
+                if self.verbose:
+                    print("[警告] 可视化器或JSON处理器不可用")
 
             if self.verbose:
-                print(f"[完成] V4.0精简可视化完成: {len(all_visualization_files)} 个文件")
-                print("   可视化类型 (4种核心图像):")
-                print("     • 单品类3DPP装载可视化")
-                print("     • 多品类3DPP装载可视化")
-                print("     • 装载密度热力图")
-                print("     • 路径优化结果可视化")
-                print("   已禁用:")
-                print("     × 3D装载效率分析 (防止卡死)")
-                print("     × 其他复杂3D分析")
+                print(f"[完成] V4.0 JSON可视化生成完毕: {len(all_visualization_files)} 个文件")
+                print("   ✅ 生成的可视化类型:")
+                print("     • 单品类3DPP装载可视化 (每辆货车独立HTML)")
+                print("     • 多品类3DPP装载可视化 (混合装载)")
+                print("     • 装载密度热力图 (3D空间分布)")
+                print("     • 装载率仪表盘 (效率统计)")
+                print("     • 路径优化地图 (基于真实GPS坐标)")
+                print("     • 综合路径概览地图 (所有路径)")
 
         except Exception as e:
-            self.logger.error(f"综合可视化生成失败: {str(e)}")
+            self.logger.error(f"JSON可视化生成失败: {str(e)}")
             if self.verbose:
-                print(f"[警告] 综合可视化生成失败: {str(e)}")
+                print(f"[错误] JSON可视化生成失败: {str(e)}")
 
         return all_visualization_files
 

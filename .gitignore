@@ -1,0 +1,120 @@
+# 字节码文件 / Byte-compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C扩展
+*.so
+
+# 分发 / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# 单元测试 / Unit test
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# 环境变量
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE文件
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 日志文件
+*.log
+logs/
+
+# 数据库文件
+*.db
+*.sqlite3
+
+# 配置文件（包含敏感信息）
+config.local.py
+secrets.json
+.secrets
+
+# 临时文件
+*.tmp
+*.temp
+temp/
+tmp/
+
+# 操作系统文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 项目特定文件
+# 输出文件（可选择性忽略）
+# output/visualizations/*.html
+# output/reports/*.json
+# output/reports/*.xlsx
+
+# 大型数据文件
+data/raw/*.csv
+data/raw/*.xlsx
+*.large
+
+# Gurobi许可证文件
+gurobi.lic
+
+# 缓存文件
+.cache/
+*.cache
+
+# 编译的Python文件
+*.pyc
+*.pyo
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# 备份文件
+*.bak
+*.backup
+*~

@@ -11,8 +11,10 @@ import numpy as np
 import pickle
 import json
 import time
+import random
 from typing import Dict, List, Tuple, Optional, Any
 from pathlib import Path
+from datetime import datetime
 import logging
 
 # 导入配置
@@ -43,6 +45,14 @@ class Plotly3DVisualizer:
 
         # 载入货物分类阈值
         self.classification_thresholds = CARGO_CLASSIFICATION
+
+        # 初始化JSON数据处理器
+        try:
+            from .json_data_processor import JsonDataProcessor
+            self.json_processor = JsonDataProcessor()
+        except ImportError:
+            self.logger.warning("JSON数据处理器导入失败，部分功能可能不可用")
+            self.json_processor = None
 
     def _setup_logger(self):
         """设置日志记录器"""
@@ -1593,6 +1603,655 @@ class Plotly3DVisualizer:
                 name=name,
                 showlegend=(face == faces[0])  # 只在第一个面显示图例
             ))
+
+    # ===== 新增：基于JSON文件的四种核心可视化方法 =====
+
+    def create_single_truck_3dpp_from_json(self, loading_json_path: Path) -> Optional[go.Figure]:
+        """
+        为单辆货车创建3DPP可视化 - 基于JSON文件
+
+        Args:
+            loading_json_path: 装载计划JSON文件路径
+
+        Returns:
+            go.Figure: 3D可视化图形
+        """
+        if not self.json_processor:
+            self.logger.error("JSON数据处理器未初始化")
+            return None
+
+        try:
+            # 加载装载数据
+            loading_data = self.json_processor.load_loading_plan(loading_json_path)
+            if not loading_data:
+                return None
+
+            # 提取基本信息
+            vehicle_id = self.json_processor.extract_vehicle_id_from_path(loading_json_path)
+            summary = loading_data.get('summary', {})
+            loading_plan = loading_data.get('loading_plan', [])
+
+            # 应用抽样逻辑
+            if len(loading_plan) > 500:
+                loading_plan = self.json_processor.apply_sampling(loading_plan, 500)
+
+            # 创建3D图形
+            fig = go.Figure()
+
+            # 添加货车边界框
+            truck_box = self._create_truck_box_from_specs()
+            fig.add_trace(truck_box)
+
+            # 为不同货物类型设置颜色
+            cargo_type_colors = {
+                '酒水': '#FF4444',
+                '食品': '#44AA44',
+                '建材': '#4444FF',
+                '日用品': '#FFAA44',
+                '农产品': '#AA44FF'
+            }
+
+            # 添加货物盒子
+            for i, item in enumerate(loading_plan):
+                cargo_type = item.get('cargo_info', {}).get('type', 'unknown')
+                color = cargo_type_colors.get(cargo_type, '#CCCCCC')
+
+                box = self._create_item_3d_box_from_json(item, color, i)
+                if box:
+                    fig.add_trace(box)
+
+            # 设置布局
+            fig.update_layout(
+                title=f"{vehicle_id} 3DPP装载可视化<br>货物数量: {len(loading_plan)} | 装载率: {summary.get('loading_efficiency', 0):.1f}%",
+                scene=dict(
+                    xaxis_title="长度 (m)",
+                    yaxis_title="宽度 (m)",
+                    zaxis_title="高度 (m)",
+                    camera=dict(eye=dict(x=1.5, y=1.5, z=1.5))
+                ),
+                width=1000,
+                height=800
+            )
+
+            return fig
+
+        except Exception as e:
+            self.logger.error(f"创建单车3DPP可视化失败 {loading_json_path}: {str(e)}")
+            return None
+
+    def generate_all_single_category_visualizations(self) -> List[str]:
+        """
+        生成所有单品类3DPP可视化HTML文件
+
+        Returns:
+            List[str]: 生成的HTML文件路径列表
+        """
+        if not self.json_processor:
+            self.logger.error("JSON数据处理器未初始化")
+            return []
+
+        html_files = []
+        json_files = self.json_processor.scan_json_files()
+
+        self.logger.info(f"开始生成 {len(json_files['loading_plans'])} 个单品类3DPP可视化...")
+
+        for loading_json in json_files['loading_plans']:
+            try:
+                fig = self.create_single_truck_3dpp_from_json(loading_json)
+                if fig:
+                    vehicle_id = self.json_processor.extract_vehicle_id_from_path(loading_json)
+                    html_path = self._save_html_visualization(fig, f"single_category_3dpp_{vehicle_id}")
+                    html_files.append(html_path)
+
+            except Exception as e:
+                self.logger.error(f"生成单品类可视化失败 {loading_json}: {str(e)}")
+
+        self.logger.info(f"单品类3DPP可视化生成完成: {len(html_files)} 个HTML文件")
+        return html_files
+
+    def create_multi_category_3dpp_visualization(self) -> List[go.Figure]:
+        """
+        多品类3DPP可视化 - 重点展示LTL_TRUCK的混合装载
+
+        Returns:
+            List[go.Figure]: 多品类可视化图形列表
+        """
+        if not self.json_processor:
+            self.logger.error("JSON数据处理器未初始化")
+            return []
+
+        figures = []
+        json_files = self.json_processor.scan_json_files()
+
+        # 只处理LTL_TRUCK类型的装载文件
+        ltl_loading_files = [f for f in json_files['loading_plans'] if 'LTL_TRUCK' in str(f)]
+
+        self.logger.info(f"开始生成 {len(ltl_loading_files)} 个多品类3DPP可视化...")
+
+        for loading_json in ltl_loading_files:
+            try:
+                loading_data = self.json_processor.load_loading_plan(loading_json)
+                if not loading_data:
+                    continue
+
+                # 检查是否为多品类
+                cargo_types = loading_data.get('summary', {}).get('cargo_types', [])
+                if len(cargo_types) <= 1:
+                    continue
+
+                vehicle_id = self.json_processor.extract_vehicle_id_from_path(loading_json)
+                loading_plan = loading_data.get('loading_plan', [])
+
+                # 应用抽样
+                if len(loading_plan) > 500:
+                    loading_plan = self.json_processor.apply_sampling(loading_plan, 500)
+
+                # 创建多品类3D图形
+                fig = self._create_multi_category_3d_view(loading_data, loading_plan, vehicle_id)
+                if fig:
+                    figures.append(fig)
+
+            except Exception as e:
+                self.logger.error(f"生成多品类可视化失败 {loading_json}: {str(e)}")
+
+        self.logger.info(f"多品类3DPP可视化生成完成: {len(figures)} 个图形")
+        return figures
+
+    def create_loading_density_heatmap(self) -> Optional[go.Figure]:
+        """
+        装载密度热力图 - 基于所有loading_plan的position_3d坐标
+
+        Returns:
+            go.Figure: 密度热力图
+        """
+        if not self.json_processor:
+            self.logger.error("JSON数据处理器未初始化")
+            return None
+
+        try:
+            json_files = self.json_processor.scan_json_files()
+
+            # 获取所有位置数据
+            all_positions = self.json_processor.get_all_position_data(
+                json_files['loading_plans'], max_items_per_truck=500
+            )
+
+            if not all_positions:
+                self.logger.warning("没有找到位置数据")
+                return None
+
+            # 创建2D密度热力图
+            fig = self._create_2d_density_heatmap(all_positions)
+            return fig
+
+        except Exception as e:
+            self.logger.error(f"创建装载密度热力图失败: {str(e)}")
+            return None
+
+    def create_3d_efficiency_analysis(self) -> Optional[go.Figure]:
+        """
+        创建3D装载效率分析图
+
+        Returns:
+            go.Figure: 3D效率分析图
+        """
+        if not self.json_processor:
+            self.logger.error("JSON数据处理器未初始化")
+            return None
+
+        try:
+            json_files = self.json_processor.scan_json_files()
+
+            # 获取3D效率分析数据
+            analysis_data = self.json_processor.get_3d_efficiency_analysis_data(
+                json_files['loading_plans']
+            )
+
+            if not analysis_data:
+                self.logger.warning("没有找到效率分析数据")
+                return None
+
+            # 创建3D散点图
+            fig = self._create_3d_efficiency_scatter(analysis_data)
+            return fig
+
+        except Exception as e:
+            self.logger.error(f"创建3D装载效率分析失败: {str(e)}")
+            return None
+
+    def create_loading_efficiency_dashboard(self) -> Optional[go.Figure]:
+        """
+        装载率仪表盘 - 先计算后可视化
+
+        Returns:
+            go.Figure: 装载效率仪表盘图形
+        """
+        if not self.json_processor:
+            self.logger.error("JSON数据处理器未初始化")
+            return None
+
+        try:
+            json_files = self.json_processor.scan_json_files()
+
+            # 获取效率摘要数据
+            efficiency_data = self.json_processor.get_loading_efficiency_summary(
+                json_files['loading_plans']
+            )
+
+            if not efficiency_data:
+                self.logger.warning("没有找到效率数据")
+                return None
+
+            # 创建仪表盘图形
+            fig = self._create_efficiency_dashboard_chart(efficiency_data)
+            return fig
+
+        except Exception as e:
+            self.logger.error(f"创建装载效率仪表盘失败: {str(e)}")
+            return None
+
+    def _create_truck_box_from_specs(self) -> go.Mesh3d:
+        """根据规格创建货车边界框"""
+        length = self.truck_specs['length']
+        width = self.truck_specs['width']
+        height = self.truck_specs['height']
+
+        return go.Mesh3d(
+            x=[0, length, length, 0, 0, length, length, 0],
+            y=[0, 0, width, width, 0, 0, width, width],
+            z=[0, 0, 0, 0, height, height, height, height],
+            i=[7, 0, 0, 0, 4, 4, 6, 6, 4, 0, 3, 2],
+            j=[3, 4, 1, 2, 5, 6, 5, 2, 0, 1, 6, 3],
+            k=[0, 7, 2, 3, 6, 7, 1, 1, 5, 5, 7, 6],
+            opacity=0.1,
+            color='#E8E8E8',
+            name='货车边界',
+            showlegend=False
+        )
+
+    def _create_item_3d_box_from_json(self, item: Dict, color: str, index: int) -> Optional[go.Mesh3d]:
+        """从JSON项目数据创建3D盒子"""
+        try:
+            pos = item.get('position_3d', {})
+            dims = item.get('dimensions', {})
+            cargo_info = item.get('cargo_info', {})
+
+            x0, y0, z0 = pos.get('x', 0), pos.get('y', 0), pos.get('z', 0)
+            length = dims.get('length_m', 0)
+            width = dims.get('width_m', 0)
+            height = dims.get('height_m', 0)
+
+            x1, y1, z1 = x0 + length, y0 + width, z0 + height
+
+            return go.Mesh3d(
+                x=[x0, x1, x1, x0, x0, x1, x1, x0],
+                y=[y0, y0, y1, y1, y0, y0, y1, y1],
+                z=[z0, z0, z0, z0, z1, z1, z1, z1],
+                i=[7, 0, 0, 0, 4, 4, 6, 6, 4, 0, 3, 2],
+                j=[3, 4, 1, 2, 5, 6, 5, 2, 0, 1, 6, 3],
+                k=[0, 7, 2, 3, 6, 7, 1, 1, 5, 5, 7, 6],
+                opacity=0.8,
+                color=color,
+                name=f"{cargo_info.get('type', 'unknown')}_{index}",
+                hovertemplate=f"<b>货物 {index}</b><br>" +
+                             f"类型: {cargo_info.get('type', 'unknown')}<br>" +
+                             f"体积: {cargo_info.get('volume_m3', 0):.3f}m³<br>" +
+                             f"位置: ({x0:.2f}, {y0:.2f}, {z0:.2f})<extra></extra>"
+            )
+
+        except Exception as e:
+            self.logger.error(f"创建3D盒子失败: {str(e)}")
+            return None
+
+    def _create_multi_category_3d_view(self, loading_data: Dict, loading_plan: List, vehicle_id: str) -> Optional[go.Figure]:
+        """创建多品类3D视图"""
+        try:
+            fig = go.Figure()
+
+            # 添加货车边界框
+            truck_box = self._create_truck_box_from_specs()
+            fig.add_trace(truck_box)
+
+            # 按货物类型分组和着色
+            cargo_type_colors = {
+                '酒水': '#FF4444',
+                '食品': '#44AA44',
+                '建材': '#4444FF',
+                '日用品': '#FFAA44',
+                '农产品': '#AA44FF'
+            }
+
+            cargo_stats = {}
+            for i, item in enumerate(loading_plan):
+                cargo_type = item.get('cargo_info', {}).get('type', 'unknown')
+                color = cargo_type_colors.get(cargo_type, '#CCCCCC')
+
+                # 统计货物类型数量
+                cargo_stats[cargo_type] = cargo_stats.get(cargo_type, 0) + 1
+
+                box = self._create_item_3d_box_from_json(item, color, i)
+                if box:
+                    fig.add_trace(box)
+
+            # 设置标题包含货物类型统计
+            cargo_summary = " | ".join([f"{k}: {v}件" for k, v in cargo_stats.items()])
+            summary = loading_data.get('summary', {})
+
+            fig.update_layout(
+                title=f"{vehicle_id} 多品类混合装载<br>{cargo_summary}<br>装载率: {summary.get('loading_efficiency', 0):.1f}%",
+                scene=dict(
+                    xaxis_title="长度 (m)",
+                    yaxis_title="宽度 (m)",
+                    zaxis_title="高度 (m)",
+                    camera=dict(eye=dict(x=1.5, y=1.5, z=1.5))
+                ),
+                width=1200,
+                height=900
+            )
+
+            return fig
+
+        except Exception as e:
+            self.logger.error(f"创建多品类3D视图失败: {str(e)}")
+            return None
+
+    def _create_2d_density_heatmap(self, position_data: List[Dict]) -> Optional[go.Figure]:
+        """
+        创建2D装载密度热力图
+        X轴: 货车长度 (m)
+        Y轴: 装载高度 (m)
+        色阶: 装载密度 (0-9)
+        """
+        try:
+            if not position_data:
+                return None
+
+            # 提取坐标数据 (x=长度, z=高度)
+            x_coords = [item['x'] for item in position_data]  # 货车长度方向
+            z_coords = [item['z'] for item in position_data]  # 高度方向
+
+            if not x_coords or not z_coords:
+                self.logger.warning("没有有效的坐标数据")
+                return None
+
+            # 创建网格并计算密度
+            x_bins = 50  # X轴网格数量
+            z_bins = 30  # Z轴网格数量
+
+            # 计算网格范围，添加小的边距
+            x_min, x_max = min(x_coords), max(x_coords)
+            z_min, z_max = min(z_coords), max(z_coords)
+
+            x_range = x_max - x_min
+            z_range = z_max - z_min
+
+            # 添加5%的边距
+            x_min -= x_range * 0.05
+            x_max += x_range * 0.05
+            z_min -= z_range * 0.05
+            z_max += z_range * 0.05
+
+            # 创建网格边界
+            x_edges = np.linspace(x_min, x_max, x_bins + 1)
+            z_edges = np.linspace(z_min, z_max, z_bins + 1)
+
+            # 初始化密度网格
+            density_grid = np.zeros((z_bins, x_bins))
+
+            # 计算每个网格的密度
+            for x, z in zip(x_coords, z_coords):
+                # 找到所属的网格索引
+                if x_min <= x <= x_max and z_min <= z <= z_max:
+                    x_idx = min(int((x - x_min) / (x_max - x_min) * x_bins), x_bins - 1)
+                    z_idx = min(int((z - z_min) / (z_max - z_min) * z_bins), z_bins - 1)
+                    density_grid[z_idx, x_idx] += 1
+
+            # 归一化到0-9的范围
+            max_density = np.max(density_grid)
+            if max_density > 0:
+                density_grid = (density_grid / max_density) * 9
+
+            # 创建网格中心点坐标用于显示
+            x_centers = (x_edges[:-1] + x_edges[1:]) / 2
+            z_centers = (z_edges[:-1] + z_edges[1:]) / 2
+
+            # 创建热力图
+            fig = go.Figure(data=go.Heatmap(
+                z=density_grid,
+                x=x_centers,  # X轴 - 货车长度
+                y=z_centers,  # Y轴 - 装载高度
+                colorscale='Hot',  # 使用热力图色彩（黑色到黄色）
+                reversescale=True,  # 反转色阶，使高密度为亮色
+                zmin=0,
+                zmax=9,
+                colorbar=dict(
+                    title="装载密度",
+                    titleside="right",
+                    len=0.7
+                ),
+                hoverongaps=False,
+                hovertemplate='货车长度: %{x:.2f}m<br>装载高度: %{y:.2f}m<br>装载密度: %{z:.1f}<extra></extra>'
+            ))
+
+            fig.update_layout(
+                title=dict(
+                    text="装载密度热力图",
+                    x=0.5,
+                    font=dict(size=16)
+                ),
+                xaxis_title="货车长度 (m)",
+                yaxis_title="装载高度 (m)",
+                width=1000,
+                height=600,
+                xaxis=dict(
+                    showgrid=True,
+                    gridwidth=1,
+                    gridcolor='rgba(128, 128, 128, 0.3)'
+                ),
+                yaxis=dict(
+                    showgrid=True,
+                    gridwidth=1,
+                    gridcolor='rgba(128, 128, 128, 0.3)'
+                )
+            )
+
+            return fig
+
+        except Exception as e:
+            self.logger.error(f"创建2D密度热力图失败: {str(e)}")
+            return None
+
+    def _create_3d_efficiency_scatter(self, analysis_data: List[Dict]) -> Optional[go.Figure]:
+        """
+        创建3D装载效率分析散点图
+
+        Args:
+            analysis_data: 效率分析数据
+
+        Returns:
+            go.Figure: 3D散点图
+        """
+        try:
+            if not analysis_data:
+                return None
+
+            # 提取数据
+            vehicle_ids = [item['vehicle_id'] for item in analysis_data]
+            loading_efficiencies = [item['loading_efficiency'] for item in analysis_data]  # X轴
+            weight_ratios = [item['weight_ratio'] for item in analysis_data]  # Y轴
+            volume_efficiencies = [item['volume_efficiency_tm3'] for item in analysis_data]  # Z轴
+            truck_types = [item['truck_type'] for item in analysis_data]
+
+            # 创建3D散点图
+            fig = go.Figure()
+
+            # 按卡车类型分组显示
+            unique_types = list(set(truck_types))
+            colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728']  # 不同颜色
+
+            for i, truck_type in enumerate(unique_types):
+                type_indices = [j for j, t in enumerate(truck_types) if t == truck_type]
+
+                # 获取该类型的数据
+                x_data = [loading_efficiencies[j] for j in type_indices]
+                y_data = [weight_ratios[j] for j in type_indices]
+                z_data = [volume_efficiencies[j] for j in type_indices]
+                labels = [vehicle_ids[j] for j in type_indices]
+
+                fig.add_trace(go.Scatter3d(
+                    x=x_data,
+                    y=y_data,
+                    z=z_data,
+                    mode='markers',
+                    marker=dict(
+                        size=8,
+                        color=x_data,  # 根据装载效率着色
+                        colorscale='Viridis',  # 使用Viridis色阶
+                        cmin=65,
+                        cmax=90,
+                        opacity=0.8,
+                        colorbar=dict(
+                            title="装载效率(%)",
+                            len=0.7,
+                            x=1.02
+                        ) if i == 0 else None,  # 只在第一个trace显示colorbar
+                        line=dict(
+                            width=2,
+                            color='rgba(0,0,0,0.3)'
+                        )
+                    ),
+                    text=labels,
+                    name=truck_type,
+                    hovertemplate="<b>%{text}</b><br>" +
+                                 "装载效率: %{x:.1f}%<br>" +
+                                 "重量比例: %{y:.1f}%<br>" +
+                                 "体积效率: %{z:.3f}T·m³<br>" +
+                                 "<extra></extra>"
+                ))
+
+            # 更新布局
+            fig.update_layout(
+                title=dict(
+                    text="3D装载效率分析",
+                    x=0.5,
+                    font=dict(size=16)
+                ),
+                scene=dict(
+                    xaxis=dict(
+                        title="装载效率 (%)",
+                        range=[60, 95],
+                        gridcolor='rgba(128, 128, 128, 0.3)',
+                        backgroundcolor='rgba(240, 240, 240, 0.5)'
+                    ),
+                    yaxis=dict(
+                        title="重量比例",
+                        gridcolor='rgba(128, 128, 128, 0.3)',
+                        backgroundcolor='rgba(240, 240, 240, 0.5)'
+                    ),
+                    zaxis=dict(
+                        title="体积利用 (T·m)",
+                        gridcolor='rgba(128, 128, 128, 0.3)',
+                        backgroundcolor='rgba(240, 240, 240, 0.5)'
+                    ),
+                    bgcolor='rgba(255, 255, 255, 0.8)',
+                    camera=dict(
+                        eye=dict(x=1.5, y=1.5, z=1.2)
+                    )
+                ),
+                width=1200,
+                height=800,
+                showlegend=True,
+                legend=dict(
+                    x=0.02,
+                    y=0.98,
+                    bgcolor='rgba(255, 255, 255, 0.8)',
+                    bordercolor='rgba(0, 0, 0, 0.2)',
+                    borderwidth=1
+                )
+            )
+
+            return fig
+
+        except Exception as e:
+            self.logger.error(f"创建3D效率散点图失败: {str(e)}")
+            return None
+
+    def _create_efficiency_dashboard_chart(self, efficiency_data: List[Dict]) -> Optional[go.Figure]:
+        """创建效率仪表盘图表"""
+        try:
+            if not efficiency_data:
+                return None
+
+            # 创建子图
+            fig = make_subplots(
+                rows=2, cols=2,
+                subplot_titles=("装载效率对比", "货物数量分布", "体积利用率", "车辆类型统计"),
+                specs=[[{"secondary_y": False}, {"secondary_y": False}],
+                       [{"secondary_y": False}, {"type": "pie"}]]
+            )
+
+            vehicles = [item['vehicle_id'] for item in efficiency_data]
+            efficiencies = [item['loading_efficiency'] for item in efficiency_data]
+            item_counts = [item['total_items'] for item in efficiency_data]
+            volumes = [item['total_volume_m3'] for item in efficiency_data]
+            truck_types = [item['truck_type'] for item in efficiency_data]
+
+            # 1. 装载效率条形图
+            fig.add_trace(
+                go.Bar(x=vehicles, y=efficiencies, name="装载效率(%)",
+                      marker_color='lightblue'),
+                row=1, col=1
+            )
+
+            # 2. 货物数量散点图
+            fig.add_trace(
+                go.Scatter(x=vehicles, y=item_counts, mode='markers+lines',
+                          name="货物数量", marker=dict(size=10, color='green')),
+                row=1, col=2
+            )
+
+            # 3. 体积利用率
+            fig.add_trace(
+                go.Bar(x=vehicles, y=volumes, name="体积(m³)",
+                      marker_color='orange'),
+                row=2, col=1
+            )
+
+            # 4. 车辆类型饼图
+            type_counts = {}
+            for truck_type in truck_types:
+                type_counts[truck_type] = type_counts.get(truck_type, 0) + 1
+
+            fig.add_trace(
+                go.Pie(labels=list(type_counts.keys()), values=list(type_counts.values()),
+                      name="车辆类型"),
+                row=2, col=2
+            )
+
+            fig.update_layout(
+                title="装载效率综合仪表盘",
+                height=800,
+                showlegend=True
+            )
+
+            return fig
+
+        except Exception as e:
+            self.logger.error(f"创建效率仪表盘失败: {str(e)}")
+            return None
+
+    def _save_html_visualization(self, fig: go.Figure, filename: str) -> str:
+        """保存HTML可视化文件"""
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        full_filename = f"{filename}_{timestamp}.html"
+        filepath = VISUALIZATIONS_DIR / full_filename
+
+        # 确保目录存在
+        VISUALIZATIONS_DIR.mkdir(parents=True, exist_ok=True)
+
+        fig.write_html(str(filepath))
+        self.logger.info(f"HTML可视化已保存: {full_filename}")
+        return str(filepath)
 
 
 def main():

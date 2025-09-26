@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物流优化系统 - 主页</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-truck"></i>
+                <h2>物流优化系统</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#dashboard" class="nav-link active">仪表盘</a></li>
+                <li><a href="#visualizations" class="nav-link">可视化</a></li>
+                <li><a href="#optimization" class="nav-link">优化运算</a></li>
+                <li><a href="#api" class="nav-link">API文档</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <div class="main-container">
+        <!-- 仪表盘部分 -->
+        <section id="dashboard" class="section active">
+            <div class="section-header">
+                <h1>系统仪表盘</h1>
+                <p>物流优化系统运行状态与关键指标</p>
+            </div>
+
+            <!-- 关键指标卡片 -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-truck-moving"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="total-trucks">-</h3>
+                        <p>活跃卡车</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="total-items">-</h3>
+                        <p>处理货物</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="avg-efficiency">-</h3>
+                        <p>平均装载率</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="total-distance">-</h3>
+                        <p>总行驶距离</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 系统状态 -->
+            <div class="system-status">
+                <h2>系统状态</h2>
+                <div class="status-grid">
+                    <div class="status-item">
+                        <span class="status-label">API状态</span>
+                        <span class="status-badge" id="api-status">检查中...</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">优化引擎</span>
+                        <span class="status-badge" id="engine-status">检查中...</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">可视化系统</span>
+                        <span class="status-badge" id="viz-status">检查中...</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 可视化部分 -->
+        <section id="visualizations" class="section">
+            <div class="section-header">
+                <h1>可视化管理</h1>
+                <p>查看和管理系统生成的可视化图表</p>
+            </div>
+
+            <!-- 可视化类型选择器 -->
+            <div class="visualization-controls">
+                <div class="type-filters">
+                    <button class="filter-btn active" data-type="all">全部</button>
+                    <button class="filter-btn" data-type="3dpp">3D装载</button>
+                    <button class="filter-btn" data-type="heatmap">热力图</button>
+                    <button class="filter-btn" data-type="efficiency">效率分析</button>
+                    <button class="filter-btn" data-type="route">路径地图</button>
+                </div>
+                <button class="refresh-btn" onclick="refreshVisualizations()">
+                    <i class="fas fa-sync-alt"></i> 刷新
+                </button>
+            </div>
+
+            <!-- 可视化文件列表 -->
+            <div class="visualization-grid" id="visualization-grid">
+                <div class="loading-placeholder">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>加载可视化文件中...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 优化运算部分 -->
+        <section id="optimization" class="section">
+            <div class="section-header">
+                <h1>优化运算</h1>
+                <p>启动新的优化任务或查看历史记录</p>
+            </div>
+
+            <!-- 优化任务表单 -->
+            <div class="optimization-form">
+                <h2>启动新任务</h2>
+                <form id="optimization-form">
+                    <div class="form-group">
+                        <label for="algorithm">优化算法</label>
+                        <select id="algorithm" required>
+                            <option value="">请选择算法...</option>
+                            <option value="integrated">集成优化</option>
+                            <option value="gurobi_3dpp">Gurobi 3D装载</option>
+                            <option value="ltl_optimizer">LTL拼装优化</option>
+                            <option value="vrp_basic">基本路径优化</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="data-source">数据源</label>
+                        <input type="text" id="data-source" placeholder="如: cargo_data.xlsx" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="generate-viz" checked>
+                            生成可视化图表
+                        </label>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-play"></i> 开始优化
+                    </button>
+                </form>
+            </div>
+
+            <!-- 任务历史 -->
+            <div class="task-history">
+                <h2>任务历史</h2>
+                <div class="history-list" id="history-list">
+                    <div class="loading-placeholder">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>加载任务历史中...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- API文档部分 -->
+        <section id="api" class="section">
+            <div class="section-header">
+                <h1>API文档</h1>
+                <p>系统API接口说明和测试工具</p>
+            </div>
+
+            <div class="api-docs">
+                <div class="api-section">
+                    <h2>快速链接</h2>
+                    <div class="api-links">
+                        <a href="/docs" class="api-link" target="_blank">
+                            <i class="fas fa-external-link-alt"></i>
+                            Swagger UI 文档
+                        </a>
+                        <a href="/redoc" class="api-link" target="_blank">
+                            <i class="fas fa-book"></i>
+                            ReDoc 文档
+                        </a>
+                    </div>
+                </div>
+
+                <div class="api-section">
+                    <h2>主要端点</h2>
+                    <div class="endpoint-list">
+                        <div class="endpoint-item">
+                            <span class="method get">GET</span>
+                            <span class="path">/api/visualizations/list</span>
+                            <span class="desc">获取可视化文件列表</span>
+                        </div>
+                        <div class="endpoint-item">
+                            <span class="method get">GET</span>
+                            <span class="path">/api/data/trucks</span>
+                            <span class="desc">获取卡车数据</span>
+                        </div>
+                        <div class="endpoint-item">
+                            <span class="method post">POST</span>
+                            <span class="path">/api/optimization/run</span>
+                            <span class="desc">运行优化任务</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 加载脚本 -->
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/visualization.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

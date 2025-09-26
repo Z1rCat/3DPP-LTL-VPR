@@ -493,7 +493,7 @@ class LTLOptimizer:
             # 处理大货物调度结果
             if large_results.get('dispatch_results'):
                 for i, result in enumerate(large_results['dispatch_results']):
-                    truck_id = f"LARGE_TRUCK_{i:02d}"
+                    truck_id = f"LARGE_TRUCK_{i:03d}"
                     dispatch_plan[truck_id] = {
                         'type': 'FULL_TRUCK',
                         'source_order': result.get('order_id', f'LARGE_ORDER_{i}'),
@@ -510,7 +510,7 @@ class LTLOptimizer:
                 trucks_dict = {}
 
                 for _, row in ltl_plan.iterrows():
-                    truck_id = f"LTL_TRUCK_{row['truck_id']:02d}"
+                    truck_id = f"LTL_TRUCK_{row['truck_id']:03d}"
                     if truck_id not in trucks_dict:
                         trucks_dict[truck_id] = []
 

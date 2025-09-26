@@ -1,8 +1,8 @@
 {
-  "run_id": "run_20250922_173933",
-  "generated_time": "2025-09-22T17:39:33.391011",
+  "run_id": "run_20250926_141205",
+  "generated_time": "2025-09-26T14:12:05.261147",
   "dispatch_plan": {
-    "LARGE_TRUCK_00": {
+    "LARGE_TRUCK_000": {
       "type": "FULL_TRUCK",
       "source_order": "ORDER_0036",
       "item_type": "酒水",
@@ -10,7 +10,7 @@
       "total_weight_kg": 48785.76,
       "loading_efficiency": 0.882265625
     },
-    "LARGE_TRUCK_01": {
+    "LARGE_TRUCK_001": {
       "type": "FULL_TRUCK",
       "source_order": "ORDER_0036",
       "item_type": "酒水",
@@ -18,7 +18,7 @@
       "total_weight_kg": 48785.76,
       "loading_efficiency": 0.882265625
     },
-    "LARGE_TRUCK_02": {
+    "LARGE_TRUCK_002": {
       "type": "FULL_TRUCK",
       "source_order": "ORDER_0036",
       "item_type": "酒水",
@@ -26,7 +26,7 @@
       "total_weight_kg": 48785.76,
       "loading_efficiency": 0.882265625
     },
-    "LARGE_TRUCK_03": {
+    "LARGE_TRUCK_003": {
       "type": "FULL_TRUCK",
       "source_order": "ORDER_0036",
       "item_type": "酒水",
@@ -34,7 +34,7 @@
       "total_weight_kg": 48785.76,
       "loading_efficiency": 0.882265625
     },
-    "LARGE_TRUCK_04": {
+    "LARGE_TRUCK_004": {
       "type": "FULL_TRUCK",
       "source_order": "ORDER_0027",
       "item_type": "酒水",
@@ -42,7 +42,7 @@
       "total_weight_kg": 52545.6,
       "loading_efficiency": 0.9502604166666667
     },
-    "LARGE_TRUCK_05": {
+    "LARGE_TRUCK_005": {
       "type": "FULL_TRUCK",
       "source_order": "ORDER_0027",
       "item_type": "酒水",
@@ -50,7 +50,7 @@
       "total_weight_kg": 52545.6,
       "loading_efficiency": 0.9502604166666667
     },
-    "LARGE_TRUCK_06": {
+    "LARGE_TRUCK_006": {
       "type": "FULL_TRUCK",
       "source_order": "ORDER_0032",
       "item_type": "酒水",
@@ -58,7 +58,7 @@
       "total_weight_kg": 44543.520000000004,
       "loading_efficiency": 0.805546875
     },
-    "LARGE_TRUCK_07": {
+    "LARGE_TRUCK_007": {
       "type": "FULL_TRUCK",
       "source_order": "ORDER_0026",
       "item_type": "食品",
@@ -66,9 +66,14 @@
       "total_weight_kg": 44499.0,
       "loading_efficiency": 0.8047417534722223
     },
-    "LTL_TRUCK_00": {
+    "LTL_TRUCK_000": {
       "type": "LTL_TRUCK",
       "loaded_items": [
+        {
+          "item_id": "LTL_04961",
+          "weight_kg": 22722.602000000003,
+          "volume_m3": 24.752612
+        },
         {
           "item_id": "LTL_04959",
           "weight_kg": 3779.94,
@@ -1614,6 +1619,18 @@
           "weight_kg": 23.72,
           "volume_m3": 0.07856
         },
+        {
+          "item_id": "LTL_00956",
+          "weight_kg": 10.77,
+          "volume_m3": 0.03928
+        }
+      ],
+      "total_weight_kg": 34171.852000000355,
+      "item_count": 311
+    },
+    "LTL_TRUCK_001": {
+      "type": "LTL_TRUCK",
+      "loaded_items": [
         {
           "item_id": "LTL_00106",
           "weight_kg": 23.72,
@@ -3309,18 +3326,6 @@
           "weight_kg": 18.67,
           "volume_m3": 0.07298
         },
-        {
-          "item_id": "LTL_00956",
-          "weight_kg": 10.77,
-          "volume_m3": 0.03928
-        }
-      ],
-      "total_weight_kg": 17788.479999999843,
-      "item_count": 649
-    },
-    "LTL_TRUCK_01": {
-      "type": "LTL_TRUCK",
-      "loaded_items": [
         {
           "item_id": "LTL_00421",
           "weight_kg": 18.67,
@@ -5905,7 +5910,14 @@
           "item_id": "LTL_01802",
           "weight_kg": 7.42,
           "volume_m3": 0.049
-        },
+        }
+      ],
+      "total_weight_kg": 12616.620000000057,
+      "item_count": 856
+    },
+    "LTL_TRUCK_002": {
+      "type": "LTL_TRUCK",
+      "loaded_items": [
         {
           "item_id": "LTL_01803",
           "weight_kg": 7.42,
@@ -8710,14 +8722,7 @@
           "item_id": "LTL_03134",
           "weight_kg": 6.2,
           "volume_m3": 0.042
-        }
-      ],
-      "total_weight_kg": 10788.840000000257,
-      "item_count": 1078
-    },
-    "LTL_TRUCK_02": {
-      "type": "LTL_TRUCK",
-      "loaded_items": [
+        },
         {
           "item_id": "LTL_03135",
           "weight_kg": 6.2,
@@ -12543,6 +12548,18 @@
           "weight_kg": 5.27,
           "volume_m3": 0.036000000000000004
         },
+        {
+          "item_id": "LTL_04350",
+          "weight_kg": 12.0,
+          "volume_m3": 0.015
+        }
+      ],
+      "total_weight_kg": 11382.420000000197,
+      "item_count": 1327
+    },
+    "LTL_TRUCK_003": {
+      "type": "LTL_TRUCK",
+      "loaded_items": [
         {
           "item_id": "LTL_03599",
           "weight_kg": 5.27,
@@ -16697,14 +16714,7 @@
           "item_id": "LTL_02500",
           "weight_kg": 5.97,
           "volume_m3": 0.02594
-        }
-      ],
-      "total_weight_kg": 24127.840000000695,
-      "item_count": 1596
-    },
-    "LTL_TRUCK_03": {
-      "type": "LTL_TRUCK",
-      "loaded_items": [
+        },
         {
           "item_id": "LTL_02499",
           "weight_kg": 5.97,
@@ -21071,11 +21081,6 @@
           "volume_m3": 0.01957
         },
         {
-          "item_id": "LTL_04350",
-          "weight_kg": 12.0,
-          "volume_m3": 0.015
-        },
-        {
           "item_id": "LTL_04351",
           "weight_kg": 12.0,
           "volume_m3": 0.015
@@ -24809,7 +24814,14 @@
           "item_id": "LTL_04111",
           "weight_kg": 12.0,
           "volume_m3": 0.015
-        },
+        }
+      ],
+      "total_weight_kg": 30953.999999999753,
+      "item_count": 2451
+    },
+    "LTL_TRUCK_004": {
+      "type": "LTL_TRUCK",
+      "loaded_items": [
         {
           "item_id": "LTL_04110",
           "weight_kg": 12.0,
@@ -24886,15 +24898,15 @@
           "volume_m3": 0.015
         }
       ],
-      "total_weight_kg": 13877.130000000056,
-      "item_count": 1636
+      "total_weight_kg": 180.0,
+      "item_count": 15
     }
   },
   "summary": {
-    "total_trucks": 12,
+    "total_trucks": 13,
     "large_trucks": 8,
-    "ltl_trucks": 4,
+    "ltl_trucks": 5,
     "large_cargo_efficiency": 0.8799839952256945,
-    "ltl_loading_rate": 0.8890029116029204
+    "ltl_loading_rate": 0.8007300057869654
   }
 }

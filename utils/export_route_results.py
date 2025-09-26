@@ -12,6 +12,19 @@ from datetime import datetime
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+def standardize_vehicle_id(vehicle_id: str) -> str:
+    """标准化vehicle_id为3位数格式"""
+    if 'LARGE_TRUCK_' in vehicle_id:
+        # 提取数字部分：LARGE_TRUCK_00 -> 00 -> 000
+        number = vehicle_id.split('_')[-1]
+        return f"LARGE_TRUCK_{int(number):03d}"
+    elif 'LTL_TRUCK_' in vehicle_id:
+        # 提取数字部分：LTL_TRUCK_00 -> 00 -> 000
+        number = vehicle_id.split('_')[-1]
+        return f"LTL_TRUCK_{int(number):03d}"
+    else:
+        return vehicle_id
+
 def load_route_plan(file_path):
     """加载路径规划JSON文件"""
     try:
@@ -42,7 +55,8 @@ def export_route_summary_to_excel():
     detailed_routes = []
     
     for vehicle_id in all_vehicles:
-        route_file = output_dir / f"{vehicle_id}_route_plan.json"
+        standardized_vehicle_id = standardize_vehicle_id(vehicle_id)
+        route_file = output_dir / f"{standardized_vehicle_id}_route_plan.json"
         route_data = load_route_plan(route_file)
         
         if route_data:
@@ -199,7 +213,8 @@ def analyze_failed_vehicles():
     for vehicle_id in ['LARGE_TRUCK_00', 'LARGE_TRUCK_01', 'LARGE_TRUCK_02', 'LARGE_TRUCK_03',
                       'LARGE_TRUCK_04', 'LARGE_TRUCK_05', 'LARGE_TRUCK_06', 'LARGE_TRUCK_07',
                       'LTL_TRUCK_00']:
-        route_file = Path(f"output/reports/{vehicle_id}_route_plan.json")
+        standardized_vehicle_id = standardize_vehicle_id(vehicle_id)
+        route_file = Path(f"output/reports/{standardized_vehicle_id}_route_plan.json")
         if not route_file.exists():
             failed_vehicles.append(vehicle_id)
     

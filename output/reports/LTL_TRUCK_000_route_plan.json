@@ -1,0 +1,92 @@
+{
+  "summary": {
+    "vehicle_id": "LTL_TRUCK_000",
+    "total_distance_km": 72.44,
+    "total_duration_hours": 2.48,
+    "fuel_cost_yuan": 98.72,
+    "total_stops": 2,
+    "pickup_stops": 2,
+    "delivery_stops": 0,
+    "initial_load_kg": 0,
+    "final_load_kg": 0,
+    "max_load_kg": 34.489999999999995,
+    "load_efficiency": 0.23,
+    "optimization_algorithm": "Nearest_Neighbor_TSP",
+    "solution_status": "MULTI_STOP_OPTIMIZED",
+    "completion_time": "10:28",
+    "start_time": "08:00",
+    "working_hours": 2.48
+  },
+  "route_details": {
+    "depot_info": {
+      "name": "A网点（成都至重庆专线）",
+      "coordinates": {
+        "lat": 30.800835,
+        "lng": 104.139111
+      }
+    },
+    "vehicle_info": {
+      "type": "9.6米厢式货车",
+      "capacity_kg": 15000,
+      "empty_weight_kg": 8500
+    },
+    "optimization_info": {
+      "solver": "Nearest_Neighbor_Algorithm",
+      "strategy": "多停靠点路径优化",
+      "route_type": "LTL_MULTI_STOP"
+    }
+  },
+  "itinerary": [
+    {
+      "step": 1,
+      "action": "取货",
+      "order_id": "ORDER_0032",
+      "coordinates": [
+        30.784712,
+        104.286461
+      ],
+      "weight_change_kg": 10.77,
+      "distance_from_previous_km": 14.19,
+      "estimated_arrival": "08:21",
+      "service_time_minutes": 20,
+      "departure_time": "08:41",
+      "address": "坐标(30.7847, 104.2865)",
+      "cargo_info": {
+        "type": "未知",
+        "weight_kg": 10.77
+      }
+    },
+    {
+      "step": 2,
+      "action": "取货",
+      "order_id": "ORDER_0036",
+      "coordinates": [
+        30.539113,
+        104.196005
+      ],
+      "weight_change_kg": 23.72,
+      "distance_from_previous_km": 28.65,
+      "estimated_arrival": "09:24",
+      "service_time_minutes": 20,
+      "departure_time": "09:44",
+      "address": "坐标(30.5391, 104.1960)",
+      "cargo_info": {
+        "type": "未知",
+        "weight_kg": 23.72
+      }
+    }
+  ],
+  "performance_metrics": {
+    "total_service_time_minutes": 50.0,
+    "total_travel_time_hours": 1.81,
+    "fuel_efficiency_yuan_per_km": 1.36,
+    "average_distance_per_stop": 36.22
+  },
+  "solver_info": {
+    "method": "Nearest_Neighbor_TSP",
+    "solve_time_seconds": 0.1,
+    "status": "MULTI_STOP_OPTIMIZED"
+  },
+  "generated_time": "2025-09-26T14:12:09.936752",
+  "generated_by": "LTL_3DPP_Optimization_System_V2"
+}

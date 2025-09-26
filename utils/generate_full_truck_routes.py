@@ -16,6 +16,19 @@ from utils.distance_calculator import DistanceCalculator
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+def standardize_vehicle_id(vehicle_id: str) -> str:
+    """标准化vehicle_id为3位数格式"""
+    if 'LARGE_TRUCK_' in vehicle_id:
+        # 提取数字部分：LARGE_TRUCK_00 -> 00 -> 000
+        number = vehicle_id.split('_')[-1]
+        return f"LARGE_TRUCK_{int(number):03d}"
+    elif 'LTL_TRUCK_' in vehicle_id:
+        # 提取数字部分：LTL_TRUCK_00 -> 00 -> 000
+        number = vehicle_id.split('_')[-1]
+        return f"LTL_TRUCK_{int(number):03d}"
+    else:
+        return vehicle_id
+
 def generate_full_truck_routes():
     """为所有FULL_TRUCK车辆生成点对点路径规划"""
     
@@ -45,7 +58,8 @@ def generate_full_truck_routes():
     for vehicle_id, truck_data in dispatch_plan['dispatch_plan'].items():
         if truck_data['type'] == 'FULL_TRUCK':
             # 检查是否已有路径文件
-            route_file = Path(f"output/reports/{vehicle_id}_route_plan.json")
+            standardized_vehicle_id = standardize_vehicle_id(vehicle_id)
+            route_file = Path(f"output/reports/{standardized_vehicle_id}_route_plan.json")
             if route_file.exists():
                 continue
                 
