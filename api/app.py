@@ -14,6 +14,8 @@ import logging
 from .routes.visualization import router as visualization_router
 from .routes.data import router as data_router
 from .routes.optimization import router as optimization_router
+from .routes.experiments import router as experiments_router
+from .routes.analytics import router as analytics_router
 
 # 配置日志
 logging.basicConfig(level=logging.INFO)
@@ -41,6 +43,8 @@ app.add_middleware(
 app.include_router(visualization_router, prefix="/api/visualizations", tags=["可视化"])
 app.include_router(data_router, prefix="/api/data", tags=["数据"])
 app.include_router(optimization_router, prefix="/api/optimization", tags=["优化"])
+app.include_router(experiments_router, prefix="/api/experiments", tags=["实验管理"])
+app.include_router(analytics_router, prefix="/api/analytics", tags=["分析报告"])
 
 # 设置静态文件服务
 static_dir = Path(__file__).parent.parent / "frontend" / "static"
@@ -86,6 +90,8 @@ async def root():
             <a href="/api/visualizations/list">📈 可视化文件列表</a>
             <a href="/api/data/trucks">🚛 卡车数据</a>
             <a href="/api/data/routes">🗺️ 路径数据</a>
+            <a href="/api/experiments/">🧪 实验管理</a>
+            <a href="/api/analytics/dashboard/overview">📊 分析仪表板</a>
 
             <h2>🎨 可视化</h2>
             <a href="/visualizations">📊 查看生成的可视化文件</a>
@@ -93,9 +99,10 @@ async def root():
 
         <div style="margin-top: 40px; padding: 20px; background: #f9f9f9; border-radius: 10px;">
             <h3>🔧 开发信息</h3>
-            <p><strong>版本:</strong> 4.0.0</p>
+            <p><strong>版本:</strong> 4.0.0 - 数据层升级版</p>
             <p><strong>状态:</strong> 开发中</p>
-            <p><strong>技术栈:</strong> FastAPI + Python + Plotly + Folium</p>
+            <p><strong>技术栈:</strong> FastAPI + SQLite + Python + Plotly + Folium</p>
+            <p><strong>新功能:</strong> 实验管理 + 数据分析 + 趋势报告</p>
         </div>
     </body>
     </html>
@@ -108,7 +115,16 @@ async def health_check():
     return {
         "status": "healthy",
         "version": "4.0.0",
-        "message": "物流优化系统 API 运行正常"
+        "message": "物流优化系统 API 运行正常",
+        "features": [
+            "3D装载优化",
+            "路径规划",
+            "实验管理",
+            "数据分析",
+            "趋势报告",
+            "可视化展示"
+        ],
+        "data_layer": "SQLite + JSON hybrid"
     }
 
 if __name__ == "__main__":

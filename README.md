@@ -16,6 +16,9 @@
 - 🌐 **RESTful API**: 基于FastAPI的现代Web API，完整的Swagger文档
 - 🖥️ **Web界面**: 响应式前端界面，支持任务管理和实时监控
 - 📊 **数据分析**: 装载效率分析、路径优化报告和性能统计
+- 🧪 **实验管理**: 支持算法对比、性能追踪和实验结果分析
+- 📈 **趋势分析**: 基于历史数据的性能趋势分析和预测
+- 💾 **数据存储**: SQLite数据库支持，完整的数据管理系统
 - 🔧 **模块化设计**: 清晰的代码结构，易于维护和扩展
 
 ## 📁 项目结构
@@ -33,7 +36,9 @@ logistics_system/
 │   ├── 📁 routes/                # API路由
 │   │   ├── visualization.py      # 可视化API
 │   │   ├── data.py               # 数据API
-│   │   └── optimization.py       # 优化API
+│   │   ├── optimization.py       # 优化API
+│   │   ├── analytics.py          # 分析报告API
+│   │   └── experiments.py        # 实验管理API
 │   ├── 📁 models/                # 数据模型
 │   │   └── schemas.py            # Pydantic模型
 │   └── 📁 utils/                 # API工具
@@ -41,10 +46,14 @@ logistics_system/
 │
 ├── 📁 frontend/                  # Web前端
 │   ├── 📁 templates/             # HTML模板
-│   │   └── index.html            # 主页面
+│   │   ├── index.html            # 主页面
+│   │   └── analytics.html        # 分析仪表板页面
 │   └── 📁 static/                # 静态资源
 │       ├── 📁 css/               # 样式文件
+│       │   ├── style.css         # 主样式
+│       │   └── analytics.css     # 分析页面样式
 │       ├── 📁 js/                # JavaScript文件
+│       │   └── analytics.js      # 分析页面脚本
 │       └── 📁 images/            # 图片资源
 │
 ├── 📁 data_processing/           # 数据处理模块
@@ -62,6 +71,19 @@ logistics_system/
 │   ├── plotly_3d.py             # 3D可视化器
 │   ├── route_visualizer.py      # 路径可视化器
 │   └── real_data_loader.py      # 实际数据加载器
+│
+├── 📁 analytics/                 # 数据分析模块
+│   ├── trend_analyzer.py        # 趋势分析器
+│   ├── performance_analyzer.py  # 性能分析器
+│   └── report_generator.py      # 报告生成器
+│
+├── 📁 experiment_manager/        # 实验管理模块
+│   ├── experiment_tracker.py    # 实验跟踪器
+│   └── comparison_engine.py     # 对比引擎
+│
+├── 📁 database/                  # 数据库管理模块
+│   ├── db_manager.py            # 数据库管理器
+│   └── models.py                # 数据模型
 │
 ├── 📁 utils/                     # 工具模块
 │   ├── system_monitor.py        # 系统监控
@@ -123,6 +145,7 @@ python api/app.py
 
 访问 Web 界面：
 - 🌐 **主页**: http://localhost:8000
+- 📊 **分析仪表板**: http://localhost:8000/analytics
 - 📋 **API文档**: http://localhost:8000/docs
 - 📖 **ReDoc**: http://localhost:8000/redoc
 
@@ -218,6 +241,21 @@ python -m uvicorn api.app:app --host 0.0.0.0 --port 8000
 - `GET /api/optimization/status/{task_id}` - 查询任务状态
 - `GET /api/optimization/result/{task_id}` - 获取优化结果
 - `GET /api/optimization/history` - 获取任务历史
+
+#### 🧪 实验管理 API
+- `POST /api/experiments/create` - 创建新实验
+- `GET /api/experiments/list` - 获取实验列表
+- `GET /api/experiments/{experiment_id}` - 获取实验详情
+- `PUT /api/experiments/{experiment_id}` - 更新实验状态
+- `DELETE /api/experiments/{experiment_id}` - 删除实验
+- `GET /api/experiments/compare` - 算法对比分析
+
+#### 📈 分析报告 API
+- `GET /api/analytics/trend` - 获取趋势分析报告
+- `GET /api/analytics/performance` - 获取性能分析报告
+- `GET /api/analytics/comparison` - 获取算法对比报告
+- `GET /api/analytics/export/{format}` - 导出分析报告
+- `GET /api/analytics/dashboard` - 获取仪表板数据
 
 ### API 特性
 - 🔄 **异步处理**: 基于FastAPI的高性能异步API

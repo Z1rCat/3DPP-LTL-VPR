@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分析仪表板 - 物流优化系统</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/analytics.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-chart-bar"></i>
+                <h2>分析仪表板</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">← 返回主页</a></li>
+                <li><a href="#overview" class="nav-link active">概览</a></li>
+                <li><a href="#experiments" class="nav-link">实验管理</a></li>
+                <li><a href="#trends" class="nav-link">趋势分析</a></li>
+                <li><a href="#performance" class="nav-link">性能分析</a></li>
+                <li><a href="#reports" class="nav-link">报告中心</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <div class="main-container">
+        <!-- 概览部分 -->
+        <section id="overview" class="section active">
+            <div class="section-header">
+                <h1>分析概览</h1>
+                <p>系统性能指标与数据洞察总览</p>
+            </div>
+
+            <!-- 关键指标仪表板 -->
+            <div class="analytics-dashboard">
+                <div class="stats-grid">
+                    <div class="stat-card primary">
+                        <div class="stat-icon">
+                            <i class="fas fa-flask"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="total-experiments">-</h3>
+                            <p>总实验数</p>
+                            <span class="trend positive" id="experiments-trend">+5%</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card success">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="success-rate">-</h3>
+                            <p>成功率</p>
+                            <span class="trend positive" id="success-trend">+2%</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card warning">
+                        <div class="stat-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="avg-efficiency">-</h3>
+                            <p>平均装载效率</p>
+                            <span class="trend positive" id="efficiency-trend">+8%</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card info">
+                        <div class="stat-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="total-vehicles">-</h3>
+                            <p>分析车辆数</p>
+                            <span class="trend neutral" id="vehicles-trend">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 快速图表区域 -->
+                <div class="quick-charts">
+                    <div class="chart-container">
+                        <h3>装载效率趋势</h3>
+                        <canvas id="efficiencyTrendChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>算法性能对比</h3>
+                        <canvas id="algorithmComparisonChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- 最新洞察 -->
+                <div class="insights-panel">
+                    <h3><i class="fas fa-lightbulb"></i> 最新洞察</h3>
+                    <div id="insights-list">
+                        <div class="insight-item">
+                            <i class="fas fa-info-circle"></i>
+                            <span>正在加载分析洞察...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 实验管理部分 -->
+        <section id="experiments" class="section">
+            <div class="section-header">
+                <h1>实验管理</h1>
+                <p>创建、监控和管理优化实验</p>
+            </div>
+
+            <!-- 实验控制面板 -->
+            <div class="experiment-controls">
+                <button class="btn primary" onclick="showCreateExperiment()">
+                    <i class="fas fa-plus"></i> 创建实验
+                </button>
+                <button class="btn secondary" onclick="refreshExperiments()">
+                    <i class="fas fa-sync-alt"></i> 刷新
+                </button>
+                <div class="filter-controls">
+                    <select id="statusFilter">
+                        <option value="">所有状态</option>
+                        <option value="running">运行中</option>
+                        <option value="completed">已完成</option>
+                        <option value="failed">失败</option>
+                    </select>
+                    <select id="algorithmFilter">
+                        <option value="">所有算法</option>
+                        <option value="integrated">集成优化</option>
+                        <option value="gurobi_3dpp">Gurobi 3D</option>
+                        <option value="ltl_optimizer">LTL优化</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 实验列表 -->
+            <div class="experiments-table">
+                <table id="experimentsTable">
+                    <thead>
+                        <tr>
+                            <th>实验名称</th>
+                            <th>算法</th>
+                            <th>状态</th>
+                            <th>创建时间</th>
+                            <th>车辆数</th>
+                            <th>订单数</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="experimentsTableBody">
+                        <tr>
+                            <td colspan="7" class="loading-cell">
+                                <i class="fas fa-spinner fa-spin"></i> 加载实验数据...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 分页控制 -->
+            <div class="pagination-controls">
+                <button class="btn-page" id="prevPage" onclick="changePage(-1)">
+                    <i class="fas fa-chevron-left"></i> 上一页
+                </button>
+                <span id="pageInfo">页面 1 / 1</span>
+                <button class="btn-page" id="nextPage" onclick="changePage(1)">
+                    下一页 <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- 趋势分析部分 -->
+        <section id="trends" class="section">
+            <div class="section-header">
+                <h1>趋势分析</h1>
+                <p>深度分析性能指标的时间序列变化</p>
+            </div>
+
+            <!-- 趋势控制面板 -->
+            <div class="trend-controls">
+                <div class="control-group">
+                    <label for="metricSelect">选择指标:</label>
+                    <select id="metricSelect">
+                        <option value="loading_efficiency">装载效率</option>
+                        <option value="total_distance">总行驶距离</option>
+                        <option value="vehicle_utilization">车辆利用率</option>
+                        <option value="avg_route_duration">平均路径时长</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="periodSelect">时间段:</label>
+                    <select id="periodSelect">
+                        <option value="7days">7天</option>
+                        <option value="30days" selected>30天</option>
+                        <option value="90days">90天</option>
+                    </select>
+                </div>
+                <button class="btn primary" onclick="analyzeTrend()">
+                    <i class="fas fa-chart-line"></i> 分析趋势
+                </button>
+            </div>
+
+            <!-- 趋势图表区域 -->
+            <div class="trend-charts">
+                <div class="chart-panel">
+                    <canvas id="trendChart"></canvas>
+                </div>
+                <div class="trend-summary">
+                    <h3>趋势摘要</h3>
+                    <div id="trendSummary">
+                        <p>请选择指标和时间段进行分析</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 异常检测 -->
+            <div class="anomaly-panel">
+                <h3><i class="fas fa-exclamation-triangle"></i> 异常检测</h3>
+                <div id="anomaliesList">
+                    <p>暂无异常数据</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 性能分析部分 -->
+        <section id="performance" class="section">
+            <div class="section-header">
+                <h1>性能分析</h1>
+                <p>深入分析算法性能和优化机会</p>
+            </div>
+
+            <!-- 性能分析选项卡 -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="algorithm-comparison">算法对比</button>
+                <button class="tab-btn" data-tab="efficiency-analysis">效率分析</button>
+                <button class="tab-btn" data-tab="optimization-opportunities">优化机会</button>
+            </div>
+
+            <!-- 算法对比标签页 -->
+            <div id="algorithm-comparison" class="tab-content active">
+                <div class="algorithm-controls">
+                    <button class="btn primary" onclick="compareAlgorithms()">
+                        <i class="fas fa-balance-scale"></i> 对比算法
+                    </button>
+                    <select id="timeRangeSelect">
+                        <option value="7">近7天</option>
+                        <option value="30" selected>近30天</option>
+                        <option value="90">近90天</option>
+                    </select>
+                </div>
+                <div class="comparison-results">
+                    <div class="algorithm-chart">
+                        <canvas id="algorithmPerformanceChart"></canvas>
+                    </div>
+                    <div class="comparison-table">
+                        <table id="algorithmComparisonTable">
+                            <thead>
+                                <tr>
+                                    <th>算法</th>
+                                    <th>实验数</th>
+                                    <th>成功率</th>
+                                    <th>平均效率</th>
+                                    <th>性能评分</th>
+                                </tr>
+                            </thead>
+                            <tbody id="algorithmComparisonBody">
+                                <tr>
+                                    <td colspan="5">点击"对比算法"按钮开始分析</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 效率分析标签页 -->
+            <div id="efficiency-analysis" class="tab-content">
+                <div class="efficiency-dashboard">
+                    <div class="efficiency-chart">
+                        <canvas id="efficiencyDistributionChart"></canvas>
+                    </div>
+                    <div class="efficiency-stats">
+                        <h3>效率统计</h3>
+                        <div id="efficiencyStats">
+                            <p>加载效率统计数据中...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="pattern-analysis">
+                    <h3>模式识别</h3>
+                    <div id="patternsList">
+                        <p>分析效率模式中...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 优化机会标签页 -->
+            <div id="optimization-opportunities" class="tab-content">
+                <div class="opportunities-list">
+                    <h3>发现的优化机会</h3>
+                    <div id="opportunitiesList">
+                        <p>分析优化机会中...</p>
+                    </div>
+                </div>
+                <div class="recommendations">
+                    <h3>改进建议</h3>
+                    <div id="recommendationsList">
+                        <p>生成改进建议中...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 报告中心部分 -->
+        <section id="reports" class="section">
+            <div class="section-header">
+                <h1>报告中心</h1>
+                <p>生成和管理各类分析报告</p>
+            </div>
+
+            <!-- 报告生成面板 -->
+            <div class="report-generator">
+                <h3>生成新报告</h3>
+                <div class="report-types">
+                    <button class="report-type-btn" data-type="comprehensive">
+                        <i class="fas fa-file-alt"></i>
+                        <span>综合报告</span>
+                    </button>
+                    <button class="report-type-btn" data-type="trend">
+                        <i class="fas fa-chart-line"></i>
+                        <span>趋势报告</span>
+                    </button>
+                    <button class="report-type-btn" data-type="benchmark">
+                        <i class="fas fa-medal"></i>
+                        <span>基准报告</span>
+                    </button>
+                    <button class="report-type-btn" data-type="custom">
+                        <i class="fas fa-cog"></i>
+                        <span>自定义报告</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 报告列表 -->
+            <div class="reports-list">
+                <h3>历史报告</h3>
+                <div class="reports-table">
+                    <table id="reportsTable">
+                        <thead>
+                            <tr>
+                                <th>报告名称</th>
+                                <th>类型</th>
+                                <th>生成时间</th>
+                                <th>大小</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportsTableBody">
+                            <tr>
+                                <td colspan="5" class="loading-cell">
+                                    <i class="fas fa-spinner fa-spin"></i> 加载报告列表...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 模态框 -->
+    <div id="createExperimentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>创建新实验</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="createExperimentForm">
+                <div class="form-group">
+                    <label for="experimentName">实验名称</label>
+                    <input type="text" id="experimentName" required>
+                </div>
+                <div class="form-group">
+                    <label for="experimentDescription">实验描述</label>
+                    <textarea id="experimentDescription" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="experimentAlgorithm">算法选择</label>
+                    <select id="experimentAlgorithm" required>
+                        <option value="">请选择算法...</option>
+                        <option value="integrated">集成优化</option>
+                        <option value="gurobi_3dpp">Gurobi 3D装载</option>
+                        <option value="ltl_optimizer">LTL拼装优化</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn secondary" onclick="closeCreateExperiment()">取消</button>
+                    <button type="submit" class="btn primary">创建实验</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 加载脚本 -->
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/analytics.js"></script>
+</body>
+</html>

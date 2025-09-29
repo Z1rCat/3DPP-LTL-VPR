@@ -30,6 +30,14 @@ flask-cors>=3.0.0
 openpyxl>=3.0.0
 xlsxwriter>=3.0.0
 
+# 数据库
+sqlite3  # 内置模块
+sqlalchemy>=1.4.0  # 可选，用于复杂查询
+
+# 数据分析增强
+seaborn>=0.11.0  # 统计可视化
+scikit-learn>=1.0.0  # 机器学习算法（用于异常检测等）
+
 # 工具库
 tqdm>=4.62.0
 pathlib2>=2.3.0
