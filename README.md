@@ -46,15 +46,25 @@ logistics_system/
 │
 ├── 📁 frontend/                  # Web前端
 │   ├── 📁 templates/             # HTML模板
-│   │   ├── index.html            # 主页面
+│   │   ├── login.html            # 登录页面
+│   │   ├── admin.html            # 管理员控制台
+│   │   ├── index.html            # 主页面（重定向）
 │   │   └── analytics.html        # 分析仪表板页面
 │   └── 📁 static/                # 静态资源
 │       ├── 📁 css/               # 样式文件
+│       │   ├── login.css         # 登录页面样式
+│       │   ├── admin.css         # 管理员控制台样式
 │       │   ├── style.css         # 主样式
 │       │   └── analytics.css     # 分析页面样式
 │       ├── 📁 js/                # JavaScript文件
-│       │   └── analytics.js      # 分析页面脚本
+│       │   ├── login.js          # 登录页面脚本
+│       │   ├── admin.js          # 管理员控制台脚本
+│       │   ├── analytics.js      # 分析页面脚本
+│       │   ├── main.js           # 主要脚本
+│       │   ├── api.js            # API接口脚本
+│       │   └── visualization.js  # 可视化脚本
 │       └── 📁 images/            # 图片资源
+│           └── default-avatar.svg
 │
 ├── 📁 data_processing/           # 数据处理模块
 │   ├── data_loader.py            # 数据加载器
@@ -115,6 +125,15 @@ logistics_system/
 
 2. **安装依赖**
    ```bash
+   # 推荐使用虚拟环境
+   python -m venv venv
+
+   # Windows
+   venv\Scripts\activate
+   pip install -r requirements.txt
+
+   # Linux/Mac
+   source venv/bin/activate
    pip install -r requirements.txt
    ```
 
@@ -123,8 +142,25 @@ logistics_system/
    # Windows
    set GUROBI_LICENSE_PATH=C:\path\to\your\gurobi.lic
 
+   # 或者设置环境变量（推荐）
+   # 在系统环境变量中添加：
+   # 变量名：GUROBI_LICENSE_PATH
+   # 变量值：C:\path\to\your\gurobi.lic
+
    # Linux/Mac
    export GUROBI_LICENSE_PATH=/path/to/your/gurobi.lic
+   ```
+
+4. **Windows特定配置**
+   ```bash
+   # 检查Python版本（需要3.8+）
+   python --version
+
+   # 检查Gurobi许可证
+   gurobi_cl --license
+
+   # 检查依赖
+   pip list
    ```
 
 ### 🎯 使用方式
@@ -144,10 +180,12 @@ python api/app.py
 ```
 
 访问 Web 界面：
-- 🌐 **主页**: http://localhost:8000
-- 📊 **分析仪表板**: http://localhost:8000/analytics
+- 🌐 **登录页面**: http://localhost:8000/login
+- 👤 **管理员控制台**: http://localhost:8000/admin
+- 📊 **系统概览**: http://localhost:8000/api
 - 📋 **API文档**: http://localhost:8000/docs
 - 📖 **ReDoc**: http://localhost:8000/redoc
+- 🔍 **健康检查**: http://localhost:8000/health
 
 ## ⚙️ 配置说明
 
@@ -302,7 +340,62 @@ python -m uvicorn api.app:app --host 0.0.0.0 --port 8000
    ```bash
    # 检查许可证
    gurobi_cl --license
+
+   # Windows环境变量检查
+   echo %GUROBI_LICENSE_PATH%
    ```
+
+4. **Windows特定问题**
+
+   **a) 端口占用错误**
+   ```bash
+   # 查看端口占用
+   netstat -ano | findstr :8000
+
+   # 终止占用进程
+   taskkill /PID <进程ID> /F
+   ```
+
+   **b) Python模块导入错误**
+   ```bash
+   # 重新安装依赖
+   pip install -r requirements.txt --force-reinstall
+
+   # 检查模块路径
+   python -c "import sys; print(sys.path)"
+   ```
+
+   **c) 中文编码问题**
+   ```python
+   # 在代码开头添加
+   # -*- coding: utf-8 -*-
+   import sys
+   sys.path.append('utf-8')
+   ```
+
+5. **前端无法加载静态资源**
+   ```bash
+   # 检查静态文件路径
+   # 确保 frontend/static/ 目录存在且包含必要文件
+
+   # 清除浏览器缓存
+   Ctrl + Shift + Delete (Chrome)
+   ```
+
+### 开发调试模式
+
+启用详细日志：
+```python
+# 在config.py中设置
+USER_EXPERIENCE['verbose_logging'] = True
+USER_EXPERIENCE['show_progress_bars'] = True
+```
+
+启动开发服务器：
+```bash
+# 开发模式（自动重载）
+python -m uvicorn api.app:app --host 0.0.0.0 --port 8000 --reload --log-level debug
+```
 
 ### 日志分析
 
@@ -319,11 +412,52 @@ python -m uvicorn api.app:app --host 0.0.0.0 --port 8000
 - `refactor-v4` - V4.0开发分支
 - `backup-v3-before-refactor` - V3.0备份
 
+### 前端开发指南
+
+1. **技术栈**
+   - HTML5 + CSS3 + Vanilla JavaScript
+   - Font Awesome 6.4.0 (图标)
+   - Chart.js 3.9.1 (图表)
+   - 响应式设计
+
+2. **文件结构**
+   ```
+   frontend/
+   ├── templates/          # HTML模板
+   │   ├── login.html     # 登录页面
+   │   ├── admin.html     # 管理员控制台
+   │   └── analytics.html # 分析页面
+   └── static/
+       ├── css/           # 样式文件
+       ├── js/            # JavaScript文件
+       └── images/        # 图片资源
+   ```
+
+3. **开发规范**
+   - 使用语义化HTML5标签
+   - CSS采用BEM命名规范
+   - JavaScript使用ES6+语法
+   - 移动端优先的响应式设计
+
+4. **调试技巧**
+   ```bash
+   # Chrome开发者工具
+   F12 → Console/Network/Elements
+
+   # 清除缓存
+   Ctrl + Shift + R (强制刷新)
+
+   # 移动端调试
+   F12 → 设备模拟器
+   ```
+
 ### 代码规范
 
 - 遵循PEP 8
 - 函数注释完整
 - 模块化设计
+- 前端代码遵循W3C标准
+- 使用ESLint进行代码检查
 
 ## 📄 许可证
 
