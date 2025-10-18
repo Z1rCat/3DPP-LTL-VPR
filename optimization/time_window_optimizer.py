@@ -22,7 +22,7 @@ import math
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
-from config import (TIME_WINDOW_CONFIG, ROUTING_CONFIG, DISTANCE_MATRIX)
+from config import (TIME_WINDOW_CONFIG, ROUTING_CONFIG)
 from utils.distance_calculator import DistanceCalculator
 
 

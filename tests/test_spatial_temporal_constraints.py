@@ -427,7 +427,7 @@ class TestConfigurationValidation(unittest.TestCase):
 
 def run_comprehensive_tests():
     """运行全面的测试套件"""
-    print("🚀 开始空间-时间约束系统全面测试")
+    print("开始空间-时间约束系统全面测试")
     print("=" * 60)
 
     # 设置日志级别
@@ -454,7 +454,7 @@ def run_comprehensive_tests():
 
     # 输出测试总结
     print("\n" + "=" * 60)
-    print("🎯 测试总结:")
+    print("测试总结:")
     print(f"  运行测试数: {result.testsRun}")
     print(f"  成功数: {result.testsRun - len(result.failures) - len(result.errors)}")
     print(f"  失败数: {len(result.failures)}")
@@ -462,24 +462,24 @@ def run_comprehensive_tests():
     print(f"  跳过数: {len(result.skipped) if hasattr(result, 'skipped') else 0}")
 
     if result.failures:
-        print("\n❌ 失败的测试:")
+        print("\n失败的测试:")
         for test, traceback in result.failures:
             print(f"  - {test}: {traceback}")
 
     if result.errors:
-        print("\n💥 错误的测试:")
+        print("\n错误的测试:")
         for test, traceback in result.errors:
             print(f"  - {test}: {traceback}")
 
     success_rate = (result.testsRun - len(result.failures) - len(result.errors)) / result.testsRun * 100
-    print(f"\n📊 测试成功率: {success_rate:.1f}%")
+    print(f"\n测试成功率: {success_rate:.1f}%")
 
     if success_rate >= 90:
-        print("🎉 测试结果优秀！")
+        print("测试结果优秀！")
     elif success_rate >= 70:
-        print("👍 测试结果良好！")
+        print("测试结果良好！")
     else:
-        print("⚠️ 测试结果需要改进！")
+        print("测试结果需要改进！")
 
     return result.wasSuccessful()
 

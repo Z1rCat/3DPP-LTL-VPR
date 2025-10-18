@@ -214,8 +214,9 @@ class GurobiOptimizerEnhanced:
         model.setParam('Threads', self.solver_config['parallel_threads'])
         model.setParam('MIPFocus', self.solver_config['mip_focus'])
         model.setParam('Heuristics', self.solver_config['heuristic_focus'])
-        model.setParam('CutsAggressive', self.solver_config['cuts_aggressiveness'])
-        model.setParam('PresolveAggressive', self.solver_config['presolve_aggressiveness'])
+        # 注释掉不支持的参数
+        # model.setParam('CutsAggressive', self.solver_config['cuts_aggressiveness'])
+        # model.setParam('PresolveAggressive', self.solver_config['presolve_aggressiveness'])
         model.setParam('NumericFocus', self.solver_config['numeric_focus'])
 
         self.logger.info(f"Gurobi参数配置: {self.solver_config}")
@@ -282,7 +283,7 @@ class GurobiOptimizerEnhanced:
             vehicle_id="enhanced_truck_001",
             capacity=truck_specs['max_weight'],
             start_time=f"{self.time_config['start_time_hour']:02d}:00",
-            max_working_hours=self.routing_config['max_working_hours'] if hasattr(self, 'routing_config') else 10,
+            max_working_hours=10,  # 固定10小时工作时间
             average_speed_kmh=self.time_config['average_speed_kmh'],
             depot_coordinates=(30.800835, 104.139111)  # A网点坐标
         )
