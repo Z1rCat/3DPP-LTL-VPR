@@ -325,6 +325,89 @@ def validate_extended_config():
 
     print("扩展配置参数验证通过")
 
+# ===== 时间窗约束配置 =====
+TIME_WINDOW_CONFIG = {
+    'start_time_hour': 6,              # T_0 = 6点开始时间
+    'early_delivery_penalty': 10.0,    # 早到惩罚率(元/分钟)
+    'late_delivery_penalty': 20.0,     # 晚到惩罚率(元/分钟)
+    'service_time_per_item': 1,        # 每件货物服务时间(分钟) - 公式3-19
+    'average_speed_kmh': 40,           # 平均行驶速度(公里/小时) - 公式3-19
+    'max_deviation_minutes': 30,       # 最大允许偏差时间
+    'enable_time_window_optimization': True,  # 启用时间窗优化
+    'default_earliest_time': '08:00',  # 默认最早送达时间
+    'default_latest_time': '18:00',    # 默认最晚送达时间
+    'soft_time_windows': True,         # 是否使用软时间窗(允许违反但惩罚)
+    'time_window_precision': 5         # 时间精度(分钟)
+}
+
+# ===== 空间约束配置 =====
+SPATIAL_CONSTRAINT_CONFIG = {
+    'enable_rotation_optimization': True,    # 启用旋转优化
+    'enable_3d_collision_detection': True,    # 启用3D碰撞检测
+    'big_m_for_spatial_constraints': 1000,   # 空间约束大M值
+    'rotation_enumeration_limit': 6,         # 旋转方式枚举限制(公式3-4)
+    'spatial_precision': 0.001,              # 空间坐标精度(米)
+    'overlap_detection_method': 'exact',     # 重叠检测方法: 'exact'/'approximate'
+    'enable_support_constraint': True,       # 启用支撑约束(重力方向)
+    'allow_item_rotation': True,             # 允许货物旋转
+    'rotation_angle_step': 90,               # 旋转角度步长(度)
+    'collision_detection_layers': 2,         # 碰撞检测分层层数
+    'max_rotation_combinations': 216         # 最大旋转组合数(6^3)
+}
+
+# ===== 多目标优化配置 =====
+MULTI_OBJECTIVE_CONFIG = {
+    'enable_multi_objective': True,          # 启用多目标优化
+    'economic_weight': 0.6,                 # 经济效益权重(公式3-7)
+    'loading_rate_weight': 0.4,             # 装载率权重(公式3-7)
+    'fixed_cost_per_vehicle': 1000,         # 每车固定成本c_f(元) - 公式3-8
+    'fuel_cost_per_ton_km': 0.16,           # 每吨公里燃油成本c_r - 公式3-8
+    'empty_vehicle_weight_tons': 8.5,       # 空车重量m_self(吨) - 公式3-8
+    'optimization_method': 'weighted_sum',  # 优化方法: 'weighted_sum'/'pareto'
+    'pareto_solution_count': 10,            # Pareto解集数量
+    'convergence_tolerance': 1e-6           # 收敛容忍度
+}
+
+# ===== 高级求解器配置 =====
+ADVANCED_SOLVER_CONFIG = {
+    'enable_advanced_constraints': True,     # 启用高级约束
+    'use_decomposition': True,               # 使用分解算法
+    'max_solve_time_minutes': 60,           # 最大求解时间(分钟)
+    'solution_pool_size': 10,               # 解池大小
+    'mip_focus': 2,                         # MIP焦点: 1=可行性, 2=最优性, 3=界限
+    'heuristic_focus': 0.5,                 # 启发式算法焦点
+    'cuts_aggressiveness': 2,               # 切平面激进程度
+    'presolve_aggressiveness': 2,           # 预处理激进程度
+    'numeric_focus': 1,                     # 数值稳定性焦点
+    'parallel_threads': 4                   # 并行线程数
+}
+
+# ===== 扩展货物数据结构 =====
+ENHANCED_CARGO_SCHEMA = {
+    'required_fields': [
+        'order_id', 'volume_m3', 'weight_kg', 'coordinates',
+        'earliest_delivery_time', 'latest_delivery_time'  # 新增时间窗字段
+    ],
+    'optional_fields': [
+        'service_time_minutes', 'time_window_penalty_rate',
+        'rotation_allowed', 'fragile', 'stackable',
+        'preferred_orientation', 'handling_requirements'
+    ],
+    'time_window_fields': {
+        'earliest_delivery_time': str,       # 格式: "HH:MM"
+        'latest_delivery_time': str,         # 格式: "HH:MM"
+        'service_time_minutes': int,         # 服务时间(分钟)
+        'time_window_penalty_rate': float    # 违约惩罚率(元/分钟)
+    },
+    'spatial_fields': {
+        'rotation_allowed': bool,            # 是否允许旋转
+        'preferred_orientation': int,        # 偏好方向(1-6)
+        'fragile': bool,                     # 是否易碎
+        'stackable': bool,                   # 是否可堆叠
+        'max_stack_height': float            # 最大堆叠高度(米)
+    }
+}
+
 if __name__ == "__main__":
     # 创建目录并验证配置
     create_all_directories()
