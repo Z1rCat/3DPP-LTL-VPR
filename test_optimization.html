@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>优化系统测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .btn { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .btn:hover { background: #0056b3; }
+        .btn.success { background: #28a745; }
+        .btn.warning { background: #ffc107; color: black; }
+        .result { margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 5px; font-family: monospace; white-space: pre-wrap; }
+        .status { padding: 5px 10px; border-radius: 3px; font-weight: bold; }
+        .status.success { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+        .status.running { background: #fff3cd; color: #856404; }
+        .progress-bar { width: 100%; height: 20px; background: #e9ecef; border-radius: 10px; overflow: hidden; margin: 10px 0; }
+        .progress-fill { height: 100%; background: #007bff; transition: width 0.3s ease; }
+        .test-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 600px) { .test-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚛 物流优化系统 - 真实后端测试</h1>
+        <p>本页面用于测试系统是否真正实现"不再是一堆壳子，而是能具体优化，运算，输出可视化图片"</p>
+
+        <div class="test-section">
+            <h2>📊 系统状态检查</h2>
+            <button class="btn" onclick="testSystemHealth()">检查系统健康</button>
+            <button class="btn" onclick="testAPIEndpoints()">测试API端点</button>
+            <div id="health-result" class="result"></div>
+        </div>
+
+        <div class="test-grid">
+            <div class="test-section">
+                <h2>📦 数据加载测试</h2>
+                <button class="btn" onclick="loadVisualizationFiles()">加载可视化文件</button>
+                <button class="btn" onclick="loadTrucksData()">加载卡车数据</button>
+                <button class="btn" onclick="loadRoutesData()">加载路径数据</button>
+                <div id="data-result" class="result"></div>
+            </div>
+
+            <div class="test-section">
+                <h2>⚡ 优化算法测试</h2>
+                <button class="btn warning" onclick="runOptimization('integrated')">运行集成优化</button>
+                <button class="btn" onclick="runOptimization('gurobi_3dpp')">运行3D装载优化</button>
+                <button class="btn" onclick="runOptimization('ltl_optimizer')">运行LTL优化</button>
+                <div id="optimization-result" class="result"></div>
+                <div id="progress-container" style="display: none;">
+                    <div class="progress-bar">
+                        <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div id="progress-text">准备启动优化...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🎯 可视化结果测试</h2>
+            <button class="btn success" onclick="testVisualizationDisplay()">测试可视化显示</button>
+            <button class="btn" onclick="openLatestVisualization()">打开最新可视化</button>
+            <div id="visualization-result" class="result"></div>
+            <iframe id="viz-frame" style="width: 100%; height: 500px; border: 1px solid #ddd; border-radius: 5px; display: none;"></iframe>
+        </div>
+
+        <div class="test-section">
+            <h2>📈 测试总结</h2>
+            <div id="summary" class="result">
+                点击上方按钮开始测试系统功能...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTaskId = null;
+        let testResults = {
+            systemHealth: false,
+            dataLoading: false,
+            optimization: false,
+            visualization: false
+        };
+
+        // 显示结果
+        function showResult(elementId, message, status = 'info') {
+            const element = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString();
+            const statusClass = status === 'success' ? 'success' : status === 'error' ? 'error' : 'running';
+            element.innerHTML = `<div class="status ${statusClass}">[${timestamp}] ${message}</div>`;
+        }
+
+        // 更新进度
+        function updateProgress(percent, message) {
+            document.getElementById('progress-fill').style.width = percent + '%';
+            document.getElementById('progress-text').textContent = message;
+        }
+
+        // 测试系统健康
+        async function testSystemHealth() {
+            showResult('health-result', '正在检查系统健康状态...', 'running');
+
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+
+                if (data.status === 'healthy') {
+                    showResult('health-result', `✅ 系统健康! 版本: ${data.version}\n功能: ${data.features.join(', ')}\n数据层: ${data.data_layer}`, 'success');
+                    testResults.systemHealth = true;
+                } else {
+                    showResult('health-result', '❌ 系统状态异常', 'error');
+                }
+            } catch (error) {
+                showResult('health-result', `❌ 连接失败: ${error.message}`, 'error');
+            }
+
+            updateSummary();
+        }
+
+        // 测试API端点
+        async function testAPIEndpoints() {
+            showResult('health-result', '正在测试API端点...', 'running');
+
+            const endpoints = [
+                '/api/visualizations/list?limit=3',
+                '/api/data/trucks?limit=3',
+                '/api/data/routes?limit=3',
+                '/api/optimization/algorithms'
+            ];
+
+            let results = [];
+
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(endpoint);
+                    const data = await response.json();
+
+                    if (data.success) {
+                        results.push(`✅ ${endpoint}: ${data.message}`);
+                    } else {
+                        results.push(`❌ ${endpoint}: ${data.message || '未知错误'}`);
+                    }
+                } catch (error) {
+                    results.push(`❌ ${endpoint}: ${error.message}`);
+                }
+            }
+
+            showResult('health-result', `API端点测试结果:\n${results.join('\n')}`,
+                      results.every(r => r.startsWith('✅')) ? 'success' : 'error');
+        }
+
+        // 加载可视化文件
+        async function loadVisualizationFiles() {
+            showResult('data-result', '正在加载可视化文件...', 'running');
+
+            try {
+                const response = await fetch('/api/visualizations/list?limit=10');
+                const data = await response.json();
+
+                if (data.success) {
+                    const types = [...new Set(data.data.map(file => file.type))];
+                    showResult('data-result', `✅ 成功加载 ${data.data.length} 个可视化文件\n类型: ${types.join(', ')}\n最新文件: ${data.data[0]?.filename}`, 'success');
+                    testResults.dataLoading = true;
+                } else {
+                    showResult('data-result', `❌ 加载失败: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showResult('data-result', `❌ 加载失败: ${error.message}`, 'error');
+            }
+
+            updateSummary();
+        }
+
+        // 加载卡车数据
+        async function loadTrucksData() {
+            showResult('data-result', '正在加载卡车数据...', 'running');
+
+            try {
+                const response = await fetch('/api/data/trucks?limit=5');
+                const data = await response.json();
+
+                if (data.success) {
+                    const truckTypes = [...new Set(data.data.map(truck => truck.type))];
+                    const avgEfficiency = (data.data.reduce((sum, truck) => sum + truck.loading_efficiency, 0) / data.data.length).toFixed(2);
+                    showResult('data-result', `✅ 成功加载 ${data.data.length} 辆卡车\n类型: ${truckTypes.join(', ')}\n平均装载效率: ${avgEfficiency}%`, 'success');
+                } else {
+                    showResult('data-result', `❌ 加载失败: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showResult('data-result', `❌ 加载失败: ${error.message}`, 'error');
+            }
+        }
+
+        // 加载路径数据
+        async function loadRoutesData() {
+            showResult('data-result', '正在加载路径数据...', 'running');
+
+            try {
+                const response = await fetch('/api/data/routes?limit=5');
+                const data = await response.json();
+
+                if (data.success) {
+                    const totalDistance = data.data.reduce((sum, route) => sum + (route.total_distance_km || 0), 0).toFixed(2);
+                    showResult('data-result', `✅ 成功加载 ${data.data.length} 条路径数据\n总距离: ${totalDistance} km`, 'success');
+                } else {
+                    showResult('data-result', `❌ 加载失败: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showResult('data-result', `❌ 加载失败: ${error.message}`, 'error');
+            }
+        }
+
+        // 运行优化
+        async function runOptimization(algorithm = 'integrated') {
+            showResult('optimization-result', `正在启动 ${algorithm} 优化...`, 'running');
+            document.getElementById('progress-container').style.display = 'block';
+            updateProgress(0, '准备启动优化...');
+
+            try {
+                const requestBody = {
+                    algorithm: algorithm,
+                    data_source: 'simulated_data.xlsx',
+                    parameters: {
+                        max_trucks: 10,
+                        optimization_time_limit: 60, // 1分钟用于测试
+                        enable_visualization: true,
+                        enable_route_optimization: true
+                    }
+                };
+
+                const response = await fetch('/api/optimization/run', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    currentTaskId = result.data.task_id;
+                    showResult('optimization-result', `✅ 优化任务已启动\n任务ID: ${currentTaskId}\n算法: ${algorithm}`, 'success');
+                    updateProgress(10, '优化任务已启动，开始监控...');
+
+                    // 开始监控进度
+                    monitorOptimizationProgress(currentTaskId);
+                } else {
+                    showResult('optimization-result', `❌ 启动优化失败: ${result.message}`, 'error');
+                    document.getElementById('progress-container').style.display = 'none';
+                }
+            } catch (error) {
+                showResult('optimization-result', `❌ 启动优化失败: ${error.message}`, 'error');
+                document.getElementById('progress-container').style.display = 'none';
+            }
+        }
+
+        // 监控优化进度
+        async function monitorOptimizationProgress(taskId) {
+            const checkProgress = async () => {
+                try {
+                    const response = await fetch(`/api/optimization/status/${taskId}`);
+                    const result = await response.json();
+
+                    if (result.success) {
+                        const { status, progress, message } = result.data;
+
+                        updateProgress(progress, message);
+                        showResult('optimization-result',
+                                  `📊 任务状态: ${status}\n进度: ${progress}%\n消息: ${message}`, 'running');
+
+                        if (status === 'completed') {
+                            showResult('optimization-result',
+                                      `🎉 优化完成!\n任务ID: ${taskId}\n算法: ${result.data.algorithm || 'unknown'}\n耗时: ${result.data.execution_time || 'unknown'}秒\n生成文件: ${result.data.output_files?.length || 0} 个`,
+                                      'success');
+                            document.getElementById('progress-container').style.display = 'none';
+                            testResults.optimization = true;
+                            updateSummary();
+                            return;
+                        } else if (status === 'failed') {
+                            showResult('optimization-result', `❌ 优化失败: ${message}`, 'error');
+                            document.getElementById('progress-container').style.display = 'none';
+                            return;
+                        }
+
+                        // 继续监控
+                        setTimeout(checkProgress, 2000);
+                    } else {
+                        showResult('optimization-result', `❌ 获取状态失败: ${result.message}`, 'error');
+                        document.getElementById('progress-container').style.display = 'none';
+                    }
+                } catch (error) {
+                    showResult('optimization-result', `❌ 监控失败: ${error.message}`, 'error');
+                    document.getElementById('progress-container').style.display = 'none';
+                }
+            };
+
+            // 开始监控
+            setTimeout(checkProgress, 1000);
+        }
+
+        // 测试可视化显示
+        async function testVisualizationDisplay() {
+            showResult('visualization-result', '正在测试可视化显示...', 'running');
+
+            try {
+                const response = await fetch('/api/visualizations/list?limit=5');
+                const data = await response.json();
+
+                if (data.success && data.data.length > 0) {
+                    const latestFile = data.data[0];
+                    showResult('visualization-result',
+                              `✅ 找到 ${data.data.length} 个可视化文件\n最新: ${latestFile.filename}\n类型: ${latestFile.type}\n大小: ${(latestFile.size / 1024).toFixed(2)} KB`,
+                              'success');
+
+                    // 在iframe中显示
+                    const iframe = document.getElementById('viz-frame');
+                    iframe.src = `/visualizations/${latestFile.filename}`;
+                    iframe.style.display = 'block';
+
+                    testResults.visualization = true;
+                } else {
+                    showResult('visualization-result', '❌ 没有找到可视化文件', 'error');
+                }
+            } catch (error) {
+                showResult('visualization-result', `❌ 测试失败: ${error.message}`, 'error');
+            }
+
+            updateSummary();
+        }
+
+        // 打开最新可视化
+        async function openLatestVisualization() {
+            try {
+                const response = await fetch('/api/visualizations/list?limit=1');
+                const data = await response.json();
+
+                if (data.success && data.data.length > 0) {
+                    const latestFile = data.data[0];
+                    window.open(`/visualizations/${latestFile.filename}`, '_blank');
+                } else {
+                    showResult('visualization-result', '❌ 没有找到可视化文件', 'error');
+                }
+            } catch (error) {
+                showResult('visualization-result', `❌ 打开失败: ${error.message}`, 'error');
+            }
+        }
+
+        // 更新测试总结
+        function updateSummary() {
+            const allTests = Object.values(testResults);
+            const passedTests = allTests.filter(test => test).length;
+
+            let summary = `📊 测试进度: ${passedTests}/${allTests.length} 项通过\n\n`;
+            summary += `✅ 系统健康: ${testResults.systemHealth ? '通过' : '未测试'}\n`;
+            summary += `📦 数据加载: ${testResults.dataLoading ? '通过' : '未测试'}\n`;
+            summary += `⚡ 优化算法: ${testResults.optimization ? '通过' : '未测试'}\n`;
+            summary += `🎯 可视化显示: ${testResults.visualization ? '通过' : '未测试'}\n\n`;
+
+            if (passedTests === allTests.length) {
+                summary += '🎉 所有测试通过！系统已成功实现"不再是一堆壳子，而是能具体优化，运算，输出可视化图片"！';
+            } else {
+                summary += `🚧 还有 ${allTests.length - passedTests} 项测试需要完成`;
+            }
+
+            document.getElementById('summary').textContent = summary;
+        }
+
+        // 页面加载时自动测试系统健康
+        window.onload = function() {
+            testSystemHealth();
+        };
+    </script>
+</body>
+</html>

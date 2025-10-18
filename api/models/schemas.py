@@ -16,6 +16,65 @@ class APIResponse(BaseModel):
     data: Optional[Any] = Field(None, description="响应数据")
     timestamp: datetime = Field(default_factory=datetime.now, description="响应时间")
 
+# ===== 用户认证相关模型 =====
+class UserRole(str, Enum):
+    """用户角色枚举"""
+    ADMIN = "admin"
+    OPERATOR = "operator"
+    VIEWER = "viewer"
+    DRIVER = "driver"      # 司机
+    MANAGER = "manager"    # 管理层
+    CUSTOMER = "customer"  # 客户
+
+class LoginRequest(BaseModel):
+    """登录请求模型"""
+    username: str = Field(description="用户名", min_length=3, max_length=20)
+    password: str = Field(description="密码", min_length=1)
+    rememberMe: bool = Field(False, description="记住我")
+
+class RegisterRequest(BaseModel):
+    """注册请求模型"""
+    username: str = Field(description="用户名", min_length=3, max_length=20)
+    email: str = Field(description="邮箱地址")
+    password: str = Field(description="密码", min_length=8)
+    passwordConfirm: str = Field(description="确认密码")
+    role: UserRole = Field(description="用户角色")
+    agreeTerms: bool = Field(description="同意服务条款")
+
+class UserProfile(BaseModel):
+    """用户资料模型"""
+    username: str = Field(description="用户名")
+    email: str = Field(description="邮箱地址")
+    role: UserRole = Field(description="用户角色")
+    created_at: datetime = Field(description="创建时间")
+    last_login: Optional[datetime] = Field(None, description="最后登录时间")
+    is_active: bool = Field(True, description="是否激活")
+
+class UserInfo(BaseModel):
+    """用户信息模型（包含token）"""
+    username: str = Field(description="用户名")
+    email: str = Field(description="邮箱地址")
+    role: UserRole = Field(description="用户角色")
+    created_at: datetime = Field(description="创建时间")
+    last_login: Optional[datetime] = Field(None, description="最后登录时间")
+    token: str = Field(description="访问令牌")
+    token_type: str = Field("bearer", description="令牌类型")
+
+class ChangePasswordRequest(BaseModel):
+    """修改密码请求模型"""
+    currentPassword: str = Field(description="当前密码")
+    newPassword: str = Field(description="新密码", min_length=8)
+    confirmPassword: str = Field(description="确认新密码")
+
+class UpdateUserStatusRequest(BaseModel):
+    """更新用户状态请求模型"""
+    is_active: bool = Field(description="是否激活")
+
+class TokenData(BaseModel):
+    """Token数据模型"""
+    username: Optional[str] = None
+    role: Optional[str] = None
+
 # ===== 可视化相关模型 =====
 class VisualizationType(str, Enum):
     """可视化类型枚举"""

@@ -1,0 +1,11 @@
+{
+  "admin": {
+    "username": "admin",
+    "email": "admin@logistics.com",
+    "password_hash": "8410ed92d0e4463a1a28318279440722:850b772161202eaacb9c7c7da2cf6e062a41379fb6e3857b59248b243f52a0fb",
+    "role": "admin",
+    "created_at": "2025-09-29T17:07:35.693234",
+    "is_active": true,
+    "last_login": "2025-10-16T16:56:27.356308"
+  }
+}

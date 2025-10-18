@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理层 - 巧满装载平台</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/manager.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-chart-line"></i>
+                <h2>管理层</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#dashboard" class="nav-link active">成本分析</a></li>
+                <li><a href="#vehicles" class="nav-link">车辆监控</a></li>
+                <li><a href="#efficiency" class="nav-link">效率分析</a></li>
+                <li><a href="#reports" class="nav-link">数据报告</a></li>
+            </ul>
+            <div class="nav-actions">
+                <span id="manager-name">管理员</span>
+                <button onclick="logout()" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> 退出
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <div class="main-container">
+        <!-- 成本分析部分 -->
+        <section id="dashboard" class="section active">
+            <div class="section-header">
+                <h1>💰 运输成本分析</h1>
+                <p>监控车队运营成本和碳排放情况</p>
+            </div>
+
+            <!-- 日期选择器 -->
+            <div class="date-selector">
+                <div class="date-controls">
+                    <button id="prev-day-btn" class="date-btn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <input type="date" id="date-input" class="date-input">
+                    <button id="next-day-btn" class="date-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <button id="today-btn" class="date-btn">今天</button>
+                </div>
+                <div class="view-controls">
+                    <button class="view-btn active" data-view="day">日视图</button>
+                    <button class="view-btn" data-view="week">周视图</button>
+                    <button class="view-btn" data-view="month">月视图</button>
+                </div>
+            </div>
+
+            <!-- 关键指标卡片 -->
+            <div class="metrics-grid">
+                <div class="metric-card cost">
+                    <div class="metric-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3 id="daily-total-cost">¥0</h3>
+                        <p>今日总成本</p>
+                        <div class="metric-change positive">
+                            <i class="fas fa-arrow-down"></i>
+                            <span>-5.2% vs 昨日</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-card fuel">
+                    <div class="metric-icon">
+                        <i class="fas fa-gas-pump"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3 id="fuel-cost">¥0</h3>
+                        <p>燃油成本</p>
+                        <div class="metric-change negative">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+2.1% vs 昨日</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-card efficiency">
+                    <div class="metric-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3 id="avg-loading-rate">0%</h3>
+                        <p>平均装载率</p>
+                        <div class="metric-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+3.5% vs 昨日</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-card carbon">
+                    <div class="metric-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3 id="carbon-emission">0kg</h3>
+                        <p>碳排放量</p>
+                        <div class="metric-change positive">
+                            <i class="fas fa-arrow-down"></i>
+                            <span>-8.3% vs 昨日</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 成本分析图表 -->
+            <div class="charts-section">
+                <div class="chart-row">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>成本趋势分析</h3>
+                            <div class="chart-controls">
+                                <select id="cost-period-select" class="period-select">
+                                    <option value="7">最近7天</option>
+                                    <option value="30">最近30天</option>
+                                    <option value="90">最近90天</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="cost-trend-chart" class="chart">
+                            <canvas id="costTrendChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>成本构成分析</h3>
+                        </div>
+                        <div id="cost-breakdown-chart" class="chart">
+                            <canvas id="costBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-row">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>车辆成本对比</h3>
+                        </div>
+                        <div id="vehicle-cost-chart" class="chart">
+                            <canvas id="vehicleCostChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>装载率vs成本关系</h3>
+                        </div>
+                        <div id="efficiency-cost-chart" class="chart">
+                            <canvas id="efficiencyCostChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 详细成本表格 -->
+            <div class="cost-table-section">
+                <div class="table-header">
+                    <h3>车辆成本明细</h3>
+                    <div class="table-controls">
+                        <input type="text" id="vehicle-search" placeholder="搜索车辆..." class="search-input">
+                        <button id="export-btn" class="export-btn">
+                            <i class="fas fa-download"></i> 导出Excel
+                        </button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="cost-table">
+                        <thead>
+                            <tr>
+                                <th>车辆编号</th>
+                                <th>类型</th>
+                                <th>总成本</th>
+                                <th>燃油成本</th>
+                                <th>人工成本</th>
+                                <th>装载率</th>
+                                <th>行驶距离</th>
+                                <th>碳排放</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cost-table-body">
+                            <tr>
+                                <td colspan="10" class="loading-row">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                    加载数据中...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 车辆监控部分 -->
+        <section id="vehicles" class="section">
+            <div class="section-header">
+                <h1>🚛 车队监控</h1>
+                <p>实时监控车队状态和位置</p>
+            </div>
+
+            <!-- 车队状态概览 -->
+            <div class="fleet-overview">
+                <div class="overview-stat">
+                    <div class="stat-number" id="total-vehicles">0</div>
+                    <div class="stat-label">总车辆数</div>
+                </div>
+                <div class="overview-stat active">
+                    <div class="stat-number" id="active-vehicles">0</div>
+                    <div class="stat-label">运行中</div>
+                </div>
+                <div class="overview-stat idle">
+                    <div class="stat-number" id="idle-vehicles">0</div>
+                    <div class="stat-label">空闲</div>
+                </div>
+                <div class="overview-stat maintenance">
+                    <div class="stat-number" id="maintenance-vehicles">0</div>
+                    <div class="stat-label">维护中</div>
+                </div>
+            </div>
+
+            <!-- 车辆地图 -->
+            <div class="vehicle-map-section">
+                <div class="map-controls">
+                    <button id="refresh-vehicle-map-btn" class="control-btn">
+                        <i class="fas fa-sync-alt"></i> 刷新
+                    </button>
+                    <select id="vehicle-filter-select" class="filter-select">
+                        <option value="all">全部车辆</option>
+                        <option value="active">运行中</option>
+                        <option value="idle">空闲</option>
+                        <option value="maintenance">维护中</option>
+                    </select>
+                </div>
+                <div id="vehicle-map-container" class="vehicle-map">
+                    <div class="map-placeholder">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <p>车辆地图加载中...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 车辆列表 -->
+            <div class="vehicle-list-section">
+                <h3>车辆状态列表</h3>
+                <div id="vehicle-list-container" class="vehicle-list">
+                    <div class="loading-placeholder">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>加载车辆数据中...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 效率分析部分 -->
+        <section id="efficiency" class="section">
+            <div class="section-header">
+                <h1>📊 效率分析</h1>
+                <p>分析装载率和运营效率</p>
+            </div>
+
+            <!-- 效率概览 -->
+            <div class="efficiency-overview">
+                <div class="efficiency-metric">
+                    <div class="metric-value" id="overall-efficiency">0%</div>
+                    <div class="metric-title">总体装载效率</div>
+                </div>
+                <div class="efficiency-metric">
+                    <div class="metric-value" id="route-efficiency">0%</div>
+                    <div class="metric-title">路径优化效率</div>
+                </div>
+                <div class="efficiency-metric">
+                    <div class="metric-value" id="time-efficiency">0%</div>
+                    <div class="metric-title">时间利用率</div>
+                </div>
+            </div>
+
+            <!-- 装载率热力图 -->
+            <div class="heatmap-section">
+                <h3>装载率热力图</h3>
+                <div id="loading-heatmap-container" class="heatmap-container">
+                    <iframe
+                        src="/visualizations/loading_efficiency_dashboard.html"
+                        width="100%"
+                        height="600px"
+                        frameborder="0">
+                    </iframe>
+                </div>
+            </div>
+
+            <!-- 优化效果对比 -->
+            <div class="optimization-comparison">
+                <h3>优化效果对比</h3>
+                <div id="optimization-chart-container" class="chart-container">
+                    <canvas id="optimizationChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数据报告部分 -->
+        <section id="reports" class="section">
+            <div class="section-header">
+                <h1>📋 数据报告</h1>
+                <p>生成和导出各类运营报告</p>
+            </div>
+
+            <!-- 报告生成器 -->
+            <div class="report-generator">
+                <div class="generator-controls">
+                    <div class="control-group">
+                        <label>报告类型:</label>
+                        <select id="report-type-select" class="report-select">
+                            <option value="daily">日报</option>
+                            <option value="weekly">周报</option>
+                            <option value="monthly">月报</option>
+                            <option value="custom">自定义</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>开始日期:</label>
+                        <input type="date" id="start-date" class="date-input">
+                    </div>
+                    <div class="control-group">
+                        <label>结束日期:</label>
+                        <input type="date" id="end-date" class="date-input">
+                    </div>
+                    <button id="generate-report-btn" class="generate-btn">
+                        <i class="fas fa-file-alt"></i> 生成报告
+                    </button>
+                </div>
+            </div>
+
+            <!-- 报告列表 -->
+            <div class="reports-list">
+                <h3>最近报告</h3>
+                <div id="reports-list-container" class="reports-container">
+                    <div class="loading-placeholder">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>加载报告列表中...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 加载脚本 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/manager.js"></script>
+</body>
+</html>

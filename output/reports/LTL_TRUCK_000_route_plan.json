@@ -1,92 +1,304 @@
 {
   "summary": {
     "vehicle_id": "LTL_TRUCK_000",
-    "total_distance_km": 72.44,
-    "total_duration_hours": 2.48,
-    "fuel_cost_yuan": 98.72,
-    "total_stops": 2,
-    "pickup_stops": 2,
-    "delivery_stops": 0,
-    "initial_load_kg": 0,
-    "final_load_kg": 0,
-    "max_load_kg": 34.489999999999995,
-    "load_efficiency": 0.23,
+    "total_distance_km": 2351.7326286144835,
+    "total_stops": 34,
+    "estimated_time_hours": 39.19554381024139,
     "optimization_algorithm": "Nearest_Neighbor_TSP",
-    "solution_status": "MULTI_STOP_OPTIMIZED",
-    "completion_time": "10:28",
-    "start_time": "08:00",
-    "working_hours": 2.48
+    "solution_status": "OPTIMAL"
   },
-  "route_details": {
-    "depot_info": {
-      "name": "A网点（成都至重庆专线）",
-      "coordinates": {
-        "lat": 30.800835,
-        "lng": 104.139111
-      }
-    },
-    "vehicle_info": {
-      "type": "9.6米厢式货车",
-      "capacity_kg": 15000,
-      "empty_weight_kg": 8500
-    },
-    "optimization_info": {
-      "solver": "Nearest_Neighbor_Algorithm",
-      "strategy": "多停靠点路径优化",
-      "route_type": "LTL_MULTI_STOP"
-    }
-  },
-  "itinerary": [
+  "route_details": [
     {
       "step": 1,
-      "action": "取货",
-      "order_id": "ORDER_0032",
       "coordinates": [
-        30.784712,
-        104.286461
+        30.5728,
+        104.0668
       ],
-      "weight_change_kg": 10.77,
-      "distance_from_previous_km": 14.19,
-      "estimated_arrival": "08:21",
-      "service_time_minutes": 20,
-      "departure_time": "08:41",
-      "address": "坐标(30.7847, 104.2865)",
-      "cargo_info": {
-        "type": "未知",
-        "weight_kg": 10.77
-      }
+      "location_type": "depot"
     },
     {
       "step": 2,
-      "action": "取货",
-      "order_id": "ORDER_0036",
       "coordinates": [
-        30.539113,
-        104.196005
+        30.740435698069778,
+        104.13566366702024
       ],
-      "weight_change_kg": 23.72,
-      "distance_from_previous_km": 28.65,
-      "estimated_arrival": "09:24",
-      "service_time_minutes": 20,
-      "departure_time": "09:44",
-      "address": "坐标(30.5391, 104.1960)",
-      "cargo_info": {
-        "type": "未知",
-        "weight_kg": 23.72
-      }
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 3,
+      "coordinates": [
+        30.275645342028287,
+        104.2653328133741
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 4,
+      "coordinates": [
+        30.652045499097888,
+        103.57461575004399
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 5,
+      "coordinates": [
+        30.521582428757075,
+        103.01818228902282
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 6,
+      "coordinates": [
+        30.734712097854782,
+        102.95830046710294
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 7,
+      "coordinates": [
+        31.15553559397156,
+        102.34978467641412
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 8,
+      "coordinates": [
+        31.666145799226367,
+        102.9002737985415
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 9,
+      "coordinates": [
+        31.484653418564434,
+        103.15687603991516
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 10,
+      "coordinates": [
+        31.447917615764307,
+        103.3151289358051
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 11,
+      "coordinates": [
+        31.983830216847636,
+        102.92280899391803
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 12,
+      "coordinates": [
+        31.87279694970733,
+        104.35879149956129
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 13,
+      "coordinates": [
+        31.546132270261467,
+        104.82121937136091
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 14,
+      "coordinates": [
+        31.677905560799946,
+        105.00018042490699
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 15,
+      "coordinates": [
+        31.758020899624988,
+        105.43574691934413
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 16,
+      "coordinates": [
+        31.66089161524386,
+        105.63023934203403
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 17,
+      "coordinates": [
+        31.389775790582963,
+        105.87699214231841
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 18,
+      "coordinates": [
+        30.984041873544307,
+        105.43750691907701
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 19,
+      "coordinates": [
+        29.798268590757054,
+        105.51189941875212
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 20,
+      "coordinates": [
+        29.46009456896641,
+        105.95648555434887
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 21,
+      "coordinates": [
+        29.25620519589386,
+        105.90096839098301
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 22,
+      "coordinates": [
+        29.04904970379029,
+        105.12527629789231
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 23,
+      "coordinates": [
+        28.96492313606221,
+        104.99065826818153
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 24,
+      "coordinates": [
+        29.12500630684795,
+        104.82442318386516
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 25,
+      "coordinates": [
+        28.98798335536414,
+        104.50156987803283
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 26,
+      "coordinates": [
+        28.70674530001437,
+        105.09328762607127
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 27,
+      "coordinates": [
+        28.223606844035118,
+        104.08103808576995
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 28,
+      "coordinates": [
+        28.11062779509216,
+        103.46178945915659
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 29,
+      "coordinates": [
+        28.213234563758622,
+        103.23097955195422
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 30,
+      "coordinates": [
+        28.75001332816419,
+        102.47760669825766
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 31,
+      "coordinates": [
+        29.16771729629202,
+        102.38332070137827
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 32,
+      "coordinates": [
+        29.77831009937284,
+        102.50016315959313
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 33,
+      "coordinates": [
+        30.306085021977637,
+        102.02651773865274
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 34,
+      "coordinates": [
+        29.837615885303848,
+        103.21807163653
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 35,
+      "coordinates": [
+        29.16296091916451,
+        103.81668634039434
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 36,
+      "coordinates": [
+        30.5728,
+        104.0668
+      ],
+      "location_type": "depot"
     }
   ],
-  "performance_metrics": {
-    "total_service_time_minutes": 50.0,
-    "total_travel_time_hours": 1.81,
-    "fuel_efficiency_yuan_per_km": 1.36,
-    "average_distance_per_stop": 36.22
-  },
-  "solver_info": {
-    "method": "Nearest_Neighbor_TSP",
-    "solve_time_seconds": 0.1,
-    "status": "MULTI_STOP_OPTIMIZED"
-  },
-  "generated_time": "2025-09-26T14:12:09.936752",
-  "generated_by": "LTL_3DPP_Optimization_System_V2"
+  "metadata": {
+    "generated_time": "2025-10-17T18:02:42.098343",
+    "generated_by": "Simple_Optimizer"
+  }
 }

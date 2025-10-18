@@ -1,111 +1,560 @@
 {
   "summary": {
     "vehicle_id": "LTL_TRUCK_001",
-    "total_distance_km": 149.94,
-    "total_duration_hours": 4.75,
-    "fuel_cost_yuan": 204.52,
-    "total_stops": 3,
-    "pickup_stops": 3,
-    "delivery_stops": 0,
-    "initial_load_kg": 0,
-    "final_load_kg": 0,
-    "max_load_kg": 49.81,
-    "load_efficiency": 0.33,
+    "total_distance_km": 3170.764594032439,
+    "total_stops": 66,
+    "estimated_time_hours": 52.84607656720732,
     "optimization_algorithm": "Nearest_Neighbor_TSP",
-    "solution_status": "MULTI_STOP_OPTIMIZED",
-    "completion_time": "12:44",
-    "start_time": "08:00",
-    "working_hours": 4.75
+    "solution_status": "OPTIMAL"
   },
-  "route_details": {
-    "depot_info": {
-      "name": "A网点（成都至重庆专线）",
-      "coordinates": {
-        "lat": 30.800835,
-        "lng": 104.139111
-      }
-    },
-    "vehicle_info": {
-      "type": "9.6米厢式货车",
-      "capacity_kg": 15000,
-      "empty_weight_kg": 8500
-    },
-    "optimization_info": {
-      "solver": "Nearest_Neighbor_Algorithm",
-      "strategy": "多停靠点路径优化",
-      "route_type": "LTL_MULTI_STOP"
-    }
-  },
-  "itinerary": [
+  "route_details": [
     {
       "step": 1,
-      "action": "取货",
-      "order_id": "ORDER_0027",
       "coordinates": [
-        30.867638,
-        104.036469
+        30.5728,
+        104.0668
       ],
-      "weight_change_kg": 18.67,
-      "distance_from_previous_km": 12.3,
-      "estimated_arrival": "08:18",
-      "service_time_minutes": 20,
-      "departure_time": "08:38",
-      "address": "坐标(30.8676, 104.0365)",
-      "cargo_info": {
-        "type": "未知",
-        "weight_kg": 18.67
-      }
+      "location_type": "depot"
     },
     {
       "step": 2,
-      "action": "取货",
-      "order_id": "ORDER_0036",
       "coordinates": [
-        30.539113,
-        104.196005
+        30.631187242055923,
+        104.03698928478211
       ],
-      "weight_change_kg": 23.72,
-      "distance_from_previous_km": 39.59,
-      "estimated_arrival": "09:37",
-      "service_time_minutes": 20,
-      "departure_time": "09:57",
-      "address": "坐标(30.5391, 104.1960)",
-      "cargo_info": {
-        "type": "未知",
-        "weight_kg": 23.72
-      }
+      "location_type": "delivery_point"
     },
     {
       "step": 3,
-      "action": "取货",
-      "order_id": "ORDER_0040",
       "coordinates": [
-        30.399125,
-        104.558069
+        30.597874324068652,
+        104.19209971666432
       ],
-      "weight_change_kg": 7.42,
-      "distance_from_previous_km": 38.03,
-      "estimated_arrival": "10:54",
-      "service_time_minutes": 20,
-      "departure_time": "11:14",
-      "address": "坐标(30.3991, 104.5581)",
-      "cargo_info": {
-        "type": "未知",
-        "weight_kg": 7.42
-      }
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 4,
+      "coordinates": [
+        30.827623042959726,
+        104.00044825914604
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 5,
+      "coordinates": [
+        30.838048408739557,
+        104.40809223335329
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 6,
+      "coordinates": [
+        31.040352951052682,
+        104.48833127641737
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 7,
+      "coordinates": [
+        31.114032421429236,
+        104.68514541245602
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 8,
+      "coordinates": [
+        30.74506408345202,
+        104.92701792145526
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 9,
+      "coordinates": [
+        30.521379335730803,
+        105.0704154991286
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 10,
+      "coordinates": [
+        30.148895668164986,
+        104.99985413021278
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 11,
+      "coordinates": [
+        30.105951147845055,
+        105.09373253166832
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 12,
+      "coordinates": [
+        30.011883363658413,
+        104.9434472102717
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 13,
+      "coordinates": [
+        29.6372155272996,
+        104.99916785954757
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 14,
+      "coordinates": [
+        29.655141942113374,
+        104.50822877009877
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 15,
+      "coordinates": [
+        29.11201476469192,
+        104.48650405298714
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 16,
+      "coordinates": [
+        28.881581029673224,
+        104.89654718083871
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 17,
+      "coordinates": [
+        28.6857356287531,
+        104.96604703836203
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 18,
+      "coordinates": [
+        28.343973310655567,
+        104.85891934151151
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 19,
+      "coordinates": [
+        28.274962499423403,
+        104.89891540272934
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 20,
+      "coordinates": [
+        28.126789470861265,
+        105.0039179713421
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 21,
+      "coordinates": [
+        28.028136432571486,
+        104.34180735705004
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 22,
+      "coordinates": [
+        28.277476106120762,
+        104.28467048954268
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 23,
+      "coordinates": [
+        28.300932343644668,
+        104.20525780073993
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 24,
+      "coordinates": [
+        28.459306878427675,
+        104.10323611125389
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 25,
+      "coordinates": [
+        28.53013709285947,
+        104.15298901428578
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 26,
+      "coordinates": [
+        28.333752797763903,
+        103.83905944072737
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 27,
+      "coordinates": [
+        28.427939505895363,
+        103.7484069108491
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 28,
+      "coordinates": [
+        28.66001277213621,
+        103.80372755873198
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 29,
+      "coordinates": [
+        28.843640189963935,
+        103.86604799867881
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 30,
+      "coordinates": [
+        28.86132668583752,
+        103.94385709659127
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 31,
+      "coordinates": [
+        28.72944340965021,
+        103.47084281103271
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 32,
+      "coordinates": [
+        29.134265927521636,
+        103.48757338667984
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 33,
+      "coordinates": [
+        29.195298141765097,
+        103.29371671001604
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 34,
+      "coordinates": [
+        29.506985007077876,
+        103.28387637606026
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 35,
+      "coordinates": [
+        29.93982276792708,
+        103.35630928939878
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 36,
+      "coordinates": [
+        30.28900658092523,
+        103.22663750351755
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 37,
+      "coordinates": [
+        30.33626953927151,
+        102.84844107600702
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 38,
+      "coordinates": [
+        30.10779300847204,
+        102.72343359481428
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 39,
+      "coordinates": [
+        30.10122681646113,
+        102.42866768063323
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 40,
+      "coordinates": [
+        30.345637619493065,
+        102.40855380312496
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 41,
+      "coordinates": [
+        30.789068342799194,
+        102.24324212081613
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 42,
+      "coordinates": [
+        31.253987676755973,
+        102.39273055167794
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 43,
+      "coordinates": [
+        31.662832996521793,
+        102.52432976965152
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 44,
+      "coordinates": [
+        31.938136566668952,
+        102.94247830120815
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 45,
+      "coordinates": [
+        31.982525094811425,
+        103.22659225980354
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 46,
+      "coordinates": [
+        31.3989504769371,
+        103.5549202234306
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 47,
+      "coordinates": [
+        31.862879126486387,
+        104.43733842042025
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 48,
+      "coordinates": [
+        31.797370176953418,
+        104.5748575021278
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 49,
+      "coordinates": [
+        31.616869481613307,
+        105.45610019869325
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 50,
+      "coordinates": [
+        31.646362755677213,
+        105.68998907263807
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 51,
+      "coordinates": [
+        31.522974713973866,
+        105.84905806027581
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 52,
+      "coordinates": [
+        31.00793883415614,
+        105.79780232748315
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 53,
+      "coordinates": [
+        30.05635910564835,
+        105.6474809090443
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 54,
+      "coordinates": [
+        29.9430922445283,
+        105.75171180573955
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 55,
+      "coordinates": [
+        29.906809813946523,
+        105.53415599347653
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 56,
+      "coordinates": [
+        29.642977173606276,
+        105.7531156944335
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 57,
+      "coordinates": [
+        29.224271002399075,
+        105.88045726262924
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 58,
+      "coordinates": [
+        29.18516648102225,
+        105.91655639669419
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 59,
+      "coordinates": [
+        29.665889341020808,
+        103.87110436424949
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 60,
+      "coordinates": [
+        29.70386485599002,
+        103.73985295455505
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 61,
+      "coordinates": [
+        29.78620204759766,
+        102.80682991895806
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 62,
+      "coordinates": [
+        29.755883086324562,
+        102.54339651744533
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 63,
+      "coordinates": [
+        29.566875672866857,
+        102.1208246554743
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 64,
+      "coordinates": [
+        29.91867374152163,
+        102.07569480298457
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 65,
+      "coordinates": [
+        28.671590862978398,
+        102.77728573786423
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 66,
+      "coordinates": [
+        28.49352193552364,
+        102.61119189880574
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 67,
+      "coordinates": [
+        28.420438785883473,
+        102.07571877660511
+      ],
+      "location_type": "delivery_point"
+    },
+    {
+      "step": 68,
+      "coordinates": [
+        30.5728,
+        104.0668
+      ],
+      "location_type": "depot"
     }
   ],
-  "performance_metrics": {
-    "total_service_time_minutes": 75.0,
-    "total_travel_time_hours": 3.75,
-    "fuel_efficiency_yuan_per_km": 1.36,
-    "average_distance_per_stop": 49.98
-  },
-  "solver_info": {
-    "method": "Nearest_Neighbor_TSP",
-    "solve_time_seconds": 0.1,
-    "status": "MULTI_STOP_OPTIMIZED"
-  },
-  "generated_time": "2025-09-26T14:12:09.937278",
-  "generated_by": "LTL_3DPP_Optimization_System_V2"
+  "metadata": {
+    "generated_time": "2025-10-17T18:02:42.099328",
+    "generated_by": "Simple_Optimizer"
+  }
 }

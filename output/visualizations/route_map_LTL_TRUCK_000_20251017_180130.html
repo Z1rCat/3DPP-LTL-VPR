@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>路径规划 - LTL_TRUCK_000</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        .header { background: #f0f8ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .stats { display: flex; gap: 20px; margin-bottom: 20px; }
+        .stat-box { background: #e8f4f8; padding: 10px; border-radius: 5px; text-align: center; }
+        #map { height: 500px; width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🗺️ 路径规划 - LTL_TRUCK_000</h1>
+        <p>算法: 简化版最近邻算法 | 生成时间: 2025-10-17 18:01:30</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat-box">
+            <h3>35</h3>
+            <p>停靠点数</p>
+        </div>
+        <div class="stat-box">
+            <h3>2728.56km</h3>
+            <p>总距离</p>
+        </div>
+        <div class="stat-box">
+            <h3>45.5h</h3>
+            <p>预计时间</p>
+        </div>
+    </div>
+
+    <div id="map"></div>
+
+    <script>
+        // 初始化地图
+        const map = L.map('map').setView([30.5728, 104.0668], 10);
+
+        // 添加地图图层
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // 路径坐标
+        const routeCoords = [[104.0668, 30.5728], [103.65447391623248, 30.720203244573284], [103.51210146048463, 30.143611154796723], [102.94155182792345, 30.034965595941006], [102.63380826031629, 30.67051564112484], [102.69707138246348, 30.980116350008604], [102.6496396660935, 31.36303447329004], [103.56480020944777, 31.422262379988535], [103.82593222324974, 31.811479743777866], [104.164216075754, 31.732227754736464], [104.07645950497454, 31.550294512325042], [104.14204151784506, 31.97719421800714], [104.5304082708487, 31.53738991605418], [105.25538949272321, 31.178933415348247], [105.7644656310242, 31.468318788045604], [105.49129492267207, 30.629599211875906], [105.22615576703535, 30.27196169339848], [105.08559802603874, 30.266928278429173], [104.86790689385917, 30.50326906481019], [104.70487346635097, 30.05009223240684], [104.36808751129638, 29.976762344543054], [104.15631728689536, 30.008374592415578], [104.35584112301191, 29.71082543981942], [103.8698069065424, 28.939194937084984], [103.84597555451191, 28.951334343498367], [103.86405102571653, 28.31276540473704], [104.37618897942215, 28.414188826128385], [104.84001155019406, 28.737311074965266], [105.82145937388506, 29.38495835829073], [105.59541332379443, 29.68021495182871], [105.82686274320251, 30.30955775327434], [102.76815716484482, 29.18997491314745], [102.70865053080031, 28.791088327859452], [102.67932287114594, 28.550097278778495], [102.46982587088897, 28.00202731006671], [102.03270029151925, 30.582990152345392], [104.0668, 30.5728]];
+
+        // 创建路径线
+        const routeLine = L.polyline(routeCoords.map(coord => [coord[1], coord[0]]), {
+            color: 'blue',
+            weight: 4,
+            opacity: 0.8
+        }).addTo(map);
+
+        // 添加标记点
+        routeCoords.forEach((coord, index) => {
+            const marker = L.marker([coord[1], coord[0]]).addTo(map);
+            const label = index === 0 ? '配送中心' : index === routeCoords.length - 1 ? '返回配送中心' : `停靠点 ${index}`;
+            marker.bindPopup(label);
+        });
+
+        // 调整地图视野
+        map.fitBounds(routeLine.getBounds());
+    </script>
+</body>
+</html>
+        

@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>装载效率分析</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .header { background: #f0f8ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 装载效率分析</h1>
+        <p>生成时间: 2025-10-17 18:02:42</p>
+    </div>
+
+    <div id="efficiency-chart"></div>
+    <div id="volume-chart" style="margin-top: 20px;"></div>
+
+    <script>
+        // 效率图表
+        const efficiencyData = {
+            x: ["LTL_TRUCK_000", "LTL_TRUCK_001"],
+            y: [99.96831694774588, 88.24860355742679],
+            type: 'bar',
+            marker: {
+                color: [99.96831694774588, 88.24860355742679],
+                colorscale: 'RdYlGn',
+                colorbar: { title: '效率 (%)' }
+            },
+            text: ["100.0%", "88.2%"],
+            hovertemplate: '车辆: %{x}<br>效率: %{text}<extra></extra>'
+        };
+
+        const efficiencyLayout = {
+            title: '各车辆装载效率',
+            xaxis: { title: '车辆ID' },
+            yaxis: { title: '装载效率 (%)', range: [0, 100] },
+            margin: { b: 100 }
+        };
+
+        Plotly.newPlot('efficiency-chart', [efficiencyData], efficiencyLayout);
+
+        // 体积图表
+        const volumeData = {
+            x: ["LTL_TRUCK_000", "LTL_TRUCK_001"],
+            y: [54.98257432126023, 48.53673195658473],
+            type: 'bar',
+            marker: { color: 'lightblue' },
+            text: ["54.98m\u00b3", "48.54m\u00b3"],
+            hovertemplate: '车辆: %{x}<br>使用体积: %{text}<extra></extra>'
+        };
+
+        const volumeLayout = {
+            title: '各车辆使用体积',
+            xaxis: { title: '车辆ID' },
+            yaxis: { title: '使用体积 (m³)' }
+        };
+
+        Plotly.newPlot('volume-chart', [volumeData], volumeLayout);
+    </script>
+</body>
+</html>
+        

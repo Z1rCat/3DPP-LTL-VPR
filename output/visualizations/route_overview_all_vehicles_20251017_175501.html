@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_ba3acbefcb8e86842b7f3c9ac04a1840 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div style="
+                position: fixed;
+                bottom: 50px;
+                left: 50px;
+                width: 200px;
+                height: auto;
+                background-color: white;
+                border:2px solid grey;
+                z-index:9999;
+                font-size:14px;
+                padding: 10px;
+                border-radius: 5px;
+            ">
+                <h4>路径图例</h4>
+                <p><i class="fa fa-minus" style="color:red"></i> 车辆路径</p>
+                <p>总计: 13 辆车</p>
+            </div>
+            
+    
+            <div class="folium-map" id="map_ba3acbefcb8e86842b7f3c9ac04a1840" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_ba3acbefcb8e86842b7f3c9ac04a1840 = L.map(
+                "map_ba3acbefcb8e86842b7f3c9ac04a1840",
+                {
+                    center: [30.800835, 104.139111],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_af16cbb7304a0b77cc97a73afa78aeab = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_af16cbb7304a0b77cc97a73afa78aeab.addTo(map_ba3acbefcb8e86842b7f3c9ac04a1840);
+        
+    
+            var poly_line_0bd90d790bf38dfd3f1717acdcf6482a = L.polyline(
+                [[30.800835, 104.139111], [30.539113, 104.196005], [30.800835, 104.139111]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_ba3acbefcb8e86842b7f3c9ac04a1840);
+        
+    
+        var popup_890bb49f1cccda7854ab3bcd1a57efc7 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4978f1be45a81727e5804f45e95c60ae = $(`<div id="html_4978f1be45a81727e5804f45e95c60ae" style="width: 100.0%; height: 100.0%;">LARGE_TRUCK_000 路径</div>`)[0];
+                popup_890bb49f1cccda7854ab3bcd1a57efc7.setContent(html_4978f1be45a81727e5804f45e95c60ae);
+            
+        
+
+        poly_line_0bd90d790bf38dfd3f1717acdcf6482a.bindPopup(popup_890bb49f1cccda7854ab3bcd1a57efc7)
+        ;
+
+        
+    
+    
+            var poly_line_946a94484f8a4a3771238611ce60df6f = L.polyline(
+                [[30.800835, 104.139111], [30.539113, 104.196005], [30.800835, 104.139111]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_ba3acbefcb8e86842b7f3c9ac04a1840);
+        
+    
+        var popup_6005b3663c5c702f8749f69a6eb8c915 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6b0727585c8ec99fe1d9fcc52f12fb6e = $(`<div id="html_6b0727585c8ec99fe1d9fcc52f12fb6e" style="width: 100.0%; height: 100.0%;">LARGE_TRUCK_001 路径</div>`)[0];
+                popup_6005b3663c5c702f8749f69a6eb8c915.setContent(html_6b0727585c8ec99fe1d9fcc52f12fb6e);
+            
+        
+
+        poly_line_946a94484f8a4a3771238611ce60df6f.bindPopup(popup_6005b3663c5c702f8749f69a6eb8c915)
+        ;
+
+        
+    
+    
+            var poly_line_078ddb440c0039052657f0cee2c8f324 = L.polyline(
+                [[30.800835, 104.139111], [30.539113, 104.196005], [30.800835, 104.139111]],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "green", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_ba3acbefcb8e86842b7f3c9ac04a1840);
+        
+    
+        var popup_e4055591c9c3d3667dce1b3512b51cea = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5829ea0ed4bcd4b6d611b50ad0064796 = $(`<div id="html_5829ea0ed4bcd4b6d611b50ad0064796" style="width: 100.0%; height: 100.0%;">LARGE_TRUCK_002 路径</div>`)[0];
+                popup_e4055591c9c3d3667dce1b3512b51cea.setContent(html_5829ea0ed4bcd4b6d611b50ad0064796);
+            
+        
+
+        poly_line_078ddb440c0039052657f0cee2c8f324.bindPopup(popup_e4055591c9c3d3667dce1b3512b51cea)
+        ;
+
+        
+    
+    
+            var poly_line_2fac1a18392ce52c848dda31328453ce = L.polyline(
+                [[30.800835, 104.139111], [30.539113, 104.196005], [30.800835, 104.139111]],
+                {"bubblingMouseEvents": true, "color": "purple", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "purple", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_ba3acbefcb8e86842b7f3c9ac04a1840);
+        
+    
+        var popup_e7ac71623d1092b8839f23c06cdcef8f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c214db46b43de764e9194c369acd7b9c = $(`<div id="html_c214db46b43de764e9194c369acd7b9c" style="width: 100.0%; height: 100.0%;">LARGE_TRUCK_003 路径</div>`)[0];
+                popup_e7ac71623d1092b8839f23c06cdcef8f.setContent(html_c214db46b43de764e9194c369acd7b9c);
+            
+        
+
+        poly_line_2fac1a18392ce52c848dda31328453ce.bindPopup(popup_e7ac71623d1092b8839f23c06cdcef8f)
+        ;
+
+        
+    
+    
+            var poly_line_d37777117310694de2cc464fdd99f410 = L.polyline(
+                [[30.800835, 104.139111], [30.867638, 104.036469], [30.800835, 104.139111]],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "orange", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_ba3acbefcb8e86842b7f3c9ac04a1840);
+        
+    
+        var popup_b0577587c7401b808d30fbd5db69017c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_21d493d4ed8ef91882e2d22fd8f68f81 = $(`<div id="html_21d493d4ed8ef91882e2d22fd8f68f81" style="width: 100.0%; height: 100.0%;">LARGE_TRUCK_004 路径</div>`)[0];
+                popup_b0577587c7401b808d30fbd5db69017c.setContent(html_21d493d4ed8ef91882e2d22fd8f68f81);
+            
+        
+
+        poly_line_d37777117310694de2cc464fdd99f410.bindPopup(popup_b0577587c7401b808d30fbd5db69017c)
+        ;
+
+        
+    
+    
+            var poly_line_ec9cd57789413d911fa89c8a683e6613 = L.polyline(
+                [[30.800835, 104.139111], [30.867638, 104.036469], [30.800835, 104.139111]],
+                {"bubblingMouseEvents": true, "color": "darkred", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "darkred", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_ba3acbefcb8e86842b7f3c9ac04a1840);
+        
+    
+        var popup_5d89242096c81a2d2aaa796cb7c94312 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0b3cd0c5d6ba79279cdda0d0ca077464 = $(`<div id="html_0b3cd0c5d6ba79279cdda0d0ca077464" style="width: 100.0%; height: 100.0%;">LARGE_TRUCK_005 路径</div>`)[0];
+                popup_5d89242096c81a2d2aaa796cb7c94312.setContent(html_0b3cd0c5d6ba79279cdda0d0ca077464);
+            
+        
+
+        poly_line_ec9cd57789413d911fa89c8a683e6613.bindPopup(popup_5d89242096c81a2d2aaa796cb7c94312)
+        ;
+
+        
+    
+    
+            var poly_line_4f4297b2e428d3a0805f4f2e4ab23e1e = L.polyline(
+                [[30.800835, 104.139111], [30.784712, 104.286461], [30.800835, 104.139111]],
+                {"bubblingMouseEvents": true, "color": "lightred", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "lightred", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_ba3acbefcb8e86842b7f3c9ac04a1840);
+        
+    
+        var popup_c735a08a696defa5f3244c275a234e6d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4931cfef869557bf2c6a4a7862701ac9 = $(`<div id="html_4931cfef869557bf2c6a4a7862701ac9" style="width: 100.0%; height: 100.0%;">LARGE_TRUCK_006 路径</div>`)[0];
+                popup_c735a08a696defa5f3244c275a234e6d.setContent(html_4931cfef869557bf2c6a4a7862701ac9);
+            
+        
+
+        poly_line_4f4297b2e428d3a0805f4f2e4ab23e1e.bindPopup(popup_c735a08a696defa5f3244c275a234e6d)
+        ;
+
+        
+    
+    
+            var poly_line_7efb12a3eef9954b7277326a740cbeef = L.polyline(
+                [[30.800835, 104.139111], [30.802111, 104.164075], [30.800835, 104.139111]],
+                {"bubblingMouseEvents": true, "color": "beige", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "beige", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_ba3acbefcb8e86842b7f3c9ac04a1840);
+        
+    
+        var popup_fb94c56b73995ede9c7d40fc886f7e31 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4afd208f1f70874ad5c4b8dd7aca00e0 = $(`<div id="html_4afd208f1f70874ad5c4b8dd7aca00e0" style="width: 100.0%; height: 100.0%;">LARGE_TRUCK_007 路径</div>`)[0];
+                popup_fb94c56b73995ede9c7d40fc886f7e31.setContent(html_4afd208f1f70874ad5c4b8dd7aca00e0);
+            
+        
+
+        poly_line_7efb12a3eef9954b7277326a740cbeef.bindPopup(popup_fb94c56b73995ede9c7d40fc886f7e31)
+        ;
+
+        
+    
+    
+            var poly_line_197a8fb9cdd5a1268020f7cc0094ebf5 = L.polyline(
+                [[30.800835, 104.139111], [30.867638, 104.036469], [30.784712, 104.286461], [30.539113, 104.196005], [30.800835, 104.139111]],
+                {"bubblingMouseEvents": true, "color": "darkblue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "darkblue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_ba3acbefcb8e86842b7f3c9ac04a1840);
+        
+    
+        var popup_8fce77ad2eb0af269632c5f9f728511b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_203a9bb3735707aad0544fed8a75ae3b = $(`<div id="html_203a9bb3735707aad0544fed8a75ae3b" style="width: 100.0%; height: 100.0%;">LTL_TRUCK_000 路径</div>`)[0];
+                popup_8fce77ad2eb0af269632c5f9f728511b.setContent(html_203a9bb3735707aad0544fed8a75ae3b);
+            
+        
+
+        poly_line_197a8fb9cdd5a1268020f7cc0094ebf5.bindPopup(popup_8fce77ad2eb0af269632c5f9f728511b)
+        ;
+
+        
+    
+    
+            var poly_line_90e78b4332070abb813d157d1bdf7f01 = L.polyline(
+                [[30.800835, 104.139111], [30.76405, 104.0668], [30.867638, 104.036469], [30.851558, 104.28116], [30.399125, 104.558069], [30.800835, 104.139111]],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "darkgreen", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_ba3acbefcb8e86842b7f3c9ac04a1840);
+        
+    
+        var popup_52d2df7c670e1572849deb293066bf8a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e0fbae06bbc6022fa4cdbf56457298a5 = $(`<div id="html_e0fbae06bbc6022fa4cdbf56457298a5" style="width: 100.0%; height: 100.0%;">LTL_TRUCK_001 路径</div>`)[0];
+                popup_52d2df7c670e1572849deb293066bf8a.setContent(html_e0fbae06bbc6022fa4cdbf56457298a5);
+            
+        
+
+        poly_line_90e78b4332070abb813d157d1bdf7f01.bindPopup(popup_52d2df7c670e1572849deb293066bf8a)
+        ;
+
+        
+    
+    
+            var poly_line_a141cd2425e298815a3a626072d109ac = L.polyline(
+                [[30.800835, 104.139111], [30.802111, 104.164075], [30.76405, 104.0668], [30.689311, 104.086109], [30.784712, 104.286461], [30.851558, 104.28116], [30.737656, 104.609837], [30.800835, 104.139111]],
+                {"bubblingMouseEvents": true, "color": "cadetblue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "cadetblue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_ba3acbefcb8e86842b7f3c9ac04a1840);
+        
+    
+        var popup_98dc0da9357550021c9332fd65750fe7 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_bcf00bb05fe14a4574622ffa741a9f05 = $(`<div id="html_bcf00bb05fe14a4574622ffa741a9f05" style="width: 100.0%; height: 100.0%;">LTL_TRUCK_002 路径</div>`)[0];
+                popup_98dc0da9357550021c9332fd65750fe7.setContent(html_bcf00bb05fe14a4574622ffa741a9f05);
+            
+        
+
+        poly_line_a141cd2425e298815a3a626072d109ac.bindPopup(popup_98dc0da9357550021c9332fd65750fe7)
+        ;
+
+        
+    
+    
+            var poly_line_569c632d1dfb6aa0c12a7295253408fb = L.polyline(
+                [[30.800835, 104.139111], [30.84101, 104.1591], [30.893214, 104.269026], [30.737656, 104.609837], [30.800835, 104.139111]],
+                {"bubblingMouseEvents": true, "color": "darkpurple", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "darkpurple", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_ba3acbefcb8e86842b7f3c9ac04a1840);
+        
+    
+        var popup_0785fd6d53edc33b5460c868e83c0a4c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5b68f964785c7247ff4f4348ebf7393a = $(`<div id="html_5b68f964785c7247ff4f4348ebf7393a" style="width: 100.0%; height: 100.0%;">LTL_TRUCK_003 路径</div>`)[0];
+                popup_0785fd6d53edc33b5460c868e83c0a4c.setContent(html_5b68f964785c7247ff4f4348ebf7393a);
+            
+        
+
+        poly_line_569c632d1dfb6aa0c12a7295253408fb.bindPopup(popup_0785fd6d53edc33b5460c868e83c0a4c)
+        ;
+
+        
+    
+    
+            var poly_line_78fce832cf51f4718fa5de804c6f5b23 = L.polyline(
+                [[30.800835, 104.139111], [30.84101, 104.1591], [30.800835, 104.139111]],
+                {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "white", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_ba3acbefcb8e86842b7f3c9ac04a1840);
+        
+    
+        var popup_039fcc853b48aa4947084744b99bfd01 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b4e9f0c3a41763799c0d861a5c162f42 = $(`<div id="html_b4e9f0c3a41763799c0d861a5c162f42" style="width: 100.0%; height: 100.0%;">LTL_TRUCK_004 路径</div>`)[0];
+                popup_039fcc853b48aa4947084744b99bfd01.setContent(html_b4e9f0c3a41763799c0d861a5c162f42);
+            
+        
+
+        poly_line_78fce832cf51f4718fa5de804c6f5b23.bindPopup(popup_039fcc853b48aa4947084744b99bfd01)
+        ;
+
+        
+    
+</script>
+</html>

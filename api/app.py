@@ -16,6 +16,8 @@ from .routes.data import router as data_router
 from .routes.optimization import router as optimization_router
 from .routes.experiments import router as experiments_router
 from .routes.analytics import router as analytics_router
+from .routes.auth import router as auth_router
+from .routes.system import router as system_router
 
 # 配置日志
 logging.basicConfig(level=logging.INFO)
@@ -40,6 +42,8 @@ app.add_middleware(
 )
 
 # 注册路由
+app.include_router(auth_router, prefix="/api/auth", tags=["用户认证"])
+app.include_router(system_router, prefix="/api/system", tags=["系统管理"])
 app.include_router(visualization_router, prefix="/api/visualizations", tags=["可视化"])
 app.include_router(data_router, prefix="/api/data", tags=["数据"])
 app.include_router(optimization_router, prefix="/api/optimization", tags=["优化"])
@@ -56,9 +60,163 @@ visualization_dir = Path(__file__).parent.parent / "output" / "visualizations"
 if visualization_dir.exists():
     app.mount("/visualizations", StaticFiles(directory=str(visualization_dir)), name="visualizations")
 
+# 设置模板目录
+templates_dir = Path(__file__).parent.parent / "frontend" / "templates"
+
+@app.get("/login", response_class=HTMLResponse)
+async def login_page():
+    """登录页面"""
+    login_file = templates_dir / "login.html"
+    if login_file.exists():
+        with open(login_file, 'r', encoding='utf-8') as f:
+            return HTMLResponse(content=f.read())
+    else:
+        return HTMLResponse(content="<h1>登录页面不存在</h1>", status_code=404)
+
+@app.get("/admin", response_class=HTMLResponse)
+async def admin_page():
+    """管理员控制台"""
+    admin_file = templates_dir / "admin.html"
+    if admin_file.exists():
+        with open(admin_file, 'r', encoding='utf-8') as f:
+            return HTMLResponse(content=f.read())
+    else:
+        return HTMLResponse(content="<h1>管理员页面不存在</h1>", status_code=404)
+
+@app.get("/admin.html", response_class=HTMLResponse)
+async def admin_page_alt():
+    """管理员控制台（备用路径）"""
+    return await admin_page()
+
+# ===== 新增多角色页面路由 =====
+
+@app.get("/driver", response_class=HTMLResponse)
+async def driver_page():
+    """司机端页面"""
+    driver_file = templates_dir / "driver" / "dashboard.html"
+    if driver_file.exists():
+        with open(driver_file, 'r', encoding='utf-8') as f:
+            return HTMLResponse(content=f.read())
+    else:
+        return HTMLResponse(content="""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <title>司机端 - 巧满装载平台</title>
+            <link rel="stylesheet" href="/static/css/style.css">
+        </head>
+        <body>
+            <div style="text-align: center; margin-top: 100px;">
+                <h1>🚛 司机端页面</h1>
+                <p>页面正在开发中...</p>
+                <a href="/login">返回登录</a>
+            </div>
+        </body>
+        </html>
+        """)
+
+@app.get("/manager", response_class=HTMLResponse)
+async def manager_page():
+    """管理层页面"""
+    manager_file = templates_dir / "manager" / "dashboard.html"
+    if manager_file.exists():
+        with open(manager_file, 'r', encoding='utf-8') as f:
+            return HTMLResponse(content=f.read())
+    else:
+        return HTMLResponse(content="""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <title>管理层 - 巧满装载平台</title>
+            <link rel="stylesheet" href="/static/css/style.css">
+        </head>
+        <body>
+            <div style="text-align: center; margin-top: 100px;">
+                <h1>👥 管理层页面</h1>
+                <p>页面正在开发中...</p>
+                <a href="/login">返回登录</a>
+            </div>
+        </body>
+        </html>
+        """)
+
+@app.get("/customer", response_class=HTMLResponse)
+async def customer_page():
+    """客户端页面"""
+    customer_file = templates_dir / "customer" / "order.html"
+    if customer_file.exists():
+        with open(customer_file, 'r', encoding='utf-8') as f:
+            return HTMLResponse(content=f.read())
+    else:
+        return HTMLResponse(content="""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <title>客户端 - 巧满装载平台</title>
+            <link rel="stylesheet" href="/static/css/style.css">
+        </head>
+        <body>
+            <div style="text-align: center; margin-top: 100px;">
+                <h1>📦 客户端页面</h1>
+                <p>页面正在开发中...</p>
+                <a href="/login">返回登录</a>
+            </div>
+        </body>
+        </html>
+        """)
+
+@app.get("/demo", response_class=HTMLResponse)
+async def demo_page():
+    """演示展示页面"""
+    demo_file = templates_dir / "demo" / "optimization.html"
+    if demo_file.exists():
+        with open(demo_file, 'r', encoding='utf-8') as f:
+            return HTMLResponse(content=f.read())
+    else:
+        return HTMLResponse(content="""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <title>优化演示 - 巧满装载平台</title>
+            <link rel="stylesheet" href="/static/css/style.css">
+        </head>
+        <body>
+            <div style="text-align: center; margin-top: 100px;">
+                <h1>🎯 优化演示页面</h1>
+                <p>页面正在开发中...</p>
+                <a href="/login">返回登录</a>
+            </div>
+        </body>
+        </html>
+        """)
+
 @app.get("/", response_class=HTMLResponse)
 async def root():
-    """主页"""
+    """主页 - 重定向到登录页面"""
+    return HTMLResponse(content="""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <title>巧满装载平台</title>
+        <script>
+            window.location.href = '/login';
+        </script>
+    </head>
+    <body>
+        <p>正在跳转到登录页面...</p>
+        <p>如果没有自动跳转，请<a href="/login">点击这里</a></p>
+    </body>
+    </html>
+    """)
+
+@app.get("/api", response_class=HTMLResponse)
+async def api_overview():
+    """API概览页面"""
     html_content = """
     <!DOCTYPE html>
     <html>
@@ -82,27 +240,33 @@ async def root():
         </div>
 
         <div class="api-links">
+            <h2>🔐 用户系统</h2>
+            <a href="/login">🔑 用户登录</a>
+            <a href="/admin">👤 管理控制台</a>
+
             <h2>📋 API 文档</h2>
             <a href="/docs">📊 Swagger UI (交互式API文档)</a>
             <a href="/redoc">📖 ReDoc (API文档)</a>
 
-            <h2>🎯 API 端点</h2>
+            <h2>🎯 主要功能</h2>
+            <a href="/api/auth/login">🔐 用户认证</a>
             <a href="/api/visualizations/list">📈 可视化文件列表</a>
             <a href="/api/data/trucks">🚛 卡车数据</a>
             <a href="/api/data/routes">🗺️ 路径数据</a>
+            <a href="/api/optimization/algorithms">⚡ 优化算法</a>
             <a href="/api/experiments/">🧪 实验管理</a>
-            <a href="/api/analytics/dashboard/overview">📊 分析仪表板</a>
+            <a href="/api/analytics/dashboard">📊 分析仪表板</a>
 
             <h2>🎨 可视化</h2>
             <a href="/visualizations">📊 查看生成的可视化文件</a>
         </div>
 
         <div style="margin-top: 40px; padding: 20px; background: #f9f9f9; border-radius: 10px;">
-            <h3>🔧 开发信息</h3>
-            <p><strong>版本:</strong> 4.0.0 - 数据层升级版</p>
-            <p><strong>状态:</strong> 开发中</p>
-            <p><strong>技术栈:</strong> FastAPI + SQLite + Python + Plotly + Folium</p>
-            <p><strong>新功能:</strong> 实验管理 + 数据分析 + 趋势报告</p>
+            <h3>🔧 系统信息</h3>
+            <p><strong>版本:</strong> 4.0.0 - 现代化管理系统</p>
+            <p><strong>状态:</strong> 运行中</p>
+            <p><strong>技术栈:</strong> FastAPI + JWT认证 + 响应式前端</p>
+            <p><strong>新功能:</strong> 用户认证 + 权限管理 + 现代化UI</p>
         </div>
     </body>
     </html>
