@@ -492,7 +492,7 @@ class TimeWindowOptimizer:
             schedule: 时间安排列表
 
         Returns:
-            Dict: 验证结果
+            Dict: 验证结果 - 兼容系统的预期格式
         """
         validation_result = {
             'valid': True,
@@ -537,19 +537,24 @@ class TimeWindowOptimizer:
                     'penalty': violations['late_penalty']
                 })
 
+        total_violations = total_early_violations + total_late_violations
+
         # 统计信息
         validation_result['statistics'] = {
             'total_nodes': len(schedule),
             'early_violations': total_early_violations,
             'late_violations': total_late_violations,
-            'total_violations': total_early_violations + total_late_violations,
-            'on_time_rate': round((len(schedule) - total_early_violations - total_late_violations) / len(schedule) * 100, 2) if schedule else 0
+            'total_violations': total_violations,
+            'on_time_rate': round((len(schedule) - total_violations) / len(schedule) * 100, 2) if schedule else 0
         }
 
         validation_result['total_penalty'] = total_early_penalty + total_late_penalty
 
-        if validation_result['total_violations'] > 0:
-            self.logger.warning(f"时间窗验证发现 {validation_result['total_violations']} 个违规")
+        # 🔧 关键修复：添加系统预期的total_violations字段
+        validation_result['total_violations'] = total_violations
+
+        if total_violations > 0:
+            self.logger.warning(f"时间窗验证发现 {total_violations} 个违规")
         else:
             self.logger.info("时间窗验证通过")
 

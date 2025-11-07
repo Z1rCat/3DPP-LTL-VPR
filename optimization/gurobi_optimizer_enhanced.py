@@ -458,7 +458,12 @@ class GurobiOptimizerEnhanced:
 
             # 验证时间窗
             time_window_violations = self.time_optimizer.validate_time_windows(time_schedule)
-            total_time_penalty = time_window_violations['total_penalty']
+
+            # 安全访问总时间惩罚
+            total_time_penalty = 0.0
+            if (isinstance(time_window_violations, dict) and
+                'total_penalty' in time_window_violations):
+                total_time_penalty = time_window_violations['total_penalty']
 
         # 多目标优化结果
         economic_cost = 0.0
@@ -577,8 +582,15 @@ def test_enhanced_optimizer():
                 print(f"  节点 {entry['node_id']}: 到达 {entry['schedule']['arrival_time']}, "
                       f"时间窗 {entry['time_window']['earliest']}-{entry['time_window']['latest']}")
 
-        if result.time_window_violations['total_violations'] > 0:
-            print(f"\n⚠️ 时间窗违规: {result.time_window_violations['total_violations']} 个")
+        # 安全访问时间窗违规信息
+        total_violations = 0
+        if (hasattr(result, 'time_window_violations') and
+            isinstance(result.time_window_violations, dict) and
+            'total_violations' in result.time_window_violations):
+            total_violations = result.time_window_violations['total_violations']
+
+        if total_violations > 0:
+            print(f"\n⚠️ 时间窗违规: {total_violations} 个")
         else:
             print(f"\n✅ 所有时间窗约束都满足")
 

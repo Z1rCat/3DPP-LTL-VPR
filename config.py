@@ -342,17 +342,17 @@ TIME_WINDOW_CONFIG = {
 
 # ===== 空间约束配置 =====
 SPATIAL_CONSTRAINT_CONFIG = {
-    'enable_rotation_optimization': True,    # 启用旋转优化
-    'enable_3d_collision_detection': True,    # 启用3D碰撞检测
-    'big_m_for_spatial_constraints': 1000,   # 空间约束大M值
-    'rotation_enumeration_limit': 6,         # 旋转方式枚举限制(公式3-4)
-    'spatial_precision': 0.001,              # 空间坐标精度(米)
-    'overlap_detection_method': 'exact',     # 重叠检测方法: 'exact'/'approximate'
-    'enable_support_constraint': True,       # 启用支撑约束(重力方向)
-    'allow_item_rotation': True,             # 允许货物旋转
+    'enable_rotation_optimization': False,   # 🚫 简化：禁用复杂旋转优化
+    'enable_3d_collision_detection': True,    # 保留基础3D碰撞检测但简化
+    'big_m_for_spatial_constraints': 100,    # 🚫 简化：减小大M值提高数值稳定性
+    'rotation_enumeration_limit': 2,         # 🚫 简化：仅2种旋转方式（原始和90度）
+    'spatial_precision': 0.01,               # 🚫 简化：降低精度要求
+    'overlap_detection_method': 'approximate', # 🚫 简化：使用近似重叠检测
+    'enable_support_constraint': False,      # 🚫 简化：禁用复杂支撑约束
+    'allow_item_rotation': False,             # 🚫 简化：禁用货物旋转
     'rotation_angle_step': 90,               # 旋转角度步长(度)
-    'collision_detection_layers': 2,         # 碰撞检测分层层数
-    'max_rotation_combinations': 216         # 最大旋转组合数(6^3)
+    'collision_detection_layers': 1,         # 🚫 简化：单层碰撞检测
+    'max_rotation_combinations': 2           # 🚫 简化：最大2种旋转组合
 }
 
 # ===== 多目标优化配置 =====

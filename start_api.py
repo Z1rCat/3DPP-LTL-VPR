@@ -6,7 +6,6 @@ Logistics Optimization System API Server Startup Script
 
 import os
 import sys
-import subprocess
 from pathlib import Path
 
 def check_dependencies():
@@ -81,14 +80,15 @@ def main():
     print()
 
     try:
-        # 启动API服务
-        subprocess.run([
-            sys.executable, "-m", "uvicorn",
+        # 启动API服务 - 直接导入并运行
+        import uvicorn
+        uvicorn.run(
             "api.app:app",
-            "--host", "0.0.0.0",
-            "--port", "8000",
-            "--reload"
-        ], check=True)
+            host="0.0.0.0",
+            port=8000,
+            reload=True,
+            app_dir=str(Path.cwd())
+        )
 
     except KeyboardInterrupt:
         print("\n👋 API服务已停止")

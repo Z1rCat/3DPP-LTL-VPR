@@ -424,6 +424,136 @@ class FileManager:
         with open(readme_path, 'w', encoding='utf-8') as f:
             f.write(readme_content)
 
+    def generate_full_dispatch_plan(self, enhanced_solution: Dict, route_solutions: Optional[Dict] = None) -> str:
+        """
+        生成完整调度计划文件（增强版）
+
+        Args:
+            enhanced_solution: 增强优化求解结果
+            route_solutions: 路径优化解决方案
+
+        Returns:
+            str: 保存的文件路径
+        """
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output_file = INTERMEDIATE_DIR / f"full_dispatch_plan_{timestamp}.json"
+
+        self.logger.info(f"生成完整调度计划: {output_file}")
+
+        try:
+            dispatch_plan = {
+                'metadata': {
+                    'generated_at': datetime.now().isoformat(),
+                    'system_version': '4.1 Enhanced',
+                    'plan_type': 'full_dispatch_plan'
+                },
+                'spatial_optimization': {
+                    'enhanced_constraints_enabled': True,
+                    'spatial_validation': enhanced_solution.get('spatial_validation', False),
+                    'rotation_optimization': enhanced_solution.get('rotation_optimization', False),
+                    'collision_detection': enhanced_solution.get('collision_detection', False)
+                },
+                'temporal_optimization': {
+                    'time_windows_enabled': enhanced_solution.get('time_windows_enabled', False),
+                    'total_violations': enhanced_solution.get('time_window_violations', {}).get('total_violations', 0),
+                    'violation_details': enhanced_solution.get('time_window_violations', {})
+                },
+                'multi_objective_results': {
+                    'economic_cost': enhanced_solution.get('economic_cost', 0),
+                    'multi_objective_score': enhanced_solution.get('multi_objective_score', 0),
+                    'loading_rate_weight': enhanced_solution.get('loading_rate_weight', 0.4),
+                    'economic_weight': enhanced_solution.get('economic_weight', 0.6)
+                },
+                'truck_assignments': enhanced_solution.get('truck_assignments', {}),
+                'route_optimization': route_solutions if route_solutions else {},
+                'cargo_classification': enhanced_solution.get('cargo_classification', {}),
+                'performance_metrics': enhanced_solution.get('performance_metrics', {})
+            }
+
+            # 保存到JSON文件
+            with open(output_file, 'w', encoding='utf-8') as f:
+                json.dump(dispatch_plan, f, ensure_ascii=False, indent=2)
+
+            self.logger.info(f"完整调度计划已保存: {output_file}")
+            return str(output_file)
+
+        except Exception as e:
+            self.logger.error(f"生成完整调度计划失败: {str(e)}")
+            raise
+
+    def generate_id_mapping(self, orders_data: List[Dict], items_data: List[Dict],
+                           output_file: Optional[str] = None) -> str:
+        """
+        生成订单ID到货物ID的映射文件
+
+        Args:
+            orders_data: 订单数据列表
+            items_data: 货物数据列表
+            output_file: 输出文件路径
+
+        Returns:
+            str: 保存的文件路径
+        """
+        if output_file is None:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            output_file = INTERMEDIATE_DIR / f"id_to_orders_mapping_{timestamp}.json"
+
+        self.logger.info(f"生成ID映射文件: {output_file}")
+
+        try:
+            id_mapping = {}
+
+            # 构建订单ID到货物ID的映射
+            for order in orders_data:
+                order_id = order.get('order_id', '')
+                if order_id:
+                    id_mapping[order_id] = {
+                        'order_info': order,
+                        'cargo_items': []
+                    }
+
+            # 将货物关联到对应订单
+            for item in items_data:
+                order_id = item.get('order_id', '')
+                if order_id and order_id in id_mapping:
+                    id_mapping[order_id]['cargo_items'].append(item)
+                elif order_id:
+                    # 如果订单不在映射中，创建新条目
+                    id_mapping[order_id] = {
+                        'order_info': {'order_id': order_id},
+                        'cargo_items': [item]
+                    }
+
+            # 添加统计信息
+            total_orders = len(id_mapping)
+            total_items = sum(len(data['cargo_items']) for data in id_mapping.values())
+
+            mapping_data = {
+                'metadata': {
+                    'generated_at': datetime.now().isoformat(),
+                    'total_orders': total_orders,
+                    'total_items': total_items,
+                    'mapping_type': 'order_to_items'
+                },
+                'id_mapping': id_mapping,
+                'statistics': {
+                    'orders_with_items': len([k for k, v in id_mapping.items() if v['cargo_items']]),
+                    'orders_without_items': len([k for k, v in id_mapping.items() if not v['cargo_items']]),
+                    'avg_items_per_order': total_items / total_orders if total_orders > 0 else 0
+                }
+            }
+
+            # 保存到JSON文件
+            with open(output_file, 'w', encoding='utf-8') as f:
+                json.dump(mapping_data, f, ensure_ascii=False, indent=2)
+
+            self.logger.info(f"ID映射文件已保存: {output_file}")
+            return str(output_file)
+
+        except Exception as e:
+            self.logger.error(f"生成ID映射文件失败: {str(e)}")
+            raise
+
     def clean_temporary_files(self, keep_final_results: bool = True):
         """
         清理临时文件
