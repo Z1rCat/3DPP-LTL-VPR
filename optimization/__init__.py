@@ -1,1 +1,0 @@
-# Optimization algorithms for 3D bin packing
