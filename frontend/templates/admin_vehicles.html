@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>车辆管理 - 巧满装载平台</title>
+
+    <!-- 设计系统 -->
+    <link rel="stylesheet" href="/static/css/admin_design_tokens.css">
+    <link rel="stylesheet" href="/static/css/admin_components.css">
+    <link rel="stylesheet" href="/static/css/admin_utilities.css">
+    <link rel="stylesheet" href="/static/css/admin_animations.css">
+
+    <!-- 外部资源 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+
+    <style>
+        .vehicle-details-panel {
+            background: var(--color-bg-secondary);
+            border-left: 4px solid var(--color-primary-500);
+        }
+
+        .performance-ring {
+            transform: rotate(-90deg);
+        }
+
+        .status-indicator-online { color: var(--color-success); }
+        .status-indicator-busy { color: var(--color-warning); }
+        .status-indicator-offline { color: var(--color-text-tertiary); }
+
+        .route-path {
+            stroke: var(--color-primary-500);
+            stroke-width: 3;
+            fill: none;
+            stroke-dasharray: 5, 5;
+            animation: dash 20s linear infinite;
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: -100; }
+        }
+    </style>
+</head>
+<body class="bg-primary">
+    <div class="min-h-screen p-4">
+        <!-- 页面头部 -->
+        <div class="flex items-center justify-between mb-6 animate-fade-in-down">
+            <div class="flex items-center gap-4">
+                <button class="btn btn-ghost" onclick="history.back()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h1 class="text-2xl font-bold text-primary">车辆管理</h1>
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    <span>实时监控</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div class="search-input">
+                    <input type="text" class="form-control" placeholder="搜索车牌、司机..." id="vehicleSearch">
+                </div>
+                <button class="btn btn-primary" id="addVehicleBtn">
+                    <i class="fas fa-plus mr-2"></i>添加车辆
+                </button>
+            </div>
+        </div>
+
+        <!-- 统计概览 -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="card animate-fade-in-up delay-100">
+                <div class="card-body">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-tertiary text-sm">总车辆</p>
+                            <p class="text-2xl font-bold text-primary">48</p>
+                        </div>
+                        <div class="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center">
+                            <i class="fas fa-truck text-white"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card animate-fade-in-up delay-200">
+                <div class="card-body">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-tertiary text-sm">在线车辆</p>
+                            <p class="text-2xl font-bold text-success">35</p>
+                        </div>
+                        <div class="w-12 h-12 bg-success bg-opacity-10 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-check-circle text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card animate-fade-in-up delay-300">
+                <div class="card-body">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-tertiary text-sm">运行中</p>
+                            <p class="text-2xl font-bold text-warning">28</p>
+                        </div>
+                        <div class="w-12 h-12 bg-warning bg-opacity-10 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-route text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card animate-fade-in-up delay-400">
+                <div class="card-body">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-tertiary text-sm">平均装载率</p>
+                            <p class="text-2xl font-bold text-info">87%</p>
+                        </div>
+                        <div class="w-12 h-12 bg-info bg-opacity-10 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-chart-pie text-info"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主要内容区域 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- 车辆列表 -->
+            <div class="lg:col-span-2">
+                <div class="card animate-fade-in-up delay-500">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-list"></i>
+                            车辆列表
+                        </h3>
+                        <div class="flex gap-2">
+                            <select class="form-control form-select text-sm">
+                                <option>全部状态</option>
+                                <option>在线</option>
+                                <option>忙碌</option>
+                                <option>离线</option>
+                            </select>
+                            <select class="form-control form-select text-sm">
+                                <option>默认排序</option>
+                                <option>按状态</option>
+                                <option>按装载率</option>
+                                <option>按路线</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="overflow-x-auto">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" class="form-checkbox"></th>
+                                        <th>车牌</th>
+                                        <th>司机</th>
+                                        <th>状态</th>
+                                        <th>当前位置</th>
+                                        <th>装载率</th>
+                                        <th>路线</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="vehicleTableBody">
+                                    <!-- 动态生成的车辆行 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 车辆详情面板 -->
+            <div class="space-y-4">
+                <!-- 选中车辆信息 -->
+                <div class="card vehicle-details-panel animate-fade-in-right delay-600" id="selectedVehicleInfo">
+                    <div class="card-header">
+                        <h4 class="card-title">车辆详情</h4>
+                        <button class="btn btn-ghost btn-sm" onclick="closeVehicleDetails()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center py-8 text-tertiary">
+                            <i class="fas fa-truck text-4xl mb-3"></i>
+                            <p>选择一辆车辆查看详细信息</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 实时路径图 -->
+                <div class="card animate-fade-in-right delay-700">
+                    <div class="card-header">
+                        <h4 class="card-title">
+                            <i class="fas fa-map"></i>
+                            实时路径
+                        </h4>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="vehicleMap" style="height: 300px;"></div>
+                    </div>
+                </div>
+
+                <!-- 性能指标 -->
+                <div class="card animate-fade-in-right delay-800">
+                    <div class="card-header">
+                        <h4 class="card-title">
+                            <i class="fas fa-tachometer-alt"></i>
+                            性能指标
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span>燃油效率</span>
+                                    <span class="font-semibold">8.2L/100km</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" style="width: 75%"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span>准点率</span>
+                                    <span class="font-semibold">92%</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar bg-primary" style="width: 92%"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span>客户满意度</span>
+                                    <span class="font-semibold">4.8/5.0</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar bg-warning" style="width: 96%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script>
+        // 车辆数据
+        const vehicles = [
+            {
+                id: 1,
+                plate: "川A12345",
+                driver: "张师傅",
+                phone: "13800138001",
+                status: "online",
+                location: "成都市锦江区",
+                loadRate: 85,
+                route: "成都→重庆",
+                currentPosition: [30.5728, 104.0668],
+                fuel: 8.2,
+                onTime: 92,
+                rating: 4.8,
+                nextStop: "服务区A",
+                eta: "14:30"
+            },
+            {
+                id: 2,
+                plate: "川A23456",
+                driver: "李师傅",
+                phone: "13800138002",
+                status: "busy",
+                location: "成都市武侯区",
+                loadRate: 92,
+                route: "成都→绵阳",
+                currentPosition: [30.5828, 104.0768],
+                fuel: 7.8,
+                onTime: 88,
+                rating: 4.9,
+                nextStop: "配送点B",
+                eta: "15:15"
+            },
+            {
+                id: 3,
+                plate: "川A34567",
+                driver: "王师傅",
+                phone: "13800138003",
+                status: "online",
+                location: "成都市成华区",
+                loadRate: 67,
+                route: "成都→德阳",
+                currentPosition: [30.5628, 104.0568],
+                fuel: 9.1,
+                onTime: 95,
+                rating: 4.7,
+                nextStop: "仓库C",
+                eta: "16:00"
+            },
+            {
+                id: 4,
+                plate: "川A45678",
+                driver: "赵师傅",
+                phone: "13800138004",
+                status: "offline",
+                location: "休息中",
+                loadRate: 0,
+                route: "休息",
+                currentPosition: [30.5928, 104.0868],
+                fuel: 0,
+                onTime: 0,
+                rating: 4.6,
+                nextStop: "-",
+                eta: "-"
+            }
+        ];
+
+        let selectedVehicle = null;
+        let vehicleMap = null;
+        let vehicleMarkers = [];
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadVehicleTable();
+            initializeMap();
+            setupEventListeners();
+        });
+
+        // 加载车辆表格
+        function loadVehicleTable() {
+            const tbody = document.getElementById('vehicleTableBody');
+            tbody.innerHTML = vehicles.map(vehicle => `
+                <tr class="vehicle-row hover:bg-tertiary cursor-pointer" data-vehicle-id="${vehicle.id}">
+                    <td><input type="checkbox" class="form-checkbox"></td>
+                    <td class="font-semibold">${vehicle.plate}</td>
+                    <td>${vehicle.driver}</td>
+                    <td>
+                        <span class="status-badge status-${vehicle.status}">
+                            ${getStatusText(vehicle.status)}
+                        </span>
+                    </td>
+                    <td class="text-sm">${vehicle.location}</td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <div class="progress w-16 h-2">
+                                <div class="progress-bar ${getProgressBarColor(vehicle.loadRate)}"
+                                     style="width: ${vehicle.loadRate}%"></div>
+                            </div>
+                            <span class="text-sm font-medium">${vehicle.loadRate}%</span>
+                        </div>
+                    </td>
+                    <td class="text-sm">${vehicle.route}</td>
+                    <td>
+                        <div class="flex gap-1">
+                            <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation(); viewVehicleOnMap(${vehicle.id})">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </button>
+                            <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation(); editVehicle(${vehicle.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-ghost btn-sm text-error" onclick="event.stopPropagation(); deleteVehicle(${vehicle.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            // 添加点击事件
+            document.querySelectorAll('.vehicle-row').forEach(row => {
+                row.addEventListener('click', function() {
+                    const vehicleId = parseInt(this.dataset.vehicleId);
+                    selectVehicle(vehicleId);
+                });
+            });
+        }
+
+        // 初始化地图
+        function initializeMap() {
+            vehicleMap = L.map('vehicleMap').setView([30.5728, 104.0668], 11);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(vehicleMap);
+
+            // 添加所有车辆标记
+            vehicles.forEach(vehicle => {
+                const markerColor = vehicle.status === 'online' ? '#10b981' :
+                                   vehicle.status === 'busy' ? '#f59e0b' : '#6b7280';
+
+                const marker = L.circleMarker(vehicle.currentPosition, {
+                    radius: 8,
+                    fillColor: markerColor,
+                    color: '#fff',
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                }).addTo(vehicleMap);
+
+                marker.bindPopup(`
+                    <div style="font-family: 'Inter', sans-serif;">
+                        <strong>${vehicle.plate}</strong><br>
+                        司机: ${vehicle.driver}<br>
+                        状态: ${getStatusText(vehicle.status)}<br>
+                        位置: ${vehicle.location}<br>
+                        装载率: ${vehicle.loadRate}%
+                    </div>
+                `);
+
+                vehicle.marker = marker;
+                vehicleMarkers.push(marker);
+            });
+        }
+
+        // 选择车辆
+        function selectVehicle(vehicleId) {
+            selectedVehicle = vehicles.find(v => v.id === vehicleId);
+            if (selectedVehicle) {
+                updateVehicleDetails();
+
+                // 更新表格选中状态
+                document.querySelectorAll('.vehicle-row').forEach(row => {
+                    row.classList.remove('bg-tertiary');
+                });
+                document.querySelector(`[data-vehicle-id="${vehicleId}"]`).classList.add('bg-tertiary');
+
+                // 在地图上显示选中车辆
+                if (selectedVehicle.marker) {
+                    vehicleMap.setView(selectedVehicle.currentPosition, 14);
+                    selectedVehicle.marker.openPopup();
+                }
+            }
+        }
+
+        // 更新车辆详情面板
+        function updateVehicleDetails() {
+            const detailsPanel = document.getElementById('selectedVehicleInfo');
+            if (!selectedVehicle || !detailsPanel) return;
+
+            detailsPanel.innerHTML = `
+                <div class="card-header">
+                    <h4 class="card-title">
+                        <span class="text-primary">${selectedVehicle.plate}</span>
+                    </h4>
+                    <button class="btn btn-ghost btn-sm" onclick="closeVehicleDetails()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="space-y-4">
+                        <!-- 基本信息 -->
+                        <div class="border-b border-primary pb-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="status-badge status-${selectedVehicle.status}">
+                                    ${getStatusText(selectedVehicle.status)}
+                                </span>
+                                <span class="text-sm text-tertiary">ETA: ${selectedVehicle.eta}</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3 text-sm">
+                                <div>
+                                    <p class="text-tertiary">司机</p>
+                                    <p class="font-semibold">${selectedVehicle.driver}</p>
+                                </div>
+                                <div>
+                                    <p class="text-tertiary">电话</p>
+                                    <p class="font-semibold">${selectedVehicle.phone}</p>
+                                </div>
+                                <div>
+                                    <p class="text-tertiary">当前位置</p>
+                                    <p class="font-semibold">${selectedVehicle.location}</p>
+                                </div>
+                                <div>
+                                    <p class="text-tertiary">下站</p>
+                                    <p class="font-semibold">${selectedVehicle.nextStop}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 性能指标 -->
+                        <div>
+                            <h5 class="font-semibold mb-3">性能指标</h5>
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>装载率</span>
+                                        <span class="font-semibold">${selectedVehicle.loadRate}%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar ${getProgressBarColor(selectedVehicle.loadRate)}"
+                                             style="width: ${selectedVehicle.loadRate}%"></div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>燃油效率</span>
+                                        <span class="font-semibold">${selectedVehicle.fuel}L/100km</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" style="width: ${85 - selectedVehicle.fuel * 5}%"></div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>准点率</span>
+                                        <span class="font-semibold">${selectedVehicle.onTime}%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-primary" style="width: ${selectedVehicle.onTime}%"></div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>客户评分</span>
+                                        <span class="font-semibold">${selectedVehicle.rating}/5.0</span>
+                                    </div>
+                                    <div class="flex text-yellow-400">
+                                        ${generateStars(selectedVehicle.rating)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 操作按钮 -->
+                        <div class="flex gap-2 pt-4">
+                            <button class="btn btn-primary flex-1">
+                                <i class="fas fa-phone mr-2"></i>联系司机
+                            </button>
+                            <button class="btn btn-secondary flex-1">
+                                <i class="fas fa-route mr-2"></i>查看路线
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // 添加动画效果
+            detailsPanel.classList.remove('animate-fade-in-right');
+            void detailsPanel.offsetWidth; // 触发重排
+            detailsPanel.classList.add('animate-fade-in-right');
+        }
+
+        // 关闭车辆详情
+        function closeVehicleDetails() {
+            selectedVehicle = null;
+            const detailsPanel = document.getElementById('selectedVehicleInfo');
+            if (detailsPanel) {
+                detailsPanel.innerHTML = `
+                    <div class="card-header">
+                        <h4 class="card-title">车辆详情</h4>
+                        <button class="btn btn-ghost btn-sm" onclick="closeVehicleDetails()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center py-8 text-tertiary">
+                            <i class="fas fa-truck text-4xl mb-3"></i>
+                            <p>选择一辆车辆查看详细信息</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.querySelectorAll('.vehicle-row').forEach(row => {
+                row.classList.remove('bg-tertiary');
+            });
+        }
+
+        // 在地图上查看车辆
+        function viewVehicleOnMap(vehicleId) {
+            const vehicle = vehicles.find(v => v.id === vehicleId);
+            if (vehicle && vehicle.marker) {
+                vehicleMap.setView(vehicle.currentPosition, 15);
+                vehicle.marker.openPopup();
+            }
+        }
+
+        // 编辑车辆
+        function editVehicle(vehicleId) {
+            console.log('编辑车辆:', vehicleId);
+            // 实现编辑功能
+        }
+
+        // 删除车辆
+        function deleteVehicle(vehicleId) {
+            if (confirm('确定要删除这辆车吗？')) {
+                console.log('删除车辆:', vehicleId);
+                // 实现删除功能
+            }
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 搜索功能
+            const searchInput = document.getElementById('vehicleSearch');
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    const query = e.target.value.toLowerCase();
+                    filterVehicles(query);
+                });
+            }
+        }
+
+        // 过滤车辆
+        function filterVehicles(query) {
+            const rows = document.querySelectorAll('.vehicle-row');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        // 工具函数
+        function getStatusText(status) {
+            const statusMap = {
+                'online': '在线',
+                'busy': '忙碌',
+                'offline': '离线'
+            };
+            return statusMap[status] || '未知';
+        }
+
+        function getProgressBarColor(rate) {
+            if (rate >= 90) return 'bg-success';
+            if (rate >= 70) return 'bg-primary';
+            if (rate >= 50) return 'bg-warning';
+            return 'bg-error';
+        }
+
+        function generateStars(rating) {
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            let stars = '';
+
+            for (let i = 0; i < fullStars; i++) {
+                stars += '<i class="fas fa-star"></i>';
+            }
+
+            if (hasHalfStar) {
+                stars += '<i class="fas fa-star-half-alt"></i>';
+            }
+
+            const emptyStars = 5 - Math.ceil(rating);
+            for (let i = 0; i < emptyStars; i++) {
+                stars += '<i class="far fa-star"></i>';
+            }
+
+            return stars;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree /F)",
+      "Bash(dir /A)",
+      "Bash(dir \"MYpython\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景圆形 -->
+  <circle cx="32" cy="32" r="32" fill="#3498db"/>
+
+  <!-- 用户图标 -->
+  <g fill="#ffffff" opacity="0.9">
+    <!-- 头部 -->
+    <circle cx="32" cy="24" r="8"/>
+
+    <!-- 身体 -->
+    <path d="M16 56 C16 48, 22 42, 32 42 C42 42, 48 48, 48 56 L48 64 L16 64 Z"/>
+  </g>
+
+  <!-- 边框 -->
+  <circle cx="32" cy="32" r="31" fill="none" stroke="#2c3e50" stroke-width="2" opacity="0.2"/>
+</svg>

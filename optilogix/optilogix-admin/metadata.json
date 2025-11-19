@@ -1,0 +1,5 @@
+{
+  "name": "OptiLogix Admin",
+  "description": "Enterprise Spatial-Temporal Logistics Optimization System featuring 3D packing simulation and VRPPD route planning.",
+  "requestFramePermissions": []
+}

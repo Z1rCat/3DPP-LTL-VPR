@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel报告浏览器 - 管理层</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            color: #2d3748;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .browser-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .browser-header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .browser-title {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #ff6b6b 0%, #feca57 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .report-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .report-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .report-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .report-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            background: #ff6b6b;
+        }
+
+        .report-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #718096;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #ff5252;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .file-preview {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .preview-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .preview-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .preview-content {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 300px;
+            border: 2px dashed #e2e8f0;
+        }
+
+        .preview-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .preview-table th,
+        .preview-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .preview-table th {
+            background: #f1f5f9;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .loading-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+            color: #718096;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #ff6b6b;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .download-all-btn {
+            background: linear-gradient(90deg, #4caf50 0%, #8bc34a 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+
+        .download-all-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="browser-container">
+        <div class="browser-header">
+            <h1 class="browser-title">📊 Excel报告浏览器</h1>
+            <p style="color: #718096;">管理和下载各类运营报告 | 文件数量: <span id="file-count">8</span></p>
+        </div>
+
+        <button class="download-all-btn">
+            <i class="fas fa-download"></i>
+            下载全部报告
+        </button>
+
+        <!-- 报告文件卡片 -->
+        <div class="reports-grid">
+            <!-- 货物分类结果 -->
+            <div class="report-card">
+                <div class="report-header">
+                    <h3 class="report-title">货物分类结果</h3>
+                    <div class="report-icon">📦</div>
+                </div>
+                <div class="report-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">文件名</div>
+                        <div class="stat-value">cargo_classification.xlsx</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">文件大小</div>
+                        <div class="stat-value">2.8 MB</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">更新时间</div>
+                        <div class="stat-value">2025-11-17 10:30</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">记录数量</div>
+                        <div class="stat-value">1,456 条</div>
+                    </div>
+                </div>
+                <div class="report-actions">
+                    <button class="btn btn-primary" onclick="previewFile('cargo_classification')">
+                        <i class="fas fa-eye"></i> 预览
+                    </button>
+                    <button class="btn btn-secondary" onclick="downloadFile('cargo_classification')">
+                        <i class="fas fa-download"></i> 下载
+                    </button>
+                </div>
+            </div>
+
+            <!-- LTL优化结果 -->
+            <div class="report-card">
+                <div class="report-header">
+                    <h3 class="report-title">LTL优化结果</h3>
+                    <div class="report-icon">🚛</div>
+                </div>
+                <div class="report-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">文件名</div>
+                        <div class="stat-value">ltl_optimization_results.xlsx</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">文件大小</div>
+                        <div class="stat-value">3.2 MB</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">更新时间</div>
+                        <div class="stat-value">2025-11-17 09:45</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">优化率</div>
+                        <div class="stat-value">87.3%</div>
+                    </div>
+                </div>
+                <div class="report-actions">
+                    <button class="btn btn-primary" onclick="previewFile('ltl_optimization')">
+                        <i class="fas fa-eye"></i> 预览
+                    </button>
+                    <button class="btn btn-secondary" onclick="downloadFile('ltl_optimization')">
+                        <i class="fas fa-download"></i> 下载
+                    </button>
+                </div>
+            </div>
+
+            <!-- 车辆路径优化汇总 -->
+            <div class="report-card">
+                <div class="report-header">
+                    <h3 class="report-title">车辆路径优化汇总</h3>
+                    <div class="report-icon">🗺️</div>
+                </div>
+                <div class="report-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">文件名</div>
+                        <div class="stat-value">route_optimization_summary.xlsx</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">文件大小</div>
+                        <div class="stat-value">4.1 MB</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">更新时间</div>
+                        <div class="stat-value">2025-11-17 08:20</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">路径数量</div>
+                        <div class="stat-value">38 条</div>
+                    </div>
+                </div>
+                <div class="report-actions">
+                    <button class="btn btn-primary" onclick="previewFile('route_optimization')">
+                        <i class="fas fa-eye"></i> 预览
+                    </button>
+                    <button class="btn btn-secondary" onclick="downloadFile('route_optimization')">
+                        <i class="fas fa-download"></i> 下载
+                    </button>
+                </div>
+            </div>
+
+            <!-- 小货物合并报告 -->
+            <div class="report-card">
+                <div class="report-header">
+                    <h3 class="report-title">小货物合并报告</h3>
+                    <div class="report-icon">📋</div>
+                </div>
+                <div class="report-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">文件名</div>
+                        <div class="stat-value">small_cargo_merged.xlsx</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">文件大小</div>
+                        <div class="stat-value">1.5 MB</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">更新时间</div>
+                        <div class="stat-value">2025-11-16 16:30</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">合并率</div>
+                        <div class="stat-value">92.1%</div>
+                    </div>
+                </div>
+                <div class="report-actions">
+                    <button class="btn btn-primary" onclick="previewFile('small_cargo')">
+                        <i class="fas fa-eye"></i> 预览
+                    </button>
+                    <button class="btn btn-secondary" onclick="downloadFile('small_cargo')">
+                        <i class="fas fa-download"></i> 下载
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 文件预览区域 -->
+        <div class="file-preview">
+            <div class="preview-header">
+                <h3 class="preview-title">📋 文件预览</h3>
+                <div class="preview-controls">
+                    <button class="btn btn-secondary" onclick="exportToPDF()">
+                        <i class="fas fa-file-pdf"></i> 导出PDF
+                    </button>
+                    <button class="btn btn-secondary" onclick="printPreview()">
+                        <i class="fas fa-print"></i> 打印
+                    </button>
+                </div>
+            </div>
+            <div class="preview-content" id="preview-content">
+                <div class="loading-placeholder">
+                    <div class="spinner"></div>
+                    <p>选择文件以预览内容</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 模拟文件预览数据
+        const previewData = {
+            'cargo_classification': {
+                type: 'table',
+                headers: ['货物ID', '类型', '重量(kg)', '体积(m³)', '密度', '分类结果'],
+                rows: [
+                    ['C001', '大货物', 120.5, 0.85, '高密度', '优先装载'],
+                    ['C002', '中货物', 45.2, 0.32, '中密度', '标准装载'],
+                    ['C003', '小货物', 12.8, 0.15, '低密度', 'LTL合并'],
+                    ['C004', '大货物', 95.3, 0.65, '高密度', '优先装载'],
+                    ['C005', '中货物', 38.7, 0.28, '中密度', '标准装载']
+                ]
+            },
+            'ltl_optimization': {
+                type: 'table',
+                headers: ['车辆ID', '订单数量', '装载率(%)', '优化前成本', '优化后成本', '节约金额'],
+                rows: [
+                    ['LTL_TRUCK_000', 15, 88.5, '¥2,450', '¥2,180', '¥270'],
+                    ['LTL_TRUCK_001', 12, 82.3, '¥2,120', '¥1,890', '¥230'],
+                    ['LTL_TRUCK_002', 18, 91.2, '¥2,780', '¥2,450', '¥330'],
+                    ['LTL_TRUCK_003', 14, 85.7, '¥2,350', '¥2,120', '¥230'],
+                    ['LTL_TRUCK_004', 16, 87.9, '¥2,560', '¥2,280', '¥280']
+                ]
+            },
+            'route_optimization': {
+                type: 'table',
+                headers: ['路径ID', '起始点', '终点', '距离(km)', '时间(小时)', '成本(元)', '优化建议'],
+                rows: [
+                    ['R001', '配送中心', '客户A', 45.2, 2.5, 185, '优化装载顺序'],
+                    ['R002', '客户A', '客户B', 28.7, 1.8, 128, '减少绕行'],
+                    ['R003', '客户B', '客户C', 35.4, 2.1, 156, '合并配送'],
+                    ['R004', '客户C', '配送中心', 52.1, 2.8, 215, '调整配送时间'],
+                    ['R005', '配送中心', '客户D', 38.9, 2.3, 168, '优化路线规划']
+                ]
+            },
+            'small_cargo': {
+                type: 'table',
+                headers: ['合并组', '货物数量', '总体积(m³)', '总重量(kg)', '合并率(%)', '节约成本'],
+                rows: [
+                    ['G001', 8, 0.95, 85.3, 94.2, '¥156'],
+                    ['G002', 12, 1.24, 112.8, 89.7, '¥128'],
+                    ['G003', 6, 0.72, 68.5, 96.1, '¥98'],
+                    ['G004', 10, 1.15, 105.2, 91.3, '¥142'],
+                    ['G005', 9, 1.08, 98.7, 93.8, '¥135']
+                ]
+            }
+        };
+
+        function previewFile(fileType) {
+            const previewContent = document.getElementById('preview-content');
+            const data = previewData[fileType];
+
+            if (data && data.type === 'table') {
+                let tableHTML = `
+                    <table class="preview-table">
+                        <thead>
+                            <tr>
+                `;
+
+                data.headers.forEach(header => {
+                    tableHTML += `<th>${header}</th>`;
+                });
+
+                tableHTML += `
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                data.rows.forEach(row => {
+                    tableHTML += '<tr>';
+                    row.forEach(cell => {
+                        tableHTML += `<td>${cell}</td>`;
+                    });
+                    tableHTML += '</tr>';
+                });
+
+                tableHTML += `
+                        </tbody>
+                    </table>
+                `;
+
+                previewContent.innerHTML = tableHTML;
+            } else {
+                previewContent.innerHTML = `
+                    <div class="loading-placeholder">
+                        <i class="fas fa-file-excel" style="font-size: 48px; color: #4caf50; margin-bottom: 15px;"></i>
+                        <p>文件预览加载中...</p>
+                    </div>
+                `;
+            }
+        }
+
+        function downloadFile(fileType) {
+            console.log('下载文件:', fileType);
+            alert(`开始下载 ${fileType} 文件...`);
+        }
+
+        function exportToPDF() {
+            console.log('导出PDF');
+            alert('正在生成PDF文件...');
+        }
+
+        function printPreview() {
+            window.print();
+        }
+
+        // 更新文件计数
+        document.getElementById('file-count').textContent = '8';
+    </script>
+</body>
+</html>

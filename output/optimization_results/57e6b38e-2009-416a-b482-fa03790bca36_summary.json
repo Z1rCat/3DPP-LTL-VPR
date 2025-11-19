@@ -1,0 +1,269 @@
+{
+  "task_id": "7295407d-f97b-47e0-8823-5b91d813a0bb",
+  "optimization_mode": "demo",
+  "status": "completed",
+  "total_orders": 50,
+  "used_trucks": 3,
+  "total_loading_rate": 78.1,
+  "total_weight_utilization": 74.8,
+  "optimization_time_seconds": 23.93,
+  "loading_plans": [
+    {
+      "truck_id": "LTL_TRUCK_001",
+      "orders": [
+        "ORDER_0001",
+        "ORDER_0002",
+        "ORDER_0003",
+        "ORDER_0004",
+        "ORDER_0005",
+        "ORDER_0006",
+        "ORDER_0007"
+      ],
+      "total_volume": 45.9,
+      "total_weight": 14562.0,
+      "volume_utilization": 83.0,
+      "weight_utilization": 80.9,
+      "loading_positions": [
+        {
+          "order_id": "ORDER_0001",
+          "position": [
+            0.79,
+            0.19,
+            1.74
+          ],
+          "dimensions": [
+            1.4028979009268276,
+            0.8850983661995466,
+            0.9348472218738955
+          ],
+          "weight": 134.1
+        },
+        {
+          "order_id": "ORDER_0002",
+          "position": [
+            6.16,
+            1.03,
+            1.33
+          ],
+          "dimensions": [
+            1.5189024826741977,
+            0.8509156196456128,
+            0.9195355219507648
+          ],
+          "weight": 53.0
+        },
+        {
+          "order_id": "ORDER_0003",
+          "position": [
+            6.22,
+            0.99,
+            0.18
+          ],
+          "dimensions": [
+            1.8081498589971425,
+            1.1457404814979022,
+            0.8597438774965673
+          ],
+          "weight": 460.5
+        },
+        {
+          "order_id": "ORDER_0004",
+          "position": [
+            0.25,
+            1.64,
+            0.51
+          ],
+          "dimensions": [
+            0.7902730266234181,
+            0.6236111248838535,
+            0.6547079458436917
+          ],
+          "weight": 328.8
+        },
+        {
+          "order_id": "ORDER_0005",
+          "position": [
+            0.3,
+            0.33,
+            1.26
+          ],
+          "dimensions": [
+            1.0167862211500722,
+            0.757954064477469,
+            0.9788065411156717
+          ],
+          "weight": 78.9
+        },
+        {
+          "order_id": "ORDER_0006",
+          "position": [
+            0.37,
+            1.07,
+            1.41
+          ],
+          "dimensions": [
+            1.1903164925684377,
+            0.7738045904227814,
+            0.3961679507890836
+          ],
+          "weight": 337.6
+        },
+        {
+          "order_id": "ORDER_0007",
+          "position": [
+            4.35,
+            1.2,
+            1.95
+          ],
+          "dimensions": [
+            1.5302373964978337,
+            1.4503982883930564,
+            0.9436135860700305
+          ],
+          "weight": 137.1
+        }
+      ]
+    },
+    {
+      "truck_id": "LTL_TRUCK_002",
+      "orders": [
+        "ORDER_0004",
+        "ORDER_0005",
+        "ORDER_0006"
+      ],
+      "total_volume": 43.79,
+      "total_weight": 11952.0,
+      "volume_utilization": 79.2,
+      "weight_utilization": 66.4,
+      "loading_positions": [
+        {
+          "order_id": "ORDER_0004",
+          "position": [
+            6.61,
+            0.31,
+            1.17
+          ],
+          "dimensions": [
+            1.6338455257025808,
+            1.344405443749145,
+            0.8441540803983614
+          ],
+          "weight": 334.4
+        },
+        {
+          "order_id": "ORDER_0005",
+          "position": [
+            1.5,
+            1.27,
+            0.36
+          ],
+          "dimensions": [
+            1.2649643772811907,
+            0.6088154379861141,
+            0.47696609751827745
+          ],
+          "weight": 93.1
+        },
+        {
+          "order_id": "ORDER_0006",
+          "position": [
+            6.64,
+            1.6,
+            0.75
+          ],
+          "dimensions": [
+            0.9002005440711897,
+            0.5904321415591633,
+            0.38144810917188615
+          ],
+          "weight": 296.3
+        }
+      ]
+    },
+    {
+      "truck_id": "LTL_TRUCK_003",
+      "orders": [
+        "ORDER_0007",
+        "ORDER_0008",
+        "ORDER_0009"
+      ],
+      "total_volume": 52.2,
+      "total_weight": 14328.0,
+      "volume_utilization": 94.4,
+      "weight_utilization": 79.6,
+      "loading_positions": [
+        {
+          "order_id": "ORDER_0007",
+          "position": [
+            1.85,
+            1.66,
+            0.14
+          ],
+          "dimensions": [
+            1.1936119102566385,
+            0.8080250137213659,
+            0.6282009556179424
+          ],
+          "weight": 493.2
+        },
+        {
+          "order_id": "ORDER_0008",
+          "position": [
+            5.13,
+            1.3,
+            1.44
+          ],
+          "dimensions": [
+            1.5761391865074086,
+            1.0660531094525996,
+            0.7546918389046123
+          ],
+          "weight": 82.2
+        },
+        {
+          "order_id": "ORDER_0009",
+          "position": [
+            2.69,
+            1.9,
+            0.05
+          ],
+          "dimensions": [
+            1.1894956817109175,
+            1.0518192765245056,
+            0.9736241308040927
+          ],
+          "weight": 254.4
+        }
+      ]
+    }
+  ],
+  "performance_metrics": {
+    "orders_by_type": {
+      "large": 10,
+      "medium": 15,
+      "small": 25
+    },
+    "efficiency_scores": {
+      "space_efficiency": 78.1,
+      "weight_efficiency": 80.7,
+      "route_efficiency": 87.5,
+      "time_efficiency": 94.7
+    },
+    "cost_analysis": {
+      "total_distance": 416.9,
+      "fuel_cost": 278.0,
+      "driver_cost": 1399.0,
+      "total_cost": 1265.0,
+      "cost_per_order": 30.6
+    },
+    "improvement_metrics": {
+      "loading_rate_improvement": 14.0,
+      "cost_reduction": 16.4,
+      "time_saving": 17.1
+    }
+  },
+  "timestamp": "2025-11-18T12:33:09.209784",
+  "success": true,
+  "message": "优化成功完成",
+  "source": "simple_demo"
+}

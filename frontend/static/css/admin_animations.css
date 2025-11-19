@@ -1,0 +1,813 @@
+/**
+ * 高级物流管理系统 - 动画系统
+ * Logistics Management System - Animation System
+ * Version: 2.0.0
+ */
+
+/* ========================================
+   CSS 自定义属性 - 动画参数
+   ======================================== */
+
+:root {
+  /* 动画性能优化 */
+  --animation-will-change: transform, opacity;
+  --animation-gpu-accelerated: translate3d(0, 0, 0);
+
+  /* 页面加载动画 */
+  --page-load-duration: 0.8s;
+  --page-load-delay: 0.1s;
+  --page-load-stagger: 0.1s;
+
+  /* 微交互动画 */
+  --micro-interaction-duration: 0.2s;
+  --micro-interaction-scale: 1.05;
+  --micro-interaction-lift: 2px;
+
+  /* 数据刷新动画 */
+  --data-refresh-duration: 0.6s;
+  --data-refresh-easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================================
+   页面入口动画 - Page Enter Animations
+   ======================================== */
+
+/* 淡入向上 */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp var(--page-load-duration) var(--ease-out) forwards;
+  opacity: 0;
+}
+
+/* 淡入向下 */
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown var(--page-load-duration) var(--ease-out) forwards;
+  opacity: 0;
+}
+
+/* 淡入左侧 */
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fade-in-left {
+  animation: fadeInLeft var(--page-load-duration) var(--ease-out) forwards;
+  opacity: 0;
+}
+
+/* 淡入右侧 */
+@keyframes fadeInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fade-in-right {
+  animation: fadeInRight var(--page-load-duration) var(--ease-out) forwards;
+  opacity: 0;
+}
+
+/* 缩放淡入 */
+@keyframes scaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scale-in {
+  animation: scaleIn var(--page-load-duration) var(--ease-back) forwards;
+  opacity: 0;
+}
+
+/* 弹性进入 */
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-bounce-in {
+  animation: bounceIn 0.8s var(--ease-back) forwards;
+  opacity: 0;
+}
+
+/* ========================================
+   滑动动画 - Slide Animations
+   ======================================== */
+
+/* 侧边栏滑入 */
+@keyframes slideInLeft {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.4s var(--ease-out) forwards;
+}
+
+/* 模态框滑入 */
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s var(--ease-out) forwards;
+}
+
+/* ========================================
+   微交互动画 - Micro Interactions
+   ======================================== */
+
+/* 悬浮提升 */
+.hover-lift {
+  transition: transform var(--micro-interaction-duration) var(--ease-out);
+  will-change: var(--animation-will-change);
+}
+
+.hover-lift:hover {
+  transform: translateY(calc(var(--micro-interaction-lift) * -1));
+}
+
+/* 悬浮缩放 */
+.hover-scale {
+  transition: transform var(--micro-interaction-duration) var(--ease-out);
+  will-change: var(--animation-will-change);
+}
+
+.hover-scale:hover {
+  transform: scale(var(--micro-interaction-scale));
+}
+
+/* 悬浮发光 */
+.hover-glow {
+  transition: box-shadow var(--micro-interaction-duration) var(--ease-out);
+  will-change: box-shadow;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+/* 点击反馈 */
+.click-feedback {
+  position: relative;
+  overflow: hidden;
+}
+
+.click-feedback::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s var(--ease-out), height 0.3s var(--ease-out);
+}
+
+.click-feedback:active::after {
+  width: 200px;
+  height: 200px;
+}
+
+/* ========================================
+   加载动画 - Loading Animations
+   ======================================== */
+
+/* 旋转加载 */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* 脉冲加载 */
+@keyframes loading-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.loading-pulse {
+  animation: loading-pulse 1.5s var(--ease-in-out) infinite;
+}
+
+/* 闪烁加载 */
+@keyframes loading-blink {
+  0%, 50%, 100% {
+    opacity: 1;
+  }
+  25%, 75% {
+    opacity: 0;
+  }
+}
+
+.loading-blink {
+  animation: loading-blink 1.4s var(--ease-in-out) infinite;
+}
+
+/* 弹跳加载 */
+@keyframes loading-bounce {
+  0%, 100%, 20%, 50%, 80% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+.loading-bounce {
+  animation: loading-bounce 1s var(--ease-in-out) infinite;
+}
+
+/* ========================================
+   数据更新动画 - Data Update Animations
+   ======================================== */
+
+/* 数字递增动画 */
+@keyframes countUp {
+  0% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(-2px);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-count-up {
+  animation: countUp 0.6s var(--ease-out);
+}
+
+/* 数据刷新动画 */
+@keyframes dataRefresh {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-data-refresh {
+  animation: dataRefresh var(--data-refresh-duration) var(--data-refresh-easing);
+}
+
+/* 新数据高亮 */
+@keyframes highlight {
+  0% {
+    background-color: rgba(59, 130, 246, 0);
+  }
+  50% {
+    background-color: rgba(59, 130, 246, 0.2);
+  }
+  100% {
+    background-color: rgba(59, 130, 246, 0);
+  }
+}
+
+.animate-highlight {
+  animation: highlight 1s var(--ease-out);
+}
+
+/* ========================================
+   状态变化动画 - State Change Animations
+   ======================================== */
+
+/* 成功状态 */
+@keyframes success {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-success {
+  animation: success 0.5s var(--ease-back);
+}
+
+/* 错误状态 */
+@keyframes error {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-2px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(2px);
+  }
+}
+
+.animate-error {
+  animation: error 0.5s var(--ease-in-out);
+}
+
+/* 警告状态 */
+@keyframes warning {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-warning {
+  animation: warning 0.3s var(--ease-in-out) infinite alternate;
+}
+
+/* ========================================
+   导航动画 - Navigation Animations
+   ======================================== */
+
+/* 标签切换 */
+@keyframes tabSwitch {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-tab-switch {
+  animation: tabSwitch 0.3s var(--ease-out);
+}
+
+/* 菜单展开 */
+@keyframes menuExpand {
+  0% {
+    max-height: 0;
+    opacity: 0;
+  }
+  100% {
+    max-height: 500px;
+    opacity: 1;
+  }
+}
+
+.animate-menu-expand {
+  animation: menuExpand 0.3s var(--ease-out) forwards;
+  overflow: hidden;
+}
+
+/* ========================================
+   表单动画 - Form Animations
+   ======================================== */
+
+/* 焦点动画 */
+@keyframes focus {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 0 6px rgba(59, 130, 246, 0);
+  }
+}
+
+.form-control:focus {
+  animation: focus 0.3s var(--ease-out);
+}
+
+/* 表单验证 */
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
+
+.animate-shake {
+  animation: shake 0.5s var(--ease-in-out);
+}
+
+/* ========================================
+   通知动画 - Notification Animations
+   ======================================== */
+
+/* 通知滑入 */
+@keyframes notificationSlide {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-notification-slide {
+  animation: notificationSlide 0.3s var(--ease-out);
+}
+
+/* 通知淡出 */
+@keyframes notificationFade {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.animate-notification-fade {
+  animation: notificationFade 0.3s var(--ease-out);
+}
+
+/* ========================================
+   图表动画 - Chart Animations
+   ======================================== */
+
+/* 图表绘制 */
+@keyframes chartDraw {
+  0% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+}
+
+.animate-chart-draw {
+  animation: chartDraw 1s var(--ease-out);
+}
+
+/* 进度条动画 */
+@keyframes progress {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.animate-progress {
+  animation: progress 1s var(--ease-out);
+}
+
+/* 圆环进度 */
+@keyframes circular-progress {
+  0% {
+    stroke-dashoffset: 283;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-circular-progress {
+  animation: circular-progress 1s var(--ease-out);
+}
+
+/* ========================================
+   背景动画 - Background Animations
+   ======================================== */
+
+/* 渐变背景动画 */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradientShift 3s var(--ease-in-out) infinite;
+}
+
+/* 粒子背景 */
+@keyframes particle {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+    border-radius: 0;
+  }
+  100% {
+    transform: translateY(-100px) rotate(720deg);
+    opacity: 0;
+    border-radius: 50%;
+  }
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--color-primary-400);
+  animation: particle 3s linear infinite;
+}
+
+/* ========================================
+   3D 变换动画 - 3D Transform Animations
+   ======================================== */
+
+/* 翻转卡片 */
+@keyframes flip {
+  0% {
+    transform: perspective(600px) rotateY(0);
+  }
+  100% {
+    transform: perspective(600px) rotateY(180deg);
+  }
+}
+
+.animate-flip {
+  transform-style: preserve-3d;
+  animation: flip 0.6s var(--ease-out);
+}
+
+/* 旋转立方体 */
+@keyframes rotateCube {
+  0% {
+    transform: rotateX(0deg) rotateY(0deg);
+  }
+  100% {
+    transform: rotateX(360deg) rotateY(360deg);
+  }
+}
+
+.animate-rotate-cube {
+  animation: rotateCube 4s linear infinite;
+  transform-style: preserve-3d;
+}
+
+/* ========================================
+   性能优化 - Performance Optimization
+   ======================================== */
+
+/* GPU 加速优化 */
+.gpu-accelerated {
+  transform: var(--animation-gpu-accelerated);
+  will-change: var(--animation-will-change);
+}
+
+/* 减少动画 */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 暗色模式优化 */
+@media (prefers-color-scheme: dark) {
+  .animate-highlight {
+    animation-name: highlight-dark;
+  }
+
+  @keyframes highlight-dark {
+    0% {
+      background-color: rgba(96, 165, 250, 0);
+    }
+    50% {
+      background-color: rgba(96, 165, 250, 0.3);
+    }
+    100% {
+      background-color: rgba(96, 165, 250, 0);
+    }
+  }
+}
+
+/* ========================================
+   动画延迟类 - Animation Delay Classes
+   ======================================== */
+
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-600 { animation-delay: 0.6s; }
+.delay-700 { animation-delay: 0.7s; }
+.delay-800 { animation-delay: 0.8s; }
+.delay-900 { animation-delay: 0.9s; }
+.delay-1000 { animation-delay: 1s; }
+
+/* ========================================
+   动画控制类 - Animation Control Classes
+   ======================================== */
+
+/* 暂停动画 */
+.animation-paused {
+  animation-play-state: paused !important;
+}
+
+/* 无限循环 */
+.animation-infinite {
+  animation-iteration-count: infinite;
+}
+
+/* 交替动画 */
+.animation-alternate {
+  animation-direction: alternate;
+}
+
+/* 反向动画 */
+.animation-reverse {
+  animation-direction: reverse;
+}
+
+/* ========================================
+   组合动画 - Combined Animations
+   ======================================== */
+
+/* 复杂入场动画 */
+@keyframes complexEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-5px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-complex-enter {
+  animation: complexEnter 0.8s var(--ease-back) forwards;
+  opacity: 0;
+}
+
+/* 数据更新组合动画 */
+@keyframes dataUpdate {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    filter: brightness(1);
+  }
+  25% {
+    transform: scale(1.05);
+    filter: brightness(1.2);
+  }
+  50% {
+    transform: scale(0.95);
+    filter: brightness(0.8);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    filter: brightness(1);
+  }
+}
+
+.animate-data-update {
+  animation: dataUpdate 0.8s var(--ease-in-out);
+}
+
+/* ========================================
+   页面过渡动画 - Page Transitions
+   ======================================== */
+
+/* 页面淡出 */
+@keyframes pageFadeOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+.page-transition-out {
+  animation: pageFadeOut 0.3s var(--ease-out) forwards;
+}
+
+/* 页面淡入 */
+@keyframes pageFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.page-transition-in {
+  animation: pageFadeIn 0.3s var(--ease-out) forwards;
+}

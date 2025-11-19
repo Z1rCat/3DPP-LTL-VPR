@@ -1,0 +1,54 @@
+# 物流优化系统 V4.0 依赖包清单
+# Logistics Optimization System V4.0 Dependencies
+
+# 核心计算
+numpy>=1.21.0
+pandas>=1.3.0
+scipy>=1.7.0
+
+# 优化求解
+gurobi>=9.5.0
+
+# 可视化
+plotly>=5.0.0
+matplotlib>=3.5.0
+folium>=0.12.0
+
+# Web框架 (用于API)
+fastapi>=0.85.0
+uvicorn[standard]>=0.18.0
+pydantic>=1.10.0
+python-multipart>=0.0.5
+aiofiles>=0.8.0
+jinja2>=3.1.0
+
+# 用户认证
+PyJWT>=2.6.0
+python-jose[cryptography]>=3.3.0
+
+# 备用Web框架
+flask>=2.0.0
+flask-cors>=3.0.0
+
+# 数据处理
+openpyxl>=3.0.0
+xlsxwriter>=3.0.0
+
+# 数据库
+sqlite3  # 内置模块
+sqlalchemy>=1.4.0  # 可选，用于复杂查询
+
+# 数据分析增强
+seaborn>=0.11.0  # 统计可视化
+scikit-learn>=1.0.0  # 机器学习算法（用于异常检测等）
+
+# 工具库
+tqdm>=4.62.0
+pathlib2>=2.3.0
+typing-extensions>=4.0.0
+psutil>=5.8.0  # 系统监控
+
+# 开发和测试
+pytest>=6.0.0
+black>=21.0.0
+isort>=5.0.0

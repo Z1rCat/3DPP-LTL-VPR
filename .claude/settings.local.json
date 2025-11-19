@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python start_api.py)",
+      "Bash(python start_api_simple.py)",
+      "Bash(curl -s -I http://localhost:8001/customer)",
+      "Bash(curl -s http://localhost:8001/customer)",
+      "Bash(curl -s -I http://localhost:8001/static/css/customer.css)",
+      "Bash(curl -s http://localhost:8001/admin)",
+      "Bash(curl -s -I http://localhost:8001/admin)",
+      "Bash(curl -s http://localhost:8001/health)",
+      "Bash(curl -s -I http://localhost:8001/static/css/admin_design_tokens.css)",
+      "Bash(curl -s http://localhost:8001/admin/vehicles)",
+      "Bash(curl -s http://localhost:8001/admin/analytics)",
+      "Bash(curl -s http://localhost:8001/api/real-data/optimization-summary)",
+      "Bash(curl -s http://localhost:8001/api/real-data/loading-plans)",
+      "Bash(npm install)",
+      "Bash(npm run dev)",
+      "Bash(git remote add origin https://github.com/Z1rCat/3DPP-LTL-VPR.git)",
+      "Bash(git init)",
+      "Bash(git fetch origin)",
+      "Bash(git checkout -b main)",
+      "Bash(git add README.md)",
+      "Bash(git commit -m \"feat: 升级README到V5.0版本 - 整合OptiLogix前端架构\n\n🚀 V5.0重大更新:\n- ✨ 全新前端架构: React 19.2.0 + TypeScript 5.8.2 + Vite 6.2.0\n- 🎨 3D可视化升级: Three.js替代Plotly，真实3D渲染体验\n- 📱 移动端优化: 原生移动应用体验，响应式设计\n- 🔧 模块化架构: 四大独立模块，支持微服务部署\n- 🛠️ 共享组件库: 统一设计系统，提升开发效率\n\n🔗 模块详情:\n- optilogix-admin: 智能物流管理中心\n- optilogix-client-portal: 智能自助服务平台\n- optilogix-driver: 移动端任务执行平台\n- optilogix-admin-login: 企业级身份认证平台\n- shared: 统一的设计系统与工具库\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\")",
+      "Bash(git push -u origin main)",
+      "Bash(git add .)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

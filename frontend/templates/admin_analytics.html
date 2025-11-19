@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能分析 - 巧满装载平台</title>
+
+    <!-- 设计系统 -->
+    <link rel="stylesheet" href="/static/css/admin_design_tokens.css">
+    <link rel="stylesheet" href="/static/css/admin_components.css">
+    <link rel="stylesheet" href="/static/css/admin_utilities.css">
+    <link rel="stylesheet" href="/static/css/admin_animations.css">
+
+    <!-- 外部资源 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.css">
+
+    <style>
+        .insight-card {
+            background: linear-gradient(135deg, var(--color-bg-secondary), var(--color-bg-tertiary));
+            border: 1px solid var(--color-border-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .insight-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: var(--gradient-radial);
+            opacity: 0.1;
+        }
+
+        .trend-indicator {
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .trend-indicator::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+
+        .trend-up::before {
+            border-width: 0 8px 16px 8px;
+            border-color: transparent transparent var(--color-success) transparent;
+        }
+
+        .trend-down::before {
+            border-width: 16px 8px 0 8px;
+            border-color: var(--color-error) transparent transparent transparent;
+        }
+
+        .heatmap-cell {
+            aspect-ratio: 1;
+            border-radius: var(--radius-sm);
+            transition: all var(--duration-200) var(--ease-out);
+            cursor: pointer;
+        }
+
+        .heatmap-cell:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .prediction-item {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .prediction-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            border-radius: var(--radius-full);
+        }
+
+        .prediction-high::before { background: var(--color-error); }
+        .prediction-medium::before { background: var(--color-warning); }
+        .prediction-low::before { background: var(--color-success); }
+
+        /* AI建议动画 */
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typewriter 2s steps(40, end);
+        }
+    </style>
+</head>
+<body class="bg-primary">
+    <div class="min-h-screen p-4">
+        <!-- 页面头部 -->
+        <div class="flex items-center justify-between mb-6 animate-fade-in-down">
+            <div class="flex items-center gap-4">
+                <button class="btn btn-ghost" onclick="history.back()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <div>
+                    <h1 class="text-2xl font-bold text-primary">智能分析中心</h1>
+                    <p class="text-tertiary text-sm">AI驱动的物流洞察与预测</p>
+                </div>
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    <span>AI分析中</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <select class="form-control form-select" id="timeRange">
+                    <option>最近24小时</option>
+                    <option>最近7天</option>
+                    <option>最近30天</option>
+                    <option>自定义范围</option>
+                </select>
+                <button class="btn btn-primary" id="generateReport">
+                    <i class="fas fa-file-download mr-2"></i>生成报告
+                </button>
+            </div>
+        </div>
+
+        <!-- AI洞察卡片 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="insight-card card animate-fade-in-up delay-100">
+                <div class="card-body">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <h4 class="text-lg font-semibold text-primary mb-1">效率提升机会</h4>
+                            <p class="text-2xl font-bold text-success">+23%</p>
+                        </div>
+                        <div class="w-10 h-10 bg-success bg-opacity-10 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-chart-line text-success"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up text-success">
+                        <span class="text-sm">相比上周提升 23%</span>
+                    </div>
+                    <div class="mt-3 text-sm text-secondary">
+                        主要来自路径优化算法的改进，建议继续优化成都-重庆线路。
+                    </div>
+                </div>
+            </div>
+
+            <div class="insight-card card animate-fade-in-up delay-200">
+                <div class="card-body">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <h4 class="text-lg font-semibold text-primary mb-1">成本节约预测</h4>
+                            <p class="text-2xl font-bold text-primary">¥15.8K</p>
+                        </div>
+                        <div class="w-10 h-10 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-coins text-primary"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-down text-error">
+                        <span class="text-sm">预计本月节约成本</span>
+                    </div>
+                    <div class="mt-3 text-sm text-secondary">
+                        通过智能调度和装载优化，预计可节约燃油成本约15%。
+                    </div>
+                </div>
+            </div>
+
+            <div class="insight-card card animate-fade-in-up delay-300">
+                <div class="card-body">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <h4 class="text-lg font-semibold text-primary mb-1">风险预警</h4>
+                            <p class="text-2xl font-bold text-warning">3</p>
+                        </div>
+                        <div class="w-10 h-10 bg-warning bg-opacity-10 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-exclamation-triangle text-warning"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator text-warning">
+                        <span class="text-sm">需要关注的潜在问题</span>
+                    </div>
+                    <div class="mt-3 text-sm text-secondary">
+                        检测到3辆车辆接近保养期限，建议安排维护避免意外停运。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主要分析区域 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- 需求预测分析 -->
+            <div class="card animate-fade-in-up delay-400">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-brain"></i>
+                        AI需求预测
+                    </h3>
+                    <button class="btn btn-ghost btn-sm">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container" style="height: 300px;">
+                        <canvas id="demandForecastChart"></canvas>
+                    </div>
+                    <div class="mt-4 p-3 bg-tertiary rounded-lg">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i class="fas fa-lightbulb text-warning"></i>
+                            <span class="font-semibold">AI建议</span>
+                        </div>
+                        <p class="text-sm text-secondary typewriter">
+                            预测未来3天订单量将增加35%，建议提前调配5辆车到成都东郊区域。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 运营效率热力图 -->
+            <div class="card animate-fade-in-up delay-500">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-th"></i>
+                        时段效率热力图
+                    </h3>
+                    <div class="flex gap-2">
+                        <button class="btn btn-ghost btn-xs" data-view="week">周视图</button>
+                        <button class="btn btn-ghost btn-xs" data-view="month">月视图</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="efficiencyHeatmap" class="grid grid-cols-7 gap-1">
+                        <!-- 动态生成热力图 -->
+                    </div>
+                    <div class="mt-4 flex justify-between text-xs text-tertiary">
+                        <span>效率最低：02:00-06:00</span>
+                        <span>效率最高：14:00-18:00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 高级分析面板 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- 路径优化建议 -->
+            <div class="card animate-fade-in-up delay-600">
+                <div class="card-header">
+                    <h4 class="card-title">
+                        <i class="fas fa-route"></i>
+                        路径优化建议
+                    </h4>
+                </div>
+                <div class="card-body space-y-3">
+                    <div class="p-3 bg-tertiary rounded-lg">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-semibold text-primary">成都-重庆高速线</span>
+                            <span class="text-success text-sm">-18%</span>
+                        </div>
+                        <p class="text-sm text-secondary">建议使用新路线，可节省18%时间和燃油成本。</p>
+                    </div>
+                    <div class="p-3 bg-tertiary rounded-lg">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-semibold text-primary">市区配送网</span>
+                            <span class="text-success text-sm">-12%</span>
+                        </div>
+                        <p class="text-sm text-secondary">重新规划配送站点，提升整体效率。</p>
+                    </div>
+                    <div class="p-3 bg-tertiary rounded-lg">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-semibold text-primary">夜间配送方案</span>
+                            <span class="text-warning text-sm">+8%</span>
+                        </div>
+                        <p class="text-sm text-secondary">在夜间22:00-06:00增加配送，避开高峰期。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 维护预警系统 -->
+            <div class="card animate-fade-in-up delay-700">
+                <div class="card-header">
+                    <h4 class="card-title">
+                        <i class="fas fa-tools"></i>
+                        维护预警
+                    </h4>
+                </div>
+                <div class="card-body space-y-3">
+                    <div class="prediction-item prediction-high">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-semibold">川A12345</span>
+                                <p class="text-sm text-secondary">发动机故障风险高</p>
+                            </div>
+                            <span class="text-error font-semibold">紧急</span>
+                        </div>
+                    </div>
+                    <div class="prediction-item prediction-medium">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-semibold">川A23456</span>
+                                <p class="text-sm text-secondary">轮胎需要更换</p>
+                            </div>
+                            <span class="text-warning font-semibold">7天内</span>
+                        </div>
+                    </div>
+                    <div class="prediction-item prediction-low">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-semibold">川A34567</span>
+                                <p class="text-sm text-secondary">常规保养到期</p>
+                            </div>
+                            <span class="text-success font-semibold">15天内</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 性能对比分析 -->
+            <div class="card animate-fade-in-up delay-800">
+                <div class="card-header">
+                    <h4 class="card-title">
+                        <i class="fas fa-trophy"></i>
+                        司机绩效排行
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-3 p-2 bg-tertiary rounded-lg">
+                            <span class="text-lg font-bold text-warning">🥇</span>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-semibold">张师傅</span>
+                                    <span class="text-success font-semibold">98.5%</span>
+                                </div>
+                                <div class="progress h-1">
+                                    <div class="progress-bar bg-success" style="width: 98.5%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-2 bg-tertiary rounded-lg">
+                            <span class="text-lg font-bold text-secondary">🥈</span>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-semibold">李师傅</span>
+                                    <span class="text-primary font-semibold">96.2%</span>
+                                </div>
+                                <div class="progress h-1">
+                                    <div class="progress-bar bg-primary" style="width: 96.2%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-2 bg-tertiary rounded-lg">
+                            <span class="text-lg font-bold text-tertiary">🥉</span>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-semibold">王师傅</span>
+                                    <span class="text-info font-semibold">94.8%</span>
+                                </div>
+                                <div class="progress h-1">
+                                    <div class="progress-bar bg-info" style="width: 94.8%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 实时监控仪表板 -->
+        <div class="card animate-fade-in-up delay-900">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-tachometer-alt"></i>
+                    实时监控仪表板
+                </h3>
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    <span>实时数据</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="relative inline-flex items-center justify-center">
+                            <canvas id="gaugeChart1" width="120" height="120"></canvas>
+                            <div class="absolute">
+                                <p class="text-2xl font-bold text-primary">87%</p>
+                                <p class="text-xs text-secondary">整体效率</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="relative inline-flex items-center justify-center">
+                            <canvas id="gaugeChart2" width="120" height="120"></canvas>
+                            <div class="absolute">
+                                <p class="text-2xl font-bold text-success">92%</p>
+                                <p class="text-xs text-secondary">准点率</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="relative inline-flex items-center justify-center">
+                            <canvas id="gaugeChart3" width="120" height="120"></canvas>
+                            <div class="absolute">
+                                <p class="text-2xl font-bold text-warning">76%</p>
+                                <p class="text-xs text-secondary">装载率</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="relative inline-flex items-center justify-center">
+                            <canvas id="gaugeChart4" width="120" height="120"></canvas>
+                            <div class="absolute">
+                                <p class="text-2xl font-bold text-info">95%</p>
+                                <p class="text-xs text-secondary">客户满意度</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script>
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            generateHeatmap();
+            setupEventListeners();
+            startRealTimeUpdates();
+        });
+
+        // 初始化图表
+        function initializeCharts() {
+            // 需求预测图表
+            const demandCtx = document.getElementById('demandForecastChart');
+            if (demandCtx) {
+                new Chart(demandCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
+                        datasets: [{
+                            label: '预测订单量',
+                            data: [120, 135, 155, 180, 165, 145, 160],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }, {
+                            label: '历史订单量',
+                            data: [100, 115, 125, 140, 130, 120, 125],
+                            borderColor: '#6b7280',
+                            backgroundColor: 'rgba(107, 114, 128, 0.1)',
+                            borderDash: [5, 5],
+                            tension: 0.4,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                labels: { color: '#9ca3af' }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                                ticks: { color: '#9ca3af' }
+                            },
+                            y: {
+                                grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                                ticks: { color: '#9ca3af' }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 仪表盘图表
+            createGaugeChart('gaugeChart1', 87, '#3b82f6');
+            createGaugeChart('gaugeChart2', 92, '#10b981');
+            createGaugeChart('gaugeChart3', 76, '#f59e0b');
+            createGaugeChart('gaugeChart4', 95, '#06b6d4');
+        }
+
+        // 创建仪表盘图表
+        function createGaugeChart(canvasId, value, color) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 40;
+
+            // 背景圆弧
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, Math.PI, 2 * Math.PI);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.lineWidth = 8;
+            ctx.stroke();
+
+            // 值圆弧
+            const angle = (value / 100) * Math.PI;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, Math.PI, Math.PI + angle);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 8;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+        }
+
+        // 生成热力图
+        function generateHeatmap() {
+            const heatmapContainer = document.getElementById('efficiencyHeatmap');
+            if (!heatmapContainer) return;
+
+            const hours = ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'];
+            const days = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+
+            // 生成热力图数据
+            days.forEach((day, dayIndex) => {
+                hours.forEach((hour, hourIndex) => {
+                    const efficiency = Math.random() * 100;
+                    const intensity = Math.floor(efficiency / 25); // 0-4 级别
+                    const colors = [
+                        'rgba(239, 68, 68, 0.2)',  // 红色 - 低效率
+                        'rgba(245, 158, 11, 0.4)', // 橙色
+                        'rgba(251, 191, 36, 0.6)', // 黄色
+                        'rgba(34, 197, 94, 0.8)',  // 绿色
+                        'rgba(16, 185, 129, 1)'   // 深绿 - 高效率
+                    ];
+
+                    const cell = document.createElement('div');
+                    cell.className = 'heatmap-cell';
+                    cell.style.backgroundColor = colors[intensity];
+                    cell.title = `${day} ${hour}: ${efficiency.toFixed(1)}%`;
+                    cell.dataset.day = dayIndex;
+                    cell.dataset.hour = hourIndex;
+
+                    if (hourIndex === 0) {
+                        cell.style.gridRow = `${dayIndex + 1} / ${dayIndex + 1}`;
+                        cell.innerHTML = `<span class="text-xs text-tertiary">${day}</span>`;
+                        cell.style.display = 'flex';
+                        cell.style.alignItems = 'center';
+                        cell.style.justifyContent = 'center';
+                        cell.style.fontWeight = 'bold';
+                    }
+
+                    heatmapContainer.appendChild(cell);
+                });
+            });
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 时间范围选择
+            const timeRange = document.getElementById('timeRange');
+            if (timeRange) {
+                timeRange.addEventListener('change', function() {
+                    console.log('切换时间范围:', this.value);
+                    // 重新加载数据
+                    refreshData();
+                });
+            }
+
+            // 生成报告
+            const generateReport = document.getElementById('generateReport');
+            if (generateReport) {
+                generateReport.addEventListener('click', function() {
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>生成中...';
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fas fa-check mr-2"></i>生成完成';
+                        setTimeout(() => {
+                            this.innerHTML = '<i class="fas fa-file-download mr-2"></i>生成报告';
+                        }, 2000);
+                    }, 2000);
+                });
+            }
+        }
+
+        // 开始实时更新
+        function startRealTimeUpdates() {
+            setInterval(() => {
+                updateRealTimeData();
+            }, 5000);
+        }
+
+        // 更新实时数据
+        function updateRealTimeData() {
+            // 模拟实时数据更新
+            const gauges = ['gaugeChart1', 'gaugeChart2', 'gaugeChart3', 'gaugeChart4'];
+            gauges.forEach(gaugeId => {
+                const canvas = document.getElementById(gaugeId);
+                if (canvas) {
+                    const currentValue = Math.random() * 100;
+                    const colors = ['#3b82f6', '#10b981', '#f59e0b', '#06b6d4'];
+                    const colorIndex = parseInt(gaugeId.slice(-1)) - 1;
+                    createGaugeChart(gaugeId, currentValue, colors[colorIndex]);
+                }
+            });
+        }
+
+        // 刷新数据
+        function refreshData() {
+            console.log('刷新数据...');
+            // 重新初始化图表和数据
+            initializeCharts();
+        }
+    </script>
+</body>
+</html>

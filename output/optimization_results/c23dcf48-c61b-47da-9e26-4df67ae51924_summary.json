@@ -1,0 +1,845 @@
+{
+  "task_id": "4bf84d4d-1b4b-468f-8f3f-e0ee1f6ad9d2",
+  "optimization_mode": "demo",
+  "status": "completed",
+  "total_orders": 50,
+  "used_trucks": 5,
+  "total_loading_rate": 77.3,
+  "total_weight_utilization": 29.1,
+  "optimization_time_seconds": 6.36,
+  "loading_plans": [
+    {
+      "truck_id": "LTL_TRUCK_000",
+      "orders": [
+        "ORDER_0001",
+        "ORDER_0002",
+        "ORDER_0003",
+        "ORDER_0004",
+        "ORDER_0005",
+        "ORDER_0006",
+        "ORDER_0007",
+        "ORDER_0008"
+      ],
+      "total_volume": 44.12,
+      "total_weight": 5873.1,
+      "volume_utilization": 79.8,
+      "weight_utilization": 32.6,
+      "loading_positions": [
+        {
+          "order_id": "ORDER_0001",
+          "position": [
+            1.19,
+            0.16,
+            0.02
+          ],
+          "dimensions": [
+            2.88,
+            2.29,
+            2.37
+          ],
+          "weight": 1398.8
+        },
+        {
+          "order_id": "ORDER_0002",
+          "position": [
+            1.99,
+            0.65,
+            0.36
+          ],
+          "dimensions": [
+            0.94,
+            0.77,
+            0.49
+          ],
+          "weight": 38.0
+        },
+        {
+          "order_id": "ORDER_0003",
+          "position": [
+            1.07,
+            0.95,
+            1.18
+          ],
+          "dimensions": [
+            1.98,
+            1.08,
+            1.2
+          ],
+          "weight": 200.3
+        },
+        {
+          "order_id": "ORDER_0004",
+          "position": [
+            0.99,
+            0.91,
+            1.56
+          ],
+          "dimensions": [
+            0.47,
+            0.72,
+            0.46
+          ],
+          "weight": 22.5
+        },
+        {
+          "order_id": "ORDER_0005",
+          "position": [
+            3.12,
+            1.29,
+            0.58
+          ],
+          "dimensions": [
+            1.29,
+            1.07,
+            1.18
+          ],
+          "weight": 356.8
+        },
+        {
+          "order_id": "ORDER_0006",
+          "position": [
+            1.13,
+            0.35,
+            0.03
+          ],
+          "dimensions": [
+            3.69,
+            1.58,
+            2.47
+          ],
+          "weight": 1852.6
+        },
+        {
+          "order_id": "ORDER_0007",
+          "position": [
+            0.77,
+            0.36,
+            0.47
+          ],
+          "dimensions": [
+            2.63,
+            1.8,
+            1.97
+          ],
+          "weight": 1940.3
+        },
+        {
+          "order_id": "ORDER_0008",
+          "position": [
+            0.07,
+            1.96,
+            1.44
+          ],
+          "dimensions": [
+            0.38,
+            0.45,
+            0.5
+          ],
+          "weight": 63.6
+        }
+      ]
+    },
+    {
+      "truck_id": "LTL_TRUCK_001",
+      "orders": [
+        "ORDER_0009",
+        "ORDER_0010",
+        "ORDER_0011",
+        "ORDER_0012",
+        "ORDER_0013",
+        "ORDER_0014",
+        "ORDER_0015",
+        "ORDER_0016"
+      ],
+      "total_volume": 50.23,
+      "total_weight": 6660.2,
+      "volume_utilization": 90.8,
+      "weight_utilization": 37.0,
+      "loading_positions": [
+        {
+          "order_id": "ORDER_0009",
+          "position": [
+            1.11,
+            0.02,
+            0.44
+          ],
+          "dimensions": [
+            3.05,
+            2.4,
+            1.75
+          ],
+          "weight": 1795.3
+        },
+        {
+          "order_id": "ORDER_0010",
+          "position": [
+            3.81,
+            0.31,
+            1.18
+          ],
+          "dimensions": [
+            0.65,
+            0.31,
+            0.37
+          ],
+          "weight": 73.6
+        },
+        {
+          "order_id": "ORDER_0011",
+          "position": [
+            1.03,
+            0.25,
+            0.99
+          ],
+          "dimensions": [
+            0.83,
+            0.53,
+            0.42
+          ],
+          "weight": 14.0
+        },
+        {
+          "order_id": "ORDER_0012",
+          "position": [
+            1.35,
+            0.01,
+            0.34
+          ],
+          "dimensions": [
+            2.26,
+            2.49,
+            2.12
+          ],
+          "weight": 1280.0
+        },
+        {
+          "order_id": "ORDER_0013",
+          "position": [
+            1.91,
+            0.63,
+            0.59
+          ],
+          "dimensions": [
+            1.14,
+            1.42,
+            1.33
+          ],
+          "weight": 165.2
+        },
+        {
+          "order_id": "ORDER_0014",
+          "position": [
+            1.0,
+            0.41,
+            0.5
+          ],
+          "dimensions": [
+            2.79,
+            2.02,
+            1.68
+          ],
+          "weight": 1265.1
+        },
+        {
+          "order_id": "ORDER_0015",
+          "position": [
+            0.67,
+            0.11,
+            0.23
+          ],
+          "dimensions": [
+            3.73,
+            1.75,
+            2.06
+          ],
+          "weight": 1992.9
+        },
+        {
+          "order_id": "ORDER_0016",
+          "position": [
+            2.01,
+            1.5,
+            1.55
+          ],
+          "dimensions": [
+            0.31,
+            0.79,
+            0.79
+          ],
+          "weight": 74.1
+        }
+      ]
+    },
+    {
+      "truck_id": "LTL_TRUCK_002",
+      "orders": [
+        "ORDER_0017",
+        "ORDER_0018",
+        "ORDER_0019",
+        "ORDER_0020",
+        "ORDER_0021",
+        "ORDER_0022",
+        "ORDER_0023",
+        "ORDER_0024",
+        "ORDER_0025",
+        "ORDER_0026",
+        "ORDER_0027",
+        "ORDER_0028"
+      ],
+      "total_volume": 51.84,
+      "total_weight": 5441.0,
+      "volume_utilization": 93.8,
+      "weight_utilization": 30.2,
+      "loading_positions": [
+        {
+          "order_id": "ORDER_0017",
+          "position": [
+            0.73,
+            0.01,
+            0.28
+          ],
+          "dimensions": [
+            2.05,
+            2.47,
+            2.21
+          ],
+          "weight": 992.9
+        },
+        {
+          "order_id": "ORDER_0018",
+          "position": [
+            1.11,
+            0.11,
+            0.08
+          ],
+          "dimensions": [
+            3.38,
+            1.94,
+            2.27
+          ],
+          "weight": 1497.3
+        },
+        {
+          "order_id": "ORDER_0019",
+          "position": [
+            0.58,
+            1.6,
+            1.18
+          ],
+          "dimensions": [
+            0.99,
+            0.34,
+            0.76
+          ],
+          "weight": 68.0
+        },
+        {
+          "order_id": "ORDER_0020",
+          "position": [
+            3.68,
+            0.68,
+            1.75
+          ],
+          "dimensions": [
+            0.79,
+            0.51,
+            0.32
+          ],
+          "weight": 70.3
+        },
+        {
+          "order_id": "ORDER_0021",
+          "position": [
+            2.6,
+            1.94,
+            0.1
+          ],
+          "dimensions": [
+            0.76,
+            0.39,
+            0.42
+          ],
+          "weight": 63.8
+        },
+        {
+          "order_id": "ORDER_0022",
+          "position": [
+            2.59,
+            0.61,
+            0.77
+          ],
+          "dimensions": [
+            2.0,
+            1.13,
+            0.92
+          ],
+          "weight": 350.2
+        },
+        {
+          "order_id": "ORDER_0023",
+          "position": [
+            3.05,
+            0.33,
+            0.92
+          ],
+          "dimensions": [
+            0.94,
+            0.59,
+            0.74
+          ],
+          "weight": 35.4
+        },
+        {
+          "order_id": "ORDER_0024",
+          "position": [
+            1.51,
+            0.6,
+            0.61
+          ],
+          "dimensions": [
+            1.32,
+            1.24,
+            1.26
+          ],
+          "weight": 486.0
+        },
+        {
+          "order_id": "ORDER_0025",
+          "position": [
+            1.5,
+            0.18,
+            0.96
+          ],
+          "dimensions": [
+            1.56,
+            1.49,
+            1.41
+          ],
+          "weight": 359.9
+        },
+        {
+          "order_id": "ORDER_0026",
+          "position": [
+            0.98,
+            0.51,
+            0.57
+          ],
+          "dimensions": [
+            1.96,
+            1.46,
+            1.34
+          ],
+          "weight": 333.8
+        },
+        {
+          "order_id": "ORDER_0027",
+          "position": [
+            1.65,
+            0.2,
+            0.11
+          ],
+          "dimensions": [
+            2.93,
+            2.12,
+            2.15
+          ],
+          "weight": 1170.6
+        },
+        {
+          "order_id": "ORDER_0028",
+          "position": [
+            2.75,
+            0.52,
+            0.84
+          ],
+          "dimensions": [
+            0.52,
+            0.57,
+            0.59
+          ],
+          "weight": 12.7
+        }
+      ]
+    },
+    {
+      "truck_id": "LTL_TRUCK_003",
+      "orders": [
+        "ORDER_0029",
+        "ORDER_0030",
+        "ORDER_0031",
+        "ORDER_0032",
+        "ORDER_0033",
+        "ORDER_0034",
+        "ORDER_0035",
+        "ORDER_0036",
+        "ORDER_0037",
+        "ORDER_0038",
+        "ORDER_0039",
+        "ORDER_0040",
+        "ORDER_0041"
+      ],
+      "total_volume": 36.88,
+      "total_weight": 4547.6,
+      "volume_utilization": 66.7,
+      "weight_utilization": 25.3,
+      "loading_positions": [
+        {
+          "order_id": "ORDER_0029",
+          "position": [
+            0.08,
+            0.76,
+            0.95
+          ],
+          "dimensions": [
+            1.86,
+            1.1,
+            1.12
+          ],
+          "weight": 158.0
+        },
+        {
+          "order_id": "ORDER_0030",
+          "position": [
+            0.35,
+            1.24,
+            1.63
+          ],
+          "dimensions": [
+            0.88,
+            0.72,
+            0.71
+          ],
+          "weight": 40.5
+        },
+        {
+          "order_id": "ORDER_0031",
+          "position": [
+            1.15,
+            0.26,
+            0.27
+          ],
+          "dimensions": [
+            1.7,
+            1.31,
+            1.25
+          ],
+          "weight": 200.2
+        },
+        {
+          "order_id": "ORDER_0032",
+          "position": [
+            3.87,
+            0.28,
+            1.12
+          ],
+          "dimensions": [
+            0.81,
+            0.44,
+            0.57
+          ],
+          "weight": 80.0
+        },
+        {
+          "order_id": "ORDER_0033",
+          "position": [
+            1.02,
+            0.74,
+            0.34
+          ],
+          "dimensions": [
+            1.11,
+            1.29,
+            1.45
+          ],
+          "weight": 275.1
+        },
+        {
+          "order_id": "ORDER_0034",
+          "position": [
+            0.46,
+            1.46,
+            0.25
+          ],
+          "dimensions": [
+            0.81,
+            0.58,
+            0.66
+          ],
+          "weight": 64.9
+        },
+        {
+          "order_id": "ORDER_0035",
+          "position": [
+            2.59,
+            0.35,
+            0.33
+          ],
+          "dimensions": [
+            1.63,
+            1.3,
+            1.27
+          ],
+          "weight": 461.4
+        },
+        {
+          "order_id": "ORDER_0036",
+          "position": [
+            0.72,
+            0.36,
+            0.28
+          ],
+          "dimensions": [
+            2.01,
+            2.08,
+            2.2
+          ],
+          "weight": 1623.6
+        },
+        {
+          "order_id": "ORDER_0037",
+          "position": [
+            0.75,
+            0.97,
+            0.92
+          ],
+          "dimensions": [
+            1.85,
+            1.36,
+            1.44
+          ],
+          "weight": 218.8
+        },
+        {
+          "order_id": "ORDER_0038",
+          "position": [
+            4.24,
+            0.47,
+            0.95
+          ],
+          "dimensions": [
+            0.4,
+            0.65,
+            0.55
+          ],
+          "weight": 28.7
+        },
+        {
+          "order_id": "ORDER_0039",
+          "position": [
+            0.53,
+            0.34,
+            0.27
+          ],
+          "dimensions": [
+            1.89,
+            1.25,
+            0.81
+          ],
+          "weight": 425.2
+        },
+        {
+          "order_id": "ORDER_0040",
+          "position": [
+            1.33,
+            1.25,
+            0.48
+          ],
+          "dimensions": [
+            1.94,
+            0.89,
+            1.13
+          ],
+          "weight": 361.4
+        },
+        {
+          "order_id": "ORDER_0041",
+          "position": [
+            0.3,
+            0.5,
+            0.08
+          ],
+          "dimensions": [
+            2.3,
+            1.89,
+            2.14
+          ],
+          "weight": 609.8
+        }
+      ]
+    },
+    {
+      "truck_id": "LTL_TRUCK_004",
+      "orders": [
+        "ORDER_0042",
+        "ORDER_0043",
+        "ORDER_0044",
+        "ORDER_0045",
+        "ORDER_0046",
+        "ORDER_0047",
+        "ORDER_0048",
+        "ORDER_0049",
+        "ORDER_0050"
+      ],
+      "total_volume": 30.71,
+      "total_weight": 3695.7,
+      "volume_utilization": 55.5,
+      "weight_utilization": 20.5,
+      "loading_positions": [
+        {
+          "order_id": "ORDER_0042",
+          "position": [
+            0.75,
+            0.2,
+            0.08
+          ],
+          "dimensions": [
+            3.1,
+            2.24,
+            2.3
+          ],
+          "weight": 1810.8
+        },
+        {
+          "order_id": "ORDER_0043",
+          "position": [
+            0.72,
+            0.81,
+            0.84
+          ],
+          "dimensions": [
+            1.58,
+            1.4,
+            1.42
+          ],
+          "weight": 258.7
+        },
+        {
+          "order_id": "ORDER_0044",
+          "position": [
+            1.97,
+            0.69,
+            0.74
+          ],
+          "dimensions": [
+            1.65,
+            0.91,
+            1.46
+          ],
+          "weight": 188.6
+        },
+        {
+          "order_id": "ORDER_0045",
+          "position": [
+            2.04,
+            0.02,
+            0.72
+          ],
+          "dimensions": [
+            1.45,
+            1.17,
+            1.23
+          ],
+          "weight": 433.2
+        },
+        {
+          "order_id": "ORDER_0046",
+          "position": [
+            3.24,
+            0.99,
+            0.75
+          ],
+          "dimensions": [
+            1.41,
+            1.39,
+            1.42
+          ],
+          "weight": 229.8
+        },
+        {
+          "order_id": "ORDER_0047",
+          "position": [
+            1.95,
+            1.17,
+            0.98
+          ],
+          "dimensions": [
+            1.6,
+            1.0,
+            1.12
+          ],
+          "weight": 426.7
+        },
+        {
+          "order_id": "ORDER_0048",
+          "position": [
+            1.79,
+            0.07,
+            1.3
+          ],
+          "dimensions": [
+            1.01,
+            1.31,
+            1.0
+          ],
+          "weight": 210.0
+        },
+        {
+          "order_id": "ORDER_0049",
+          "position": [
+            2.75,
+            1.48,
+            0.52
+          ],
+          "dimensions": [
+            1.4,
+            0.8,
+            1.19
+          ],
+          "weight": 123.2
+        },
+        {
+          "order_id": "ORDER_0050",
+          "position": [
+            4.15,
+            0.42,
+            0.6
+          ],
+          "dimensions": [
+            0.71,
+            0.54,
+            0.31
+          ],
+          "weight": 14.8
+        }
+      ]
+    }
+  ],
+  "performance_metrics": {
+    "orders_by_type": {
+      "large": 13,
+      "medium": 21,
+      "small": 16
+    },
+    "efficiency_scores": {
+      "space_efficiency": 77.3,
+      "weight_efficiency": 29.1,
+      "route_efficiency": 91.1,
+      "time_efficiency": 94.1
+    },
+    "cost_analysis": {
+      "total_distance": 454.7,
+      "fuel_cost": 458.0,
+      "driver_cost": 843.0,
+      "total_cost": 2246.0,
+      "cost_per_order": 34.8
+    },
+    "improvement_metrics": {
+      "loading_rate_improvement": 12.2,
+      "cost_reduction": 8.9,
+      "time_saving": 12.2
+    }
+  },
+  "timestamp": "2025-11-18T11:29:15.687570",
+  "success": true,
+  "message": "优化成功完成"
+}

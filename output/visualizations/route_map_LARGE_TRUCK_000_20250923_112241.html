@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_7a4f636c9cf59b5308705414bddd549a {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div style="
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                width: 250px;
+                background: white;
+                border: 2px solid #ccc;
+                border-radius: 5px;
+                padding: 10px;
+                font-family: Arial, sans-serif;
+                z-index: 9999;
+                box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            ">
+                <h4 style="margin: 0; color: #333; text-align: center;">LARGE_TRUCK_000 路径信息</h4>
+                <hr style="margin: 5px 0;">
+                <p><b>总距离:</b> 29.6 km</p>
+                <p><b>总时间:</b> 1.1 小时</p>
+                <p><b>燃油成本:</b> ¥271</p>
+                <p><b>停靠点:</b> 1 个</p>
+                <p style="font-size: 10px; color: #666; margin: 5px 0 0 0;">
+                    🔴 配送中心 🟢 取货点 🔵 送货点
+                </p>
+            </div>
+            
+    
+            <div class="folium-map" id="map_7a4f636c9cf59b5308705414bddd549a" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_7a4f636c9cf59b5308705414bddd549a = L.map(
+                "map_7a4f636c9cf59b5308705414bddd549a",
+                {
+                    center: [30.669974, 104.167558],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 11,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_86dd4c5c878b3b27e7053f99c3227c78 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "Map data \u0026copy; OpenStreetMap contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_86dd4c5c878b3b27e7053f99c3227c78.addTo(map_7a4f636c9cf59b5308705414bddd549a);
+        
+    
+            var marker_152b7ae9199e687983322bb6ee516bef = L.marker(
+                [30.800835, 104.139111],
+                {
+}
+            ).addTo(map_7a4f636c9cf59b5308705414bddd549a);
+        
+    
+            var icon_2f859142883aee3d32184df809b3316e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "home",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_349e4c91f954485bfee426686667c64f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0c6d5ecad459b3bbd80b08795a745eb5 = $(`<div id="html_0c6d5ecad459b3bbd80b08795a745eb5" style="width: 100.0%; height: 100.0%;"><b>A网点（成都至重庆专线）</b><br>配送中心<br>(30.800835, 104.139111)</div>`)[0];
+                popup_349e4c91f954485bfee426686667c64f.setContent(html_0c6d5ecad459b3bbd80b08795a745eb5);
+            
+        
+
+        marker_152b7ae9199e687983322bb6ee516bef.bindPopup(popup_349e4c91f954485bfee426686667c64f)
+        ;
+
+        
+    
+    
+            marker_152b7ae9199e687983322bb6ee516bef.bindTooltip(
+                `<div>
+                     配送中心
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_152b7ae9199e687983322bb6ee516bef.setIcon(icon_2f859142883aee3d32184df809b3316e);
+            
+    
+            var marker_ea23d0fe9ace92fb1a3ca869f7098fb6 = L.marker(
+                [30.539113, 104.196005],
+                {
+}
+            ).addTo(map_7a4f636c9cf59b5308705414bddd549a);
+        
+    
+            var icon_c9757b31aeb0478f4980e7382819fa5a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "arrow-up",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_0359422c484813c3a567332af4648a8a = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_35b446a029220b3294161678ecf0dba2 = $(`<div id="html_35b446a029220b3294161678ecf0dba2" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial, sans-serif;">                 <h4 style="margin: 0; color: #333;">停靠点 1</h4>                 <hr style="margin: 5px 0;">                 <p><b>车辆:</b> LARGE_TRUCK_000</p>                 <p><b>操作:</b> 取货</p>                 <p><b>订单:</b> ORDER_0036</p>                 <p><b>货物类型:</b> 酒水</p>                 <p><b>货物数量:</b> 621</p>                 <p><b>重量变化:</b> 48785.8 kg</p>                 <p><b>距离:</b> 29.6 km</p>                 <p><b>到达时间:</b> 08:44</p>                 <p><b>服务时间:</b> 20 分钟</p>                 <p><b>离开时间:</b> 09:04</p>             </div>             </div>`)[0];
+                popup_0359422c484813c3a567332af4648a8a.setContent(html_35b446a029220b3294161678ecf0dba2);
+            
+        
+
+        marker_ea23d0fe9ace92fb1a3ca869f7098fb6.bindPopup(popup_0359422c484813c3a567332af4648a8a)
+        ;
+
+        
+    
+    
+            marker_ea23d0fe9ace92fb1a3ca869f7098fb6.bindTooltip(
+                `<div>
+                     停靠点 1: 取货
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_ea23d0fe9ace92fb1a3ca869f7098fb6.setIcon(icon_c9757b31aeb0478f4980e7382819fa5a);
+            
+    
+            var poly_line_0bdd75a1fe9f6cf41dafa6cf4f055145 = L.polyline(
+                [[30.800835, 104.139111], [30.539113, 104.196005], [30.800835, 104.139111]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(map_7a4f636c9cf59b5308705414bddd549a);
+        
+    
+        var popup_ad3391d9f7f4c4591506d542344cb941 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_bd6f010225651cbe6b531174a8d5cca6 = $(`<div id="html_bd6f010225651cbe6b531174a8d5cca6" style="width: 100.0%; height: 100.0%;">LARGE_TRUCK_000 路径</div>`)[0];
+                popup_ad3391d9f7f4c4591506d542344cb941.setContent(html_bd6f010225651cbe6b531174a8d5cca6);
+            
+        
+
+        poly_line_0bdd75a1fe9f6cf41dafa6cf4f055145.bindPopup(popup_ad3391d9f7f4c4591506d542344cb941)
+        ;
+
+        
+    
+</script>
+</html>

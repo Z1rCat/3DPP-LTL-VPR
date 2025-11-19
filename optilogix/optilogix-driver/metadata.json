@@ -1,0 +1,7 @@
+{
+  "name": "OptiLogix Driver",
+  "description": "Mobile-first logistics application for drivers featuring task management, 3D load planning, and route navigation.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

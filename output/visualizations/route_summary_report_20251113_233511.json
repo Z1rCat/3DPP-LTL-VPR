@@ -1,0 +1,203 @@
+{
+  "timestamp": "2025-11-13T23:35:12.078374",
+  "summary": {
+    "total_vehicles": 6,
+    "total_distance_km": 11264.79,
+    "total_time_hours": 207.75,
+    "total_cost_yuan": 27284.52,
+    "total_stops": 40,
+    "average": {
+      "distance_per_vehicle_km": 1877.47,
+      "time_per_vehicle_hours": 34.62,
+      "cost_per_vehicle_yuan": 4547.42,
+      "cost_per_km_yuan": 2.42,
+      "stops_per_vehicle": 6.67
+    },
+    "best_performance": {
+      "vehicle_id": "VEHICLE_001",
+      "distance_km": 1226.23,
+      "cost_yuan": 2986.2,
+      "cost_per_km": 2.44
+    },
+    "worst_performance": {
+      "vehicle_id": "VEHICLE_005",
+      "distance_km": 2572.71,
+      "cost_yuan": 6227.99,
+      "cost_per_km": 2.42
+    },
+    "depot": {
+      "name": "成都",
+      "coordinates": {
+        "longitude": 104.0668,
+        "latitude": 30.5728
+      }
+    },
+    "performance_metrics": {
+      "distance_variance": 258926.83,
+      "cost_variance": 1503447.36,
+      "efficiency_score": 73.04
+    }
+  },
+  "vehicle_details": {
+    "VEHICLE_000": {
+      "route": {
+        "depot": "成都",
+        "stops": [
+          "乐山",
+          "宜宾",
+          "眉山",
+          "重庆",
+          "德阳",
+          "攀枝花",
+          "资阳",
+          "内江",
+          "遂宁"
+        ],
+        "num_stops": 9
+      },
+      "performance": {
+        "total_distance_km": 2332.25,
+        "total_time_hours": 43.37,
+        "fuel_cost_yuan": 3498.38,
+        "driver_cost_yuan": 2168.54,
+        "total_cost_yuan": 5666.93,
+        "avg_speed_kmh": 53.77,
+        "cost_per_km": 2.43
+      },
+      "cargo": {
+        "weight_kg": 12836.01
+      }
+    },
+    "VEHICLE_001": {
+      "route": {
+        "depot": "成都",
+        "stops": [
+          "达州",
+          "德阳",
+          "南充",
+          "眉山",
+          "雅安"
+        ],
+        "num_stops": 5
+      },
+      "performance": {
+        "total_distance_km": 1226.23,
+        "total_time_hours": 22.94,
+        "fuel_cost_yuan": 1839.34,
+        "driver_cost_yuan": 1146.86,
+        "total_cost_yuan": 2986.2,
+        "avg_speed_kmh": 53.46,
+        "cost_per_km": 2.44
+      },
+      "cargo": {
+        "weight_kg": 12367.72
+      }
+    },
+    "VEHICLE_002": {
+      "route": {
+        "depot": "成都",
+        "stops": [
+          "资阳",
+          "眉山",
+          "攀枝花",
+          "德阳",
+          "南充",
+          "达州"
+        ],
+        "num_stops": 6
+      },
+      "performance": {
+        "total_distance_km": 1802.25,
+        "total_time_hours": 33.04,
+        "fuel_cost_yuan": 2703.37,
+        "driver_cost_yuan": 1651.87,
+        "total_cost_yuan": 4355.25,
+        "avg_speed_kmh": 54.55,
+        "cost_per_km": 2.42
+      },
+      "cargo": {
+        "weight_kg": 8281.77
+      }
+    },
+    "VEHICLE_003": {
+      "route": {
+        "depot": "成都",
+        "stops": [
+          "重庆",
+          "宜宾",
+          "攀枝花",
+          "乐山",
+          "达州",
+          "内江"
+        ],
+        "num_stops": 6
+      },
+      "performance": {
+        "total_distance_km": 2080.34,
+        "total_time_hours": 37.67,
+        "fuel_cost_yuan": 3120.51,
+        "driver_cost_yuan": 1883.62,
+        "total_cost_yuan": 5004.13,
+        "avg_speed_kmh": 55.22,
+        "cost_per_km": 2.41
+      },
+      "cargo": {
+        "weight_kg": 12413.19
+      }
+    },
+    "VEHICLE_004": {
+      "route": {
+        "depot": "成都",
+        "stops": [
+          "攀枝花",
+          "宜宾",
+          "自贡",
+          "乐山",
+          "雅安"
+        ],
+        "num_stops": 5
+      },
+      "performance": {
+        "total_distance_km": 1251.01,
+        "total_time_hours": 23.35,
+        "fuel_cost_yuan": 1876.52,
+        "driver_cost_yuan": 1167.51,
+        "total_cost_yuan": 3044.03,
+        "avg_speed_kmh": 53.58,
+        "cost_per_km": 2.43
+      },
+      "cargo": {
+        "weight_kg": 8697.71
+      }
+    },
+    "VEHICLE_005": {
+      "route": {
+        "depot": "成都",
+        "stops": [
+          "雅安",
+          "宜宾",
+          "重庆",
+          "内江",
+          "攀枝花",
+          "绵阳",
+          "南充",
+          "达州",
+          "乐山"
+        ],
+        "num_stops": 9
+      },
+      "performance": {
+        "total_distance_km": 2572.71,
+        "total_time_hours": 47.38,
+        "fuel_cost_yuan": 3859.06,
+        "driver_cost_yuan": 2368.92,
+        "total_cost_yuan": 6227.99,
+        "avg_speed_kmh": 54.3,
+        "cost_per_km": 2.42
+      },
+      "cargo": {
+        "weight_kg": 10949.43
+      }
+    }
+  }
+}

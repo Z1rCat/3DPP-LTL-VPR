@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>司机端 - 巧满装载平台</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/driver.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-truck"></i>
+                <h2>司机端</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#dashboard" class="nav-link active">车辆日程</a></li>
+                <li><a href="#loading" class="nav-link">装载方案</a></li>
+                <li><a href="#route" class="nav-link">运输路径</a></li>
+                <li><a href="#profile" class="nav-link">个人信息</a></li>
+            </ul>
+            <div class="nav-actions">
+                <span id="driver-name">司机</span>
+                <button onclick="logout()" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> 退出
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <div class="main-container">
+        <!-- 车辆日程部分 -->
+        <section id="dashboard" class="section active">
+            <div class="section-header">
+                <h1>🚛 车辆日程</h1>
+                <p>查看今日配送任务和装载安排</p>
+            </div>
+
+            <!-- 车辆信息卡片 -->
+            <div class="vehicle-info-card">
+                <div class="vehicle-header">
+                    <h3>车辆编号: <span id="vehicle-id">LARGE_TRUCK_000</span></h3>
+                    <div class="status-badge ready">就绪</div>
+                </div>
+                <div class="vehicle-details">
+                    <div class="detail-item">
+                        <i class="fas fa-boxes"></i>
+                        <span>今日装载货物: <strong id="total-items">-</strong> 件</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-weight"></i>
+                        <span>总重量: <strong id="total-weight">-</strong> kg</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-route"></i>
+                        <span>配送距离: <strong id="total-distance">-</strong> km</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>预计时长: <strong id="estimated-duration">-</strong> 小时</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 今日日程时间线 -->
+            <div class="schedule-timeline">
+                <h3>今日日程安排</h3>
+                <div id="timeline-container" class="timeline-container">
+                    <div class="loading-placeholder">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>加载日程数据中...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 装载方案部分 -->
+        <section id="loading" class="section">
+            <div class="section-header">
+                <h1>📦 装载方案</h1>
+                <p>查看货物装载详细方案和3D可视化</p>
+            </div>
+
+            <!-- 装载概览 -->
+            <div class="loading-overview">
+                <div class="overview-card">
+                    <h4>装载统计</h4>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number" id="loading-efficiency">-</div>
+                            <div class="stat-label">装载率(%)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="volume-utilization">-</div>
+                            <div class="stat-label">体积利用率(%)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="cargo-types">-</div>
+                            <div class="stat-label">货物种类</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 装载清单 -->
+            <div class="cargo-list">
+                <h3>装载货物清单</h3>
+                <div class="list-controls">
+                    <input type="text" id="cargo-search" placeholder="搜索货物..." class="search-input">
+                    <select id="cargo-filter" class="filter-select">
+                        <option value="all">全部货物</option>
+                        <option value="large">大货物</option>
+                        <option value="medium">中货物</option>
+                        <option value="small">小货物</option>
+                    </select>
+                </div>
+                <div id="cargo-list-container" class="cargo-list-container">
+                    <div class="loading-placeholder">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>加载装载数据中...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3D可视化 -->
+            <div class="visualization-section">
+                <h3>3D装载可视化</h3>
+                <div class="visualization-controls">
+                    <button id="view-3d-btn" class="view-btn active">
+                        <i class="fas fa-cube"></i> 3D视图
+                    </button>
+                    <button id="view-list-btn" class="view-btn">
+                        <i class="fas fa-list"></i> 列表视图
+                    </button>
+                    <button id="fullscreen-btn" class="view-btn">
+                        <i class="fas fa-expand"></i> 全屏
+                    </button>
+                </div>
+                <div id="loading-visualization" class="visualization-container">
+                    <div class="visualization-placeholder">
+                        <i class="fas fa-cube"></i>
+                        <p>点击"3D视图"查看装载方案</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 运输路径部分 -->
+        <section id="route" class="section">
+            <div class="section-header">
+                <h1>🗺️ 运输路径</h1>
+                <p>查看配送路线和实时位置</p>
+            </div>
+
+            <!-- 路径概览 -->
+            <div class="route-overview">
+                <div class="route-stats">
+                    <div class="route-stat-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <div class="stat-label">总停靠点</div>
+                            <div class="stat-number" id="total-stops">-</div>
+                        </div>
+                    </div>
+                    <div class="route-stat-item">
+                        <i class="fas fa-road"></i>
+                        <div>
+                            <div class="stat-label">总距离</div>
+                            <div class="stat-number" id="route-distance">-</div>
+                        </div>
+                    </div>
+                    <div class="route-stat-item">
+                        <i class="fas fa-gas-pump"></i>
+                        <div>
+                            <div class="stat-label">燃油成本</div>
+                            <div class="stat-number" id="fuel-cost">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 路径地图 -->
+            <div class="route-map-section">
+                <div class="map-controls">
+                    <button id="refresh-map-btn" class="control-btn">
+                        <i class="fas fa-sync-alt"></i> 刷新地图
+                    </button>
+                    <button id="fullscreen-map-btn" class="control-btn">
+                        <i class="fas fa-expand"></i> 全屏地图
+                    </button>
+                </div>
+                <div id="route-map-container" class="map-container">
+                    <div class="map-placeholder">
+                        <i class="fas fa-map"></i>
+                        <p>路径地图加载中...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 停靠点列表 -->
+            <div class="stops-list">
+                <h3>配送停靠点</h3>
+                <div id="stops-list-container" class="stops-list-container">
+                    <div class="loading-placeholder">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>加载停靠点信息中...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 个人信息部分 -->
+        <section id="profile" class="section">
+            <div class="section-header">
+                <h1>👤 个人信息</h1>
+                <p>司机个人信息和工作记录</p>
+            </div>
+
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="avatar-placeholder">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-info">
+                        <h3 id="driver-name-profile">司机姓名</h3>
+                        <p id="driver-id">工号: D001</p>
+                        <div class="status-badge active">在线</div>
+                    </div>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="profile-stat-item">
+                        <i class="fas fa-truck"></i>
+                        <span>今日配送: <strong>3</strong> 单</span>
+                    </div>
+                    <div class="profile-stat-item">
+                        <i class="fas fa-road"></i>
+                        <span>本月行驶: <strong>1,234</strong> km</span>
+                    </div>
+                    <div class="profile-stat-item">
+                        <i class="fas fa-star"></i>
+                        <span>服务评分: <strong>4.8</strong> 分</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 模态框 -->
+    <div id="modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">详情</h3>
+                <button class="modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- 动态内容 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载脚本 -->
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/driver.js"></script>
+</body>
+</html>

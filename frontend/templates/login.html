@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 巧满装载平台</title>
+    <link rel="stylesheet" href="/static/css/login.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="login-container">
+        <!-- 深色模式切换按钮 -->
+        <button class="theme-toggle" id="themeToggle" title="切换深色模式">
+            <i class="fas fa-moon" id="themeIcon"></i>
+        </button>
+
+        <!-- 背景装饰 -->
+        <div class="background-decoration">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+
+        <!-- 左侧品牌信息 -->
+        <div class="brand-section">
+            <div class="brand-content">
+                <div class="brand-logo">
+                    <i class="fas fa-truck"></i>
+                    <h1>巧满装载平台</h1>
+                </div>
+                <div class="brand-description">
+                    <h2>智能物流3D装箱优化系统</h2>
+                    <p>集成3D装箱算法、车辆路径规划、智能可视化的现代化物流优化解决方案</p>
+                </div>
+                <div class="features-list">
+                    <div class="feature-item">
+                        <i class="fas fa-cube"></i>
+                        <span>3DPP-LTL多车队优化</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-route"></i>
+                        <span>智能路径规划</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>实时数据分析</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-eye"></i>
+                        <span>多维度可视化</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧登录表单 -->
+        <div class="login-section">
+            <div class="login-form-container">
+                <div class="login-header">
+                    <h2>欢迎回来</h2>
+                    <p>请登录您的账户以继续使用</p>
+                </div>
+
+                <!-- 登录表单 -->
+                <form class="login-form" id="loginForm">
+                    <div class="form-group">
+                        <label for="username">用户名</label>
+                        <div class="input-group">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="username" name="username" required
+                                   placeholder="请输入用户名" autocomplete="username">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">密码</label>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" name="password" required
+                                   placeholder="请输入密码" autocomplete="current-password">
+                            <button type="button" class="password-toggle" id="passwordToggle">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <!-- 密码强度指示器 -->
+                        <div class="password-strength" id="passwordStrength" style="display: none;">
+                            <div class="strength-bar">
+                                <div class="strength-fill" id="strengthFill"></div>
+                            </div>
+                            <span class="strength-text" id="strengthText">密码强度</span>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="rememberMe" name="rememberMe">
+                            <span class="checkmark"></span>
+                            记住我
+                        </label>
+                        <a href="#" class="forgot-password" id="forgotPassword">忘记密码？</a>
+                    </div>
+
+                    <button type="submit" class="login-btn" id="loginBtn">
+                        <span class="btn-text">登录</span>
+                        <span class="btn-loading" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            登录中...
+                        </span>
+                    </button>
+                </form>
+
+                <!-- 社交登录 -->
+                <div class="social-login">
+                    <div class="divider">
+                        <span>或使用其他方式登录</span>
+                    </div>
+                    <div class="social-buttons">
+                        <button class="social-btn wechat-btn" id="wechatLogin" title="微信登录">
+                            <i class="fab fa-weixin"></i>
+                            <span>微信登录</span>
+                        </button>
+                        <button class="social-btn dingtalk-btn" id="dingtalkLogin" title="钉钉登录">
+                            <i class="fas fa-comments"></i>
+                            <span>钉钉登录</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 注册链接 -->
+                <div class="register-section">
+                    <p>还没有账户？ <a href="#" id="showRegister">立即注册</a></p>
+                </div>
+
+                <!-- 系统信息 -->
+                <div class="system-info">
+                    <div class="version-info">
+                        <span>Version 4.0.0</span>
+                        <span>|</span>
+                        <span>系统状态: <span class="status-indicator" id="systemStatus">检查中...</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 注册模态框 -->
+        <div class="modal" id="registerModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>创建新账户</h3>
+                    <button class="modal-close" id="closeRegisterModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form class="register-form" id="registerForm">
+                    <div class="form-group">
+                        <label for="regUsername">用户名</label>
+                        <input type="text" id="regUsername" name="username" required
+                               placeholder="请输入用户名（3-20个字符）">
+                        <small class="field-hint">用户名将用于登录系统</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regEmail">邮箱</label>
+                        <input type="email" id="regEmail" name="email" required
+                               placeholder="请输入邮箱地址">
+                        <small class="field-hint">用于找回密码和系统通知</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regPassword">密码</label>
+                        <input type="password" id="regPassword" name="password" required
+                               placeholder="请输入密码（至少8位）">
+                        <small class="field-hint">密码至少包含8个字符，建议包含数字和字母</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regPasswordConfirm">确认密码</label>
+                        <input type="password" id="regPasswordConfirm" name="passwordConfirm" required
+                               placeholder="请再次输入密码">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regRole">用户类型</label>
+                        <select id="regRole" name="role" required>
+                            <option value="">请选择用户类型</option>
+                            <option value="admin">管理员</option>
+                            <option value="operator">操作员</option>
+                            <option value="viewer">查看者</option>
+                        </select>
+                        <small class="field-hint">不同类型用户具有不同的系统权限</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+                            <span class="checkmark"></span>
+                            我已阅读并同意 <a href="#" class="terms-link">服务条款</a> 和 <a href="#" class="privacy-link">隐私政策</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="register-btn" id="registerBtn">
+                        <span class="btn-text">创建账户</span>
+                        <span class="btn-loading" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            创建中...
+                        </span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 消息提示 -->
+        <div class="message-container" id="messageContainer"></div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="/static/js/login.js"></script>
+</body>
+</html>

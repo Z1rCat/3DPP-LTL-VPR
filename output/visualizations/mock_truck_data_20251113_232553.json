@@ -1,0 +1,90 @@
+{
+  "TRUCK_000": {
+    "summary": {
+      "total_items": 23,
+      "total_volume_m3": 7.006967579056648,
+      "total_weight_kg": 2102.090273716995,
+      "loading_rate": 12.671744030412052,
+      "volume_utilization": 12.671744030412052,
+      "weight_utilization": 11.67827929842775
+    },
+    "items_count": 23
+  },
+  "TRUCK_001": {
+    "summary": {
+      "total_items": 42,
+      "total_volume_m3": 13.47486384196293,
+      "total_weight_kg": 4042.459152588878,
+      "loading_rate": 24.368605038272083,
+      "volume_utilization": 24.368605038272083,
+      "weight_utilization": 22.458106403271547
+    },
+    "items_count": 42
+  },
+  "TRUCK_002": {
+    "summary": {
+      "total_items": 36,
+      "total_volume_m3": 13.612647087569348,
+      "total_weight_kg": 4083.7941262708064,
+      "loading_rate": 24.61777902121193,
+      "volume_utilization": 24.61777902121193,
+      "weight_utilization": 22.687745145948924
+    },
+    "items_count": 36
+  },
+  "TRUCK_003": {
+    "summary": {
+      "total_items": 19,
+      "total_volume_m3": 7.544945370584045,
+      "total_weight_kg": 2263.4836111752134,
+      "loading_rate": 13.644649469372187,
+      "volume_utilization": 13.644649469372187,
+      "weight_utilization": 12.574908950973407
+    },
+    "items_count": 19
+  },
+  "TRUCK_004": {
+    "summary": {
+      "total_items": 29,
+      "total_volume_m3": 10.84866852835759,
+      "total_weight_kg": 3254.6005585072767,
+      "loading_rate": 19.619264555044833,
+      "volume_utilization": 19.619264555044833,
+      "weight_utilization": 18.081114213929315
+    },
+    "items_count": 29
+  },
+  "TRUCK_005": {
+    "summary": {
+      "total_items": 20,
+      "total_volume_m3": 7.279013559896593,
+      "total_weight_kg": 2183.7040679689776,
+      "loading_rate": 13.163725332567624,
+      "volume_utilization": 13.163725332567624,
+      "weight_utilization": 12.13168926649432
+    },
+    "items_count": 20
+  },
+  "TRUCK_006": {
+    "summary": {
+      "total_items": 44,
+      "total_volume_m3": 18.382164943689762,
+      "total_weight_kg": 5514.649483106929,
+      "loading_rate": 33.24320917189266,
+      "volume_utilization": 33.24320917189266,
+      "weight_utilization": 30.636941572816273
+    },
+    "items_count": 44
+  },
+  "TRUCK_007": {
+    "summary": {
+      "total_items": 42,
+      "total_volume_m3": 14.77686525568245,
+      "total_weight_kg": 4433.059576704734,
+      "loading_rate": 26.723208289356283,
+      "volume_utilization": 26.723208289356283,
+      "weight_utilization": 24.628108759470745
+    },
+    "items_count": 42
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "metadata": {
+    "generated_at": "2025-11-13T23:09:56.000885",
+    "total_orders": 0,
+    "total_items": 0,
+    "mapping_type": "order_to_items"
+  },
+  "id_mapping": {},
+  "statistics": {
+    "orders_with_items": 0,
+    "orders_without_items": 0,
+    "avg_items_per_order": 0
+  }
+}

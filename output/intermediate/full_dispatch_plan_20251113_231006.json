@@ -1,0 +1,28 @@
+{
+  "metadata": {
+    "generated_at": "2025-11-13T23:10:06.573831",
+    "system_version": "4.1 Enhanced",
+    "plan_type": "full_dispatch_plan"
+  },
+  "spatial_optimization": {
+    "enhanced_constraints_enabled": true,
+    "spatial_validation": false,
+    "rotation_optimization": false,
+    "collision_detection": false
+  },
+  "temporal_optimization": {
+    "time_windows_enabled": false,
+    "total_violations": 0,
+    "violation_details": {}
+  },
+  "multi_objective_results": {
+    "economic_cost": 0,
+    "multi_objective_score": 0,
+    "loading_rate_weight": 0.4,
+    "economic_weight": 0.6
+  },
+  "truck_assignments": {},
+  "route_optimization": {},
+  "cargo_classification": {},
+  "performance_metrics": {}
+}
